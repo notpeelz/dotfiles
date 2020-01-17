@@ -18,6 +18,14 @@ current_shell="$(getent passwd | grep "^${USER}:" | cut -d: -f7)"
 }
 
 [[ -d "${HOME}/.oh-my-zsh" ]] || {
-  echo "Installing oh-my-zsh!"
-  git clone https://github.com/ohmyzsh/ohmyzsh.git "${HOME}/.oh-my-zsh"
+  echo "Installing oh-my-zsh"
+  git clone 'https://github.com/ohmyzsh/ohmyzsh.git' "${HOME}/.oh-my-zsh"
+}
+
+ZSH_CUSTOM="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"
+
+zsh_syntaxhl_path="${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
+[[ -d "${zsh_syntaxhl_path}" ]] || {
+  echo "Installing zsh-syntax-highlight"
+  git clone 'https://github.com/zsh-users/zsh-syntax-highlighting.git' "${zsh_syntaxhl_path}"
 }
