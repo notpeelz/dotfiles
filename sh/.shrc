@@ -1,0 +1,39 @@
+# Disable XON/XOFF flow control
+# (frees up CTRL-S and CTRL-Q)
+stty -ixon
+
+# Custom commands
+alias pigz="pigz -k"
+alias tb="nc termbin.com 9999"
+alias gogh='bash -c "$(wget -qO- https://git.io/vQgMr)"'
+
+# https://gist.github.com/vdrandom/dd9efbf061142c8f22e5
+function colortest() {
+  perl -CADS -lwe '
+  my $block = shift || (chr(0x2588) x 3);
+  for (["", 0], ["1;", 0], ["", 8], ["1;", 8]) {
+    my ($bold, $offset) = @$_;
+    my @range = map $offset + $_, 0..7;
+    printf "%s %-6s ", $bold ? "bold" : "norm", "$range[0]-$range[-1]";
+    print map("\e[${bold}38;5;${_}m$block", @range), "\e[0m"
+  }
+  ' "$@"
+}
+
+# Add local bin folders to PATH
+[[ -d "${HOME}/bin" ]] && PATH="${HOME}/bin:$PATH"
+[[ -d "${HOME}/.local/bin" ]] && PATH="${HOME}/.local/bin:$PATH"
+
+# Load NVM
+if [[ -d "${HOME}/.nvm" ]]; then
+  export NVM_DIR="${HOME}/.nvm"
+  [[ -s "${NVM_DIR}/nvm.sh" ]] && source "${NVM_DIR}/nvm.sh"
+fi
+
+# Load virtualenv
+if [[ -f "${HOME}/.local/bin/virtualenvwrapper.sh" ]]; then
+  export WORKON_HOME="${HOME}/.venv"
+  export VIRTUALENVWRAPPER_PYTHON="/usr/bin/python3"
+  export VIRTUALENVWRAPPER_VIRTUALENV="${HOME}/.local/bin/virtualenv"
+  . "${HOME}/.local/bin/virtualenvwrapper.sh" &>/dev/null
+fi
