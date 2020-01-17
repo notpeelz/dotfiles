@@ -3,6 +3,7 @@
 stty -ixon
 
 # Custom commands
+alias edit='$EDITOR'
 alias pigz="pigz -k"
 alias tb="nc termbin.com 9999"
 alias gogh='bash -c "$(wget -qO- https://git.io/vQgMr)"'
