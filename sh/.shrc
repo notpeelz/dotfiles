@@ -7,6 +7,13 @@ alias pigz="pigz -k"
 alias tb="nc termbin.com 9999"
 alias gogh='bash -c "$(wget -qO- https://git.io/vQgMr)"'
 
+# Default text editor
+if which nvim &>/dev/null; then
+  export EDITOR="nvim"
+elif which vim &>/dev/null; then
+  export EDITOR="vim"
+fi
+
 # https://gist.github.com/vdrandom/dd9efbf061142c8f22e5
 function colortest() {
   perl -CADS -lwe '
