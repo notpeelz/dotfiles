@@ -172,8 +172,6 @@ noremap j gj
 noremap k gk
 noremap <Down> gj
 noremap <Up> gk
-noremap $ g<End>
-noremap ^ g<Home>
 
 " Window splitting
 nnoremap <Space>- :split<CR>
