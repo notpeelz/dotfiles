@@ -39,13 +39,12 @@ zsh_syntaxhl_path="${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
   git clone 'https://github.com/zsh-users/zsh-syntax-highlighting.git' "${zsh_syntaxhl_path}"
 }
 
-spaceship_path="${ZSH_CUSTOM}/themes/spaceship-prompt"
-[[ -d "${spaceship_path}" ]] && {
-  echo "Updating spaceship-prompt"
-  cd "${spaceship_path}"
+pl10k_path="${ZSH_CUSTOM}/themes/powerlevel10k"
+[[ -d "${pl10k_path}" ]] && {
+  echo "Updating powerlevel10k"
+  cd "${pl10k_path}"
   git pull origin
 } || {
-  echo "Installing spaceship-prompt"
-  git clone 'https://github.com/denysdovhan/spaceship-prompt.git' "${spaceship_path}"
-  ln -sf "${ZSH_CUSTOM}/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM}/themes/spaceship.zsh-theme"
+  echo "Installing pl10k-prompt"
+  git clone --depth=1 'https://github.com/romkatv/powerlevel10k.git' "${pl10k_path}"
 }
