@@ -3,32 +3,32 @@ URxvt.font: xft:Source Code Pro:pixelsize=24
 URxvt.boldFont: xft:Source Code Pro:pixelsize=24:style=bold
 
 ! Colors
-URxvt*color0:  #1A1A1A
-URxvt*color8:  #625E4C
-URxvt*color1:  #F4005F
-URxvt*color9:  #F4005F
-URxvt*color2:  #98E024
-URxvt*color10: #98E024
-URxvt*color3:  #FA8419
-URxvt*color11: #E0D561
-URxvt*color4:  #9D65FF
-URxvt*color12: #9D65FF
-URxvt*color5:  #F4005F
-URxvt*color13: #F4005F
-URxvt*color6:  #58D1EB
-URxvt*color14: #58D1EB
-URxvt*color7:  #C4C5B5
-URxvt*color15: #F6F6EF
+URxvt.color0:  #1A1A1A
+URxvt.color8:  #625E4C
+URxvt.color1:  #F4005F
+URxvt.color9:  #F4005F
+URxvt.color2:  #98E024
+URxvt.color10: #98E024
+URxvt.color3:  #FA8419
+URxvt.color11: #E0D561
+URxvt.color4:  #9D65FF
+URxvt.color12: #9D65FF
+URxvt.color5:  #F4005F
+URxvt.color13: #F4005F
+URxvt.color6:  #58D1EB
+URxvt.color14: #58D1EB
+URxvt.color7:  #C4C5B5
+URxvt.color15: #F6F6EF
 
 ! Background/Foreground
 URxvt.depth: 32
-URxvt*background: [100]#1A1A1A
-URxvt*foreground: #C4C5B5
+URxvt.background: [100]#1A1A1A
+URxvt.foreground: #C4C5B5
 
 ! Scrolling
-URxvt*scrollTtyOutput: false
-URxvt*scrollWithBuffer: true
-URxvt*scrollTtyKeypress: true
+URxvt.scrollTtyOutput: false
+URxvt.scrollWithBuffer: true
+URxvt.scrollTtyKeypress: true
 URxvt.saveLines: 300000
 URxvt.scrollBar: false
 
@@ -36,7 +36,7 @@ URxvt.scrollBar: false
 URxvt.iso14755: false
 URxvt.iso14755_52: false
 URxvt.intensityStyles: false
-URxvt*termName: rxvt-unicode-256color
+URxvt.termName: rxvt-unicode-256color
 
 ! Allow CTRL-Arrows to skip over words
 ! https://unix.stackexchange.com/q/453100
