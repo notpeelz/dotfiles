@@ -1,6 +1,6 @@
 export ZSH_CUSTOM="${HOME}/.oh-my-zsh/custom"
 
-ZSH_THEME="dieter"
+ZSH_THEME="spaceship"
 plugins=(
   git
   sudo
@@ -27,6 +27,24 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 # Initialize oh-my-zsh
 export ZSH="${HOME}/.oh-my-zsh"
 source "${ZSH}/oh-my-zsh.sh"
+
+# Spaceship settings
+
+# Disable newline separator between prompts, since it's impossible to suppress
+# the initial newline
+SPACESHIP_PROMPT_ADD_NEWLINE=false
+
+# Exit code
+SPACESHIP_EXIT_CODE_SHOW=true
+SPACESHIP_EXIT_CODE_PREFIX=
+SPACESHIP_EXIT_CODE_SUFFIX=" %F{red}↵%f"
+SPACESHIP_EXIT_CODE_SYMBOL=
+SPACESHIP_EXIT_CODE_COLOR="red"
+
+# Add exit_code to the right prompt
+SPACESHIP_RPROMPT_ORDER=(exit_code)
+# Remove exit_code from the left prompt
+SPACESHIP_PROMPT_ORDER=("${(@)SPACESHIP_PROMPT_ORDER:#exit_code}")
 
 # Load .shrc
 [[ -s "${HOME}/.shrc" ]] && source "${HOME}/.shrc"

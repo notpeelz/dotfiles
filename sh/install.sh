@@ -17,15 +17,35 @@ current_shell="$(getent passwd | grep "^${USER}:" | cut -d: -f7)"
   }
 }
 
-[[ -d "${HOME}/.oh-my-zsh" ]] || {
+ZSH="${ZSH:-${HOME}/.oh-my-zsh}"
+ZSH_CUSTOM="${ZSH_CUSTOM:-${ZSH}/custom}"
+
+[[ -d "${ZSH}" ]] && {
+  echo "Updating oh-my-zsh"
+  cd "${ZSH}"
+  git pull origin
+} || {
   echo "Installing oh-my-zsh"
-  git clone 'https://github.com/ohmyzsh/ohmyzsh.git' "${HOME}/.oh-my-zsh"
+  git clone 'https://github.com/ohmyzsh/ohmyzsh.git' "${ZSH}"
 }
 
-ZSH_CUSTOM="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"
-
 zsh_syntaxhl_path="${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
-[[ -d "${zsh_syntaxhl_path}" ]] || {
+[[ -d "${zsh_syntaxhl_path}" ]] && {
+  echo "Updating zsh-syntax-highlighting"
+  cd "${zsh_syntaxhl_path}"
+  git pull origin
+} || {
   echo "Installing zsh-syntax-highlight"
   git clone 'https://github.com/zsh-users/zsh-syntax-highlighting.git' "${zsh_syntaxhl_path}"
+}
+
+spaceship_path="${ZSH_CUSTOM}/themes/spaceship-prompt"
+[[ -d "${spaceship_path}" ]] && {
+  echo "Updating spaceship-prompt"
+  cd "${spaceship_path}"
+  git pull origin
+} || {
+  echo "Installing spaceship-prompt"
+  git clone 'https://github.com/denysdovhan/spaceship-prompt.git' "${spaceship_path}"
+  ln -sf "${ZSH_CUSTOM}/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM}/themes/spaceship.zsh-theme"
 }
