@@ -3,6 +3,15 @@ set nocompatible
 set encoding=utf-8
 set t_Co=256
 
+" Disable termresponses on vim to prevent artifacts with kitty
+" (doesn't seem to affect nvim)
+" https://github.com/vim/vim/issues/3197#issuecomment-549086639
+set t_RB= t_RF= t_RV= t_u7=
+
+" Fix redrawing issues with kitty
+" https://github.com/kovidgoyal/kitty/issues/108#issuecomment-320492663
+let &t_ut=''
+
 " Download vim-plug if not already installed
 if has('unix')
   if has('nvim')
