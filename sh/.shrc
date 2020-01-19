@@ -4,10 +4,14 @@ stty -ixon
 
 # Custom commands
 alias edit='$EDITOR'
-alias ssh="TERM=xterm-256color ssh"
 alias pigz="pigz -k"
 alias tb="nc termbin.com 9999"
 alias gogh='bash -c "$(wget -qO- https://git.io/vQgMr)"'
+
+# Hack to avoid having to push terminfo when using ssh in urxvt
+if [[ "$TERM" == "rxvt-unicode-256color" ]]; then
+  alias ssh="TERM=xterm-256color ssh"
+fi
 
 # Default text editor
 if which nvim &>/dev/null; then
