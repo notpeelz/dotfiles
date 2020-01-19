@@ -1,6 +1,9 @@
 # Disable XON/XOFF flow control
 # (frees up CTRL-S and CTRL-Q)
-stty -ixon
+# https://github.com/sorin-ionescu/prezto/pull/1771#issuecomment-575598782
+# (unrelated to prezto)
+[[ -r ${TTY:-} && -w ${TTY:-} && $+commands[stty] == 1 ]] \
+  && stty -ixon <$TTY >$TTY
 
 # Custom commands
 alias edit='$EDITOR'
