@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -Eeu
+
 current_shell="$(getent passwd | grep "^${USER}:" | cut -d: -f7)"
 
 [[ "${current_shell}" == *"/zsh" && "$(type -t zsh)" == "file" ]] || {
