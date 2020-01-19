@@ -14,7 +14,7 @@ user_apps=(git)
 function stowit() {
   local target="$1"
   local app="$2"
-  stow -v ${opt_force:+--adopt} -t "${target}" "${app}"
+  stow -v ${opt_adopt:+--adopt} -t "${target}" "${app}"
   if [[ -x "${app}/install.sh" ]]; then
     "${app}/install.sh"
   fi
@@ -23,11 +23,11 @@ function stowit() {
 scriptfile="$(basename ${BASH_SOURCE[0]})"
 
 function exit_with_help() {
-  echo "Syntax: ${scriptfile} [-u|--user] [-f|--force]"
+  echo "Syntax: ${scriptfile} [-u|--user] [--adopt]"
   exit 1
 }
 
-options="$(getopt -o u,f --long=user,force -- "$@")" || exit_with_help
+options="$(getopt -o u, --long=user,adopt -- "$@")" || exit_with_help
 
 eval set -- "$options"
 while true; do
@@ -39,7 +39,7 @@ while true; do
 
   case "$1" in
     -u|--user) opt_user=1 ;;
-    -f|--force) opt_force=1 ;;
+    --adopt) opt_adopt=1 ;;
   esac
   shift
 done
