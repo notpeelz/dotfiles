@@ -52,9 +52,14 @@ for font_name in "${fonts[@]}"; do
       exit 1
     }
 
+    # Create temp file
+    temp_file="$(mktemp)"
+    trap "rm -f \"${temp_file}\"" EXIT
+
     # Download the font archive
-    echo "Downloading ${font_url}"
-    curl -Lsf "${font_url}" -o "${font_name}.zip" || {
+    echo "Downloading ${font_url} -> ${temp_file}"
+
+    curl -Lsf "${font_url}" -o "${temp_file}" || {
       echo "Failed to download ${font_name}.zip"
       exit 1
     }
@@ -63,14 +68,10 @@ for font_name in "${fonts[@]}"; do
     mkdir -p "${font_base_path}/${font_name}"
 
     # Extract the files
-    unzip -d "${font_base_path}/${font_name}" "${font_name}.zip" || {
+    unzip -d "${font_base_path}/${font_name}" "${temp_file}" || {
       echo "Failed to unzip ${font_name}.zip"
-      rm -f "${font_name}.zip"
       exit 1
     }
-
-    # Delete the font archive
-    rm -f "${font_name}.zip"
 
     # Save installed release
     echo -n "${font_release}" > "${font_release_file}"
