@@ -14,6 +14,9 @@ verlt() { [[ "$1" == "$2" ]] && return 1 || verlte "$1" "$2"; }
 font_base_path="${HOME}/.local/share/fonts/nerd-fonts"
 font_release="v2.0.0" # Set v2.0.0 as fallback
 
+# Create the nerd-fonts font folder
+mkdir -p "${font_base_path}"
+
 # Get the latest version from the GitHub releases API
 releases="$(
   curl -s 'https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest'
