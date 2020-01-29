@@ -46,6 +46,7 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'RRethy/vim-illuminate'
+Plug 'LnL7/vim-nix'
 call plug#end()
 
 " Custom intro
