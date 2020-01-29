@@ -160,8 +160,9 @@ endif
 let g:highlightedyank_highlight_duration = 250
 
 " Enable persistent undo history
-let s:undodir=glob("~/.vim/undodir")
+let s:undodir=$HOME . "/.vim/undodir"
 if !isdirectory(s:undodir)
+  echom s:undodir
   call mkdir(s:undodir, 'p')
 endif
 set undofile
