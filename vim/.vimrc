@@ -3,6 +3,10 @@ set nocompatible
 set encoding=utf-8
 set t_Co=256
 
+let g:is_unix = has('unix')
+let g:is_win = has('win32')
+let g:is_gui = has('gui_running')
+
 " Disable termresponses on vim to prevent artifacts with kitty
 " (doesn't seem to affect nvim)
 " https://github.com/vim/vim/issues/3197#issuecomment-549086639
@@ -13,7 +17,7 @@ set t_RB= t_RF= t_RV= t_u7=
 let &t_ut=''
 
 " Download vim-plug if not already installed
-if has('unix')
+if g:is_unix
   if has('nvim')
     if !filereadable(expand('~/.local/share/nvim/site/autoload/plug.vim'))
       silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
@@ -113,6 +117,34 @@ augroup BWCCreateDir
   autocmd!
   autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
+
+" Replace gx to open URLs
+" https://web.archive.org/web/20200129052658/https://old.reddit.com/r/vim/comments/7j9znw/gx_failing_to_open_url_on_vim8/dr6e3ks/
+function! OpenUrl() abort
+  " Open the current URL
+  " - If line begins with "Plug" open the github page
+  " of the plugin.
+
+  let cl = getline('.')
+  let url = escape(matchstr(cl, '[a-z]*:\/\/\/\?[^ >,;()]*'), '#%')
+  if cl =~# 'Plug'
+      let pn = cl[match(cl, "'", 0, 1) + 1 :
+                  \ match(cl, "'", 0, 2) - 1]
+      let url = printf('https://github.com/%s', pn)
+  endif
+  if !empty(url)
+      let url = substitute(url, "'", '', 'g')
+      let wmctrl = executable('wmctrl') && v:windowid isnot# 0 ?
+                  \ ' && wmctrl -ia ' . v:windowid : ''
+      exe 'silent :!' . (g:is_unix ?
+                  \   'xdg-open ' . shellescape(url) :
+                  \   ' start "' . shellescape(url)) .
+                  \ wmctrl .
+                  \ (g:is_unix ? ' 2> /dev/null &' : '')
+      if !g:is_gui | redraw! | endif
+  endif
+endfun
+nnoremap <silent> gx :call OpenUrl()<CR>
 
 " Disable default vim backspace behavior
 set backspace=indent,eol,start
@@ -290,7 +322,7 @@ set background=dark
 " https://github.com/neovim/neovim/issues/9019#issuecomment-521532103
 if has('nvim')
   function! s:CustomizeColors()
-    if has('guirunning') || has('termguicolors')
+    if g:is_gui || has('termguicolors')
       let cursorline_gui=''
       let cursorline_cterm='ctermfg=white'
     else
