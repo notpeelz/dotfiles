@@ -1,3 +1,8 @@
+# Let home-manager handle session vars
+if [[ -r "${HOME}/.nix-profile/etc/profile.d/hm-session-vars.sh" ]]; then
+  source "${HOME}/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
 function __is_tty() { [[ "${0}" =~ ^-.* || "${TERM}" == "linux" ]]; }
 
 __is_tty || {
