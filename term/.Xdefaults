@@ -22,7 +22,7 @@ URxvt.color15: #F6F6EF
 
 ! Background/Foreground
 URxvt.depth: 32
-URxvt.background: [100]#1A1A1A
+URxvt.background: #1A1A1A
 URxvt.foreground: #C4C5B5
 
 ! Scrolling
