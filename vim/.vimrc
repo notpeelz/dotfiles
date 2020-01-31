@@ -12,6 +12,11 @@ let g:is_gui = has('gui_running')
 " https://github.com/vim/vim/issues/3197#issuecomment-549086639
 set t_RB= t_RF= t_RV= t_u7=
 
+" Fixes scrolling issues with st
+if !has('nvim')
+  set ttymouse=sgr
+endif
+
 " Fix redrawing issues with kitty
 " https://github.com/kovidgoyal/kitty/issues/108#issuecomment-320492663
 let &t_ut=''
