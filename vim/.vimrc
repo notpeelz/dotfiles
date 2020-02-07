@@ -248,7 +248,7 @@ nnoremap <silent> th :tabfirst<CR>
 nnoremap <silent> tk :tabnext<CR>
 nnoremap <silent> tj :tabprev<CR>
 nnoremap <silent> tl :tablast<CR>
-nnoremap <silent> tt :tabedit<Space>
+nnoremap tt :tabedit<Space>
 nnoremap <silent> tn :tabnew<CR>
 nnoremap <silent> <C-t> :tabnew<CR>
 nnoremap <silent> td :windo :q<CR>
