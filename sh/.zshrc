@@ -48,6 +48,13 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 export ZSH="${HOME}/.oh-my-zsh"
 source "${ZSH}/oh-my-zsh.sh"
 
+# FIXME: gruvbox-dark uses the same color for "gray" and its bg
+[[ "${+ZSH_HIGHLIGHT_STYLES}" -eq 1 ]] && {
+  # Prevent comments from disappearing (dark fg on dark bg)
+  # https://github.com/zsh-users/zsh-syntax-highlighting/issues/510#issuecomment-376400492
+  ZSH_HIGHLIGHT_STYLES[comment]='fg=11'
+}
+
 # Initialize p10k
 __is_tty \
  || [[ -f "${HOME}/.p10k.zsh" ]] && source "${HOME}/.p10k.zsh"
