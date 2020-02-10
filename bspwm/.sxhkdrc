@@ -10,10 +10,6 @@ hyper + a
 {hyper,super} + {_,shift +} {Left,Down,Up,Right}
   {_,_}bspc node -{f,s} {west,south,north,east}
 
-# Navigate windows with hjkl
-{hyper,super} + {_,shift +} {h,j,k,l}
-  {_,_}bspc node -{f,s} {west,south,north,east}
-
 # Rotate desktop
 hyper + {_,shift +} e
   bspc node @/ -R {_,-}90
