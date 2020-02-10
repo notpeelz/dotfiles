@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+SXHKD_SHELL=bash sxhkd -m -1 -c ~/.sxhkdrc &
+
+# https://github.com/baskerville/bspwm/issues/679#issuecomment-315874130
+function enforce_monitor_position() {
+  MON_ID="$(bspc query -M --names -m "$1")"
+  MON_POS="$2"
+
+  [[ $(bspc query -M --names -m "$MON_POS") != "$MON_ID" ]] \
+    && bspc monitor "$MON_POS" -s "$MON_ID"
+
+  (
+    bspc subscribe monitor_swap | while read msg; do
+      [[ $(bspc query -M --names -m "$MON_POS") != "$MON_ID" ]] \
+        && bspc monitor "$MON_POS" -s "$MON_ID"
+    done &
+  )
+}
+
+bspc monitor DP-4 -d 1 2 3 4
+bspc monitor DP-2 -d 5 6 7 8
+
+enforce_monitor_position DP-4 '^1'
+
+bspc config border_width 4
+bspc config window_gap 12
+
+bspc config split_ratio 0.52
+bspc config borderless_monocle false
+bspc config gapless_monocle true
+
+# Reduce the lag when resizing
+bspc config pointer_motion_interval 30
+
+bspc config remove_disabled_monitors true
+bspc config remove_unplugged_monitors true

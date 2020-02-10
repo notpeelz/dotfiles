@@ -9,7 +9,7 @@ git submodule init
 git submodule update
 
 base_apps=(sh vim)
-user_apps=(term git)
+user_apps=(term git bspwm rofi)
 
 function stowit() {
   local target="$1"

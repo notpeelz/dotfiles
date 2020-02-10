@@ -1,0 +1,154 @@
+# Change window state
+hyper + {s,f,t}
+  bspc node -t '~{floating,fullscreen,tiled}'
+
+# Toggle monocle
+hyper + a
+  bspc desktop -l next
+
+# Navigate windows with arrows
+{hyper,super} + {_,shift +} {Left,Down,Up,Right}
+  {_,_}bspc node -{f,s} {west,south,north,east}
+
+# Navigate windows with hjkl
+{hyper,super} + {_,shift +} {h,j,k,l}
+  {_,_}bspc node -{f,s} {west,south,north,east}
+
+# Rotate desktop
+hyper + {_,shift +} e
+  bspc node @/ -R {_,-}90
+
+# Rotate windows
+hyper + {_,shift +} r
+  bspc node "$(bspc query -N -n @parent)" -R {_,-}90
+
+# Change desktop on main monitor
+hyper + {1,2,3,4}
+  bspc desktop -f {1,2,3,4}
+
+# Change desktop on left monitor
+hyper + alt + {1,2,3,4}
+  bspc desktop -f {5,6,7,8}
+
+# Move window to desktop
+hyper + shift + {_,alt +} {1,2,3,4}
+  monitor={0,4}; \
+  id="$(bspc query -N -n)"; \
+  monitor=$((monitor + {1,2,3,4})); \
+  bspc node $id -d ^$monitor; bspc node $id -f
+
+# Move window to desktop (switcher)
+hyper + d
+  id="$(bspc query -N -n)"; \
+  monitor="$( \
+    echo "1-1|1-2|1-3|1-4|2-1|2-2|2-3|2-4" \
+      | rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+        -sep '|' -dmenu -p "move to desktop" \
+  )"; \
+  case "$monitor" in \
+    1-*) monitor="$\{monitor:2\}" ;; \
+    2-*) monitor=$((4 + $\{monitor:2\})) ;; \
+    *) monitor="$monitor" ;; \
+  esac ;\
+  [[ -z "$monitor" ]] \
+    || (bspc node $id -d ^$monitor; bspc node $id -f) &>/dev/null
+
+
+# TODO: resize window
+#hyper + alt + {Left,Down,Up,Right}
+
+# Kill process
+hyper + shift + k
+  bspc node -k
+
+# Close window
+hyper + x
+  bspc node -c
+
+# Exit session
+super + alt + BackSpace
+  bspc quit
+
+# Run command
+hyper + F2
+  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+    -modi run -show run #-run-commmand "/usr/bin/env -S bash -i -c '{cmd}'"
+
+# Run desktop programs
+hyper + space
+  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+    -modi drun -show drun
+
+# Cycle through windows
+alt + Tab
+  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+    -modi window,windowcd -show window
+
+# TODO: Cycle through chrome tabs
+#super + Tab
+
+# TODO: swap windows
+#hyper + c # select
+#hyper + v # swap selection with current
+
+# TODO: volume controls
+#XF86AudioLowerVolume
+#XF86AudioRaiseVolume
+
+# Open terminal
+hyper + Return
+  $TERMINAL
+
+# Change gap
+hyper + {minus,equal}
+  gap="$(bspc config -d focused window_gap)"; \
+  bspc config -d focused window_gap $(({gap + 2, gap > 0 ? gap - 2 : 0}))
+
+# Reset gap
+hyper + 0
+  bspc config window_gap 12
+
+# Cycle through monitors
+hyper + g
+  bspc monitor -f next
+
+# Swap with biggest window on current monitor
+hyper + w
+  bspc node -s biggest.local
+
+# Mute microphone
+hyper + m
+  ~/scripts-and-files/audio/toggle_mic.sh
+
+# Screenshot of current desktop
+Print
+  current_mon="$(bspc query --monitors --monitor focused --names)"; \
+  while IFS=' ' read -r mon width height x y; do \
+    [[ "$current_mon" == "$mon" ]] || continue; \
+    import -window root -crop "$\{width\}x$\{height\}+$\{x\}+$\{y\}" png:- \
+      | xclip -selection clipboard -t image/png; \
+  done < <( \
+    xrandr -q | grep '\bconnected\b' \
+      | sed -r 's/^([^ ]*).*? ([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+).*$/\1 \2 \3 \4 \5/' \
+  );
+
+# Screenshot of current window
+alt + Print
+  id="$(bspc query -N -n)"; \
+  border="$(bspc config -n focused border_width)"; \
+  while IFS=: read -r field value; do \
+    value="$(echo -n "$value" | awk '\{$1=$1;print\}')"; \
+    case "$field" in \
+      *'Absolute upper-left X') x="$value" ;; \
+      *'Absolute upper-left Y') y="$value" ;; \
+      *'Width') width="$value" ;; \
+      *'Height') height="$value" ;; \
+    esac; \
+  done < <(xwininfo -id "$id"); \
+  import -window root -crop "$\{width\}x$\{height\}+$((x + border))+$((y + border))" png:- \
+    | xclip -selection clipboard -t image/png
+
+# Screenshot of all monitors
+alt + shift + Print
+  import -window root png:- \
+    | xclip -selection clipboard -t image/png
