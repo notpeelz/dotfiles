@@ -8,8 +8,8 @@ cd "$DIR"
 git submodule init
 git submodule update
 
-base_apps=(sh term vim)
-user_apps=(git)
+base_apps=(sh vim)
+user_apps=(term git)
 
 function stowit() {
   local target="$1"

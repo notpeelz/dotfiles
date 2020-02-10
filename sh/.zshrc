@@ -59,5 +59,8 @@ source "${ZSH}/oh-my-zsh.sh"
 __is_tty \
  || [[ -f "${HOME}/.p10k.zsh" ]] && source "${HOME}/.p10k.zsh"
 
+# Load direnv
+eval "$(direnv hook zsh)"
+
 # Load .shrc
 [[ -s "${HOME}/.shrc" ]] && source "${HOME}/.shrc"
