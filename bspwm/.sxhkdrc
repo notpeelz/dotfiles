@@ -42,7 +42,7 @@ hyper + d
   id="$(bspc query -N -n)"; \
   monitor="$( \
     echo "1-1|1-2|1-3|1-4|2-1|2-2|2-3|2-4" \
-      | rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+      | rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
         -sep '|' -dmenu -p "move to desktop" \
   )"; \
   case "$monitor" in \
@@ -71,17 +71,17 @@ super + alt + BackSpace
 
 # Run command
 hyper + F2
-  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
     -modi run -show run #-run-commmand "/usr/bin/env -S bash -i -c '{cmd}'"
 
 # Run desktop programs
 hyper + space
-  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
     -modi drun -show drun
 
 # Cycle through windows
 alt + Tab
-  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi -font "Hack NF 20" \
+  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
     -modi window,windowcd -show window
 
 # TODO: Cycle through chrome tabs

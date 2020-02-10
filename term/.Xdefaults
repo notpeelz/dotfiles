@@ -1,6 +1,6 @@
 ! Font
-URxvt.font: xft:Hack NF:pixelsize=24
-URxvt.boldFont: xft:Hack NF:pixelsize=24:style=bold
+URxvt.font: xft:SauceCodePro NF:pixelsize=24
+URxvt.boldFont: xft:SauceCodePro NF:pixelsize=24:style=bold
 
 ! Colors
 URxvt.color0:  #1A1A1A

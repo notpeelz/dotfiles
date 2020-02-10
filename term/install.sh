@@ -4,7 +4,7 @@ set -Eeu
 
 # Settings
 
-fonts=(Hack)
+fonts=(SourceCodePro)
 
 #############
 
