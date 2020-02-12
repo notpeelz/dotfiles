@@ -144,6 +144,10 @@ alt + Print
   import -window root -crop "$\{width\}x$\{height\}+$((x + border))+$((y + border))" png:- \
     | xclip -selection clipboard -t image/png
 
+# Screenshot selection
+shift + Print
+  spectacle -r -n -b -c
+
 # Screenshot of all monitors
 alt + shift + Print
   import -window root png:- \
