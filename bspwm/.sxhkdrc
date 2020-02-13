@@ -117,7 +117,7 @@ hyper + m
   ~/scripts-and-files/audio/toggle_mic.sh
 
 # Screenshot of current desktop
-Print
+shift + Print
   current_mon="$(bspc query --monitors --monitor focused --names)"; \
   while IFS=' ' read -r mon width height x y; do \
     [[ "$current_mon" == "$mon" ]] || continue; \
@@ -145,7 +145,7 @@ alt + Print
     | xclip -selection clipboard -t image/png
 
 # Screenshot selection
-shift + Print
+Print
   spectacle -r -n -b -c
 
 # Screenshot of all monitors
