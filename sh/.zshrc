@@ -32,6 +32,12 @@ zsh_syntaxhl_path="${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
   plugins+=(zsh-syntax-highlighting)
 }
 
+# Load zsh-nix-shell if installed
+zsh_nixshell_path="${ZSH_CUSTOM}/plugins/nix-shell"
+[[ -d "${zsh_nixshell_path}" ]] && {
+  plugins+=(nix-shell)
+}
+
 # This speeds up pasting w/ autosuggest
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238
 pasteinit() {

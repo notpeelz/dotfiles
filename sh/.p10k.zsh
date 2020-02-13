@@ -37,6 +37,7 @@
   # The list of segments shown on the left. Fill it with the most important segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
+    nix_shell               # nix-shell info
     os_icon                 # os identifier
     dir                     # current directory
     vcs                     # git status

@@ -41,6 +41,16 @@ zsh_syntaxhl_path="${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
   git clone 'https://github.com/zsh-users/zsh-syntax-highlighting.git' "${zsh_syntaxhl_path}"
 }
 
+zsh_nixshell_path="${ZSH_CUSTOM}/plugins/nix-shell"
+[[ -d "${zsh_nixshell_path}" ]] && {
+  echo "Updating zsh-nix-shell"
+  cd "${zsh_nixshell_path}"
+  git pull origin
+} || {
+  echo "Installing zsh-nix-shell"
+  git clone 'https://github.com/chisui/zsh-nix-shell.git' "${zsh_nixshell_path}"
+}
+
 pl10k_path="${ZSH_CUSTOM}/themes/powerlevel10k"
 [[ -d "${pl10k_path}" ]] && {
   echo "Updating powerlevel10k"
