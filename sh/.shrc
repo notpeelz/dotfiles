@@ -11,6 +11,10 @@ alias pigz="pigz -k"
 alias tb="nc termbin.com 9999"
 alias gogh='bash -c "$(wget -qO- https://git.io/vQgMr)"'
 
+if [[ "$TERM" == "xterm-kitty" ]]; then
+  alias icat="kitty +kitten icat"
+fi
+
 # Hack to avoid having to push terminfo when using ssh in urxvt
 if [[ "$TERM" == "rxvt-unicode-256color" ]]; then
   alias ssh="TERM=xterm-256color ssh"
