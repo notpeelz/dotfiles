@@ -332,6 +332,9 @@
   #
   # typeset -g POWERLEVEL9K_DIR_CLASSES=()
 
+  typeset -g POWERLEVEL9K_DIR_PREFIX=' '
+  typeset -g POWERLEVEL9K_DIR_CLASSES=()
+
   #####################################[ vcs: git status ]######################################
   # Branch icon. Set this parameter to '\uF126 ' for the popular Powerline branch icon.
   typeset -g POWERLEVEL9K_VCS_BRANCH_ICON='\uF126 '
