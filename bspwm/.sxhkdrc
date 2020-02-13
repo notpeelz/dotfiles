@@ -1,6 +1,6 @@
 # Change window state
-hyper + {s,f,t}
-  bspc node -t '~{floating,fullscreen,tiled}'
+hyper + {s,f,t,y}
+  bspc node -t '~{pseudo_tiled,fullscreen,tiled,floating}'
 
 # Toggle monocle
 hyper + a
