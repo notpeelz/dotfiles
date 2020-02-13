@@ -40,11 +40,11 @@ zsh_nixshell_path="${ZSH_CUSTOM}/plugins/nix-shell"
 
 # This speeds up pasting w/ autosuggest
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238
-pasteinit() {
+function pasteinit() {
   OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
   zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
 }
-pastefinish() {
+function pastefinish() {
   zle -N self-insert $OLD_SELF_INSERT
 }
 zstyle :bracketed-paste-magic paste-init pasteinit
@@ -60,6 +60,18 @@ __is_tty \
 
 # Load direnv
 eval "$(direnv hook zsh)"
+
+# Add hotkey for ranger
+function run_ranger() {
+  lastdir_file="$(mktemp)"
+  function TRAPEXIT() { rm "${lastdir_file}"; }
+  ranger --choosedir="${lastdir_file}" < "${TTY}"
+  lastdir="$(cat "${lastdir_file}")"
+  cd "${lastdir}"
+  zle reset-prompt
+}
+zle -N run_ranger
+bindkey '^f' run_ranger
 
 # Load .shrc
 [[ -s "${HOME}/.shrc" ]] && source "${HOME}/.shrc"
