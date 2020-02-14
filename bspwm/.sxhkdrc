@@ -3,8 +3,22 @@ hyper + {s,f,t,y}
   bspc node -t '~{pseudo_tiled,fullscreen,tiled,floating}'
 
 # Toggle monocle
+# Disables pseudo_tiled state if enabled, then launches a subshell that waits
+# for the desktop to come out of monocle mode to restore the original state
 hyper + a
-  bspc desktop -l next
+  id="$(bspc query -N -n)"; \
+  odesktop="$(printf '0x%08X' "$(bspc query -d -D -n "$id")")"; \
+  ostate="$(bspc query -n "$id" -T | jq -r '.client.state')"; \
+  if [[ "$ostate" == "pseudo_tiled" ]]; then \
+    bspc node "$id" -t tiled; \
+    (r=1; bspc subscribe desktop_layout | \
+      while [[ "$r" -eq 1 ]] && read -r ev mon desktop state; do \
+        if [[ "$state" != "monocle" && "$desktop" == "$odesktop" ]]; then \
+          bspc node "$id" -t "$ostate"; \
+          r=0; \
+        fi; \
+      done &); \
+  fi; bspc desktop -l next
 
 # Navigate windows with arrows
 {hyper,super} + {_,shift +} {Left,Down,Up,Right}
