@@ -68,7 +68,10 @@ function run_ranger() {
   ranger --choosedir="${lastdir_file}" < "${TTY}"
   lastdir="$(cat "${lastdir_file}")"
   cd "${lastdir}"
-  zle reset-prompt
+  # FIXME: https://github.com/romkatv/powerlevel10k/issues/72
+  BUFFER=
+  zle accept-line
+  #zle reset-prompt
 }
 zle -N run_ranger
 bindkey '^f' run_ranger
