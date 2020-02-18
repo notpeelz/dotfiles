@@ -35,3 +35,9 @@ bspc config pointer_motion_interval 30
 
 bspc config remove_disabled_monitors true
 bspc config remove_unplugged_monitors true
+
+# Fix for Overwatch aim drifting in non 16:9 resolutions
+# FIXME: OW needs to be run in a virtual desktop, so the bspc rule ends up
+# having to use the meaningless "Wine:explorer.exe" identifier
+# (which could match other programs running in a virtual desktop)
+bspc rule -a Wine:explorer.exe state=floating center=true border=off rectangle=2560x1440+0+0
