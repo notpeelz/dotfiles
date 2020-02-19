@@ -44,3 +44,5 @@ bspc rule -a Wine:explorer.exe state=floating center=true border=off rectangle=2
 
 # Fix Overcooked 2 being aligned on the left side of the screen
 bspc rule -a Overcooked2.x86_64 center=true
+
+bspc wm --adopt_orphans
