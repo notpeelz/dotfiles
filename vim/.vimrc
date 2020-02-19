@@ -57,6 +57,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'RRethy/vim-illuminate'
 Plug 'LnL7/vim-nix'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 " Custom intro
