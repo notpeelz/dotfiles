@@ -80,7 +80,7 @@ hyper + shift + k
   bspc node -k
 
 # Close window
-hyper + x
+hyper + q
   bspc node -c
 
 # Lock session and pause all VLC players
