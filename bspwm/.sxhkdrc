@@ -114,9 +114,25 @@ alt + Tab
 # TODO: Cycle through chrome tabs
 #super + Tab
 
-# TODO: swap windows
-#hyper + c # select
-#hyper + v # swap selection with current
+# Mark window
+hyper + c
+  bspc node -g marked=on
+
+# Clear marked windows
+hyper + Escape
+  bspc node any.marked -g marked=off
+
+# Move marked windows
+hyper + v
+  while w="$(bspc query -N -n any.marked)"; do \
+    bspc node "$w".marked -d focused -n focused; \
+    bspc node "$w".marked -g marked=off; \
+  done
+
+# Swap marked window
+hyper + h
+  bspc node any.marked -s focused; \
+  bspc node any.marked -g marked=off
 
 # TODO: volume controls
 #XF86AudioLowerVolume
