@@ -138,6 +138,10 @@ hyper + shift + g
 hyper + w
   bspc node -s biggest.local
 
+# Toggle sticky
+hyper + x
+  bspc node -g sticky
+
 # Mute microphone
 hyper + m
   ~/scripts-and-files/audio/toggle_mic.sh
