@@ -96,15 +96,10 @@ super + l
 super + alt + BackSpace
   bspc quit
 
-# Run command
-hyper + F2
+# Run desktop programs and commands
+hyper + {_,shift +} space
   rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
-    -modi run -show run #-run-commmand "/usr/bin/env -S bash -i -c '{cmd}'"
-
-# Run desktop programs
-hyper + space
-  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
-    -modi drun -show drun
+    {-modi drun -show drun,-modi run -show run}
 
 # Cycle through windows
 alt + Tab
