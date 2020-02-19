@@ -33,12 +33,20 @@ hyper + {_,shift +} r
   bspc node "$(bspc query -N -n @parent)" -R {_,-}90
 
 # Change desktop on main monitor
-hyper + {1,2,3,4}
-  bspc desktop -f {1,2,3,4}
+hyper + {1,2,3,4,5,6,7,8,9}
+  cur="$(bspc query --names -D -d)"; \
+  ((cur < 10)) \
+    && flag="-f" \
+    || flag="-a"; \
+  bspc desktop $flag {0,1,2,3,4,5,6,7,8}
 
 # Change desktop on left monitor
-hyper + alt + {1,2,3,4}
-  bspc desktop -f {5,6,7,8}
+hyper + F{1,2,3,4,5,6,7,8,9}
+  cur="$(bspc query --names -D -d)"; \
+  ((cur >= 10)) \
+    && flag="-f" \
+    || flag="-a"; \
+  bspc desktop $flag {10,11,12,13,14,15,16,17,18}
 
 # Move window to desktop
 hyper + shift + {_,alt +} {1,2,3,4}
