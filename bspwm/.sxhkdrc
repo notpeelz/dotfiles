@@ -139,6 +139,10 @@ hyper + 0
 hyper + g
   bspc monitor -f next
 
+# Send window to next monitor
+hyper + shift + g
+  bspc node -m next --follow
+
 # Swap with biggest window on current monitor
 hyper + w
   bspc node -s biggest.local
