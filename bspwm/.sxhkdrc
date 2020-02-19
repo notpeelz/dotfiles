@@ -83,7 +83,7 @@ hyper + {_,shift +} space
 
 # Cycle through windows
 alt + Tab
-  rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
+  rofi -monitor -4 -show-icons -theme ~/.config/rofi/themes/onedark.rasi \
     -modi window,windowcd -show window
 
 # TODO: Cycle through chrome tabs
