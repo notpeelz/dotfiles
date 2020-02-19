@@ -117,6 +117,10 @@ hyper + h
 hyper + Return
   $TERMINAL
 
+# Open browser
+hyper + {_,shift +} n
+  eval {$BROWSER,$BROWSER_INCOGNITO}
+
 # Change gap
 hyper + {minus,equal}
   gap="$(bspc config -d focused window_gap)"; \
