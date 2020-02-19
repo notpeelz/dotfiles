@@ -55,23 +55,6 @@ hyper + shift + {_,alt +} {1,2,3,4}
   monitor=$((monitor + {1,2,3,4})); \
   bspc node $id -d ^$monitor; bspc node $id -f
 
-# Move window to desktop (switcher)
-hyper + d
-  id="$(bspc query -N -n)"; \
-  monitor="$( \
-    echo "1-1|1-2|1-3|1-4|2-1|2-2|2-3|2-4" \
-      | rofi -monitor -4 -theme ~/.config/rofi/themes/onedark.rasi \
-        -sep '|' -dmenu -p "move to desktop" \
-  )"; \
-  case "$monitor" in \
-    1-*) monitor="$\{monitor:2\}" ;; \
-    2-*) monitor=$((4 + $\{monitor:2\})) ;; \
-    *) monitor="$monitor" ;; \
-  esac ;\
-  [[ -z "$monitor" ]] \
-    || (bspc node $id -d ^$monitor; bspc node $id -f) &>/dev/null
-
-
 # TODO: resize window
 #hyper + alt + {Left,Down,Up,Right}
 
