@@ -221,25 +221,25 @@ set fileformat=unix
 
 " Move through display lines (with wrap on)
 " instead of full lines
-noremap j gj
-noremap k gk
-noremap <Down> gj
-noremap <Up> gk
+noremap <silent> j gj
+noremap <silent> k gk
+noremap <silent> <Down> gj
+noremap <silent> <Up> gk
 
 " Window splitting
-nnoremap <Space>- :split<CR>
-nnoremap <Space>= :vsplit<CR>
+nnoremap <silent> <Space>- :split<CR>
+nnoremap <silent> <Space>= :vsplit<CR>
 
 " Window navigation
-nnoremap <C-Up> <C-w>k
-nnoremap <C-Down> <C-w>j
-nnoremap <C-Left> <C-w>h
-nnoremap <C-Right> <C-w>l
+nnoremap <silent> <C-Up> <C-w>k
+nnoremap <silent> <C-Down> <C-w>j
+nnoremap <silent> <C-Left> <C-w>h
+nnoremap <silent> <C-Right> <C-w>l
 
-nnoremap <Space><Up> <C-w>k
-nnoremap <Space><Down> <C-w>j
-nnoremap <Space><Left> <C-w>h
-nnoremap <Space><Right> <C-w>l
+nnoremap <silent> <Space><Up> <C-w>k
+nnoremap <silent> <Space><Down> <C-w>j
+nnoremap <silent> <Space><Left> <C-w>h
+nnoremap <silent> <Space><Right> <C-w>l
 
 " Skip over words 
 "nnoremap <C-Left> gE
@@ -259,12 +259,12 @@ nnoremap <silent> <C-t> :tabnew<CR>
 nnoremap <silent> td :windo :q<CR>
 
 " Close window
-nnoremap <Space>d :q<CR>
+nnoremap <silent> <Space>d :q<CR>
 
 " Save
 "inoremap <C-s> <C-o>:w<CR>
-inoremap <C-s> <ESC>:w<CR>
-nnoremap <C-s> :w<CR>
+inoremap <silent> <C-s> <ESC>:w<CR>
+nnoremap <silent> <C-s> :w<CR>
 
 " NERDTree
 function! OpenNERDTree()
