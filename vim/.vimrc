@@ -51,6 +51,7 @@ Plug 'https://github.com/simeji/winresizer.git'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'preservim/nerdtree'
+Plug 'itchyny/lightline.vim'
 Plug 'haya14busa/incsearch.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
@@ -156,6 +157,9 @@ set backspace=indent,eol,start
 
 " Always show the status line
 set laststatus=2
+
+" Don't show the mode below the status bar
+set noshowmode
 
 " Enable line wrapping
 set wrap linebreak nolist
@@ -285,6 +289,11 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " Show hidden files but ignore VIM swap files
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\..*\.sw[pom]$']
+
+" Lightline settings
+let g:lightline = {
+  \ 'colorscheme': 'jellybeans',
+  \ }
 
 " Prevent vim-illuminate from triggering on NERDTree
 let g:Illuminate_ftblacklist=['nerdtree']
