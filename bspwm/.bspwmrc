@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+export BSPWM_GAP=12
 SXHKD_SHELL=bash sxhkd -m -1 -c ~/.sxhkdrc &
 
 # https://github.com/baskerville/bspwm/issues/679#issuecomment-315874130
@@ -28,7 +29,7 @@ bspc config active_border_color '#9e8e7e'
 bspc config focused_border_color '#906ef5'
 
 bspc config border_width 4
-bspc config window_gap 12
+bspc config window_gap $BSPWM_GAP
 
 bspc config automatic_scheme alternate
 bspc config split_ratio 0.52

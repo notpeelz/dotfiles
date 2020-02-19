@@ -128,7 +128,7 @@ hyper + {minus,equal}
 
 # Reset gap
 hyper + 0
-  bspc config -d focused window_gap 12
+  bspc config -d focused window_gap $BSPWM_GAP
 
 # Cycle through monitors
 hyper + g
