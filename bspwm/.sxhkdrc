@@ -84,7 +84,7 @@ hyper + {_,shift +} space
 # Cycle through windows
 alt + Tab
   rofi -monitor "$(bspc query -M -m --names)" -show-icons -theme ~/.config/rofi/themes/onedark.rasi \
-    -modi window,windowcd -show window
+    -modi window,windowcd -show windowcd
 
 # TODO: Cycle through chrome tabs
 #super + Tab
