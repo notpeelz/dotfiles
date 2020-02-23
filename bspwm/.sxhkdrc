@@ -9,7 +9,7 @@ hyper + a
   id="$(bspc query -N -n)"; \
   odesktop="$(printf '0x%08X' "$(bspc query -d -D -n "$id")")"; \
   ostate="$(bspc query -n "$id" -T | jq -r '.client.state')"; \
-  if [[ "$ostate" == "pseudo_tiled" ]]; then \
+  if [[ "$ostate" == "pseudo_tiled" || "$ostate" == "floating" ]]; then \
     bspc node "$id" -t tiled; \
     (r=1; bspc subscribe desktop_layout | \
       while [[ "$r" -eq 1 ]] && read -r ev mon desktop state; do \
