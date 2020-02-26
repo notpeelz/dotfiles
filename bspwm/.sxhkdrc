@@ -59,7 +59,7 @@ hyper + shift + {_,F}{1,2,3,4,5,6,7,8,9}
 
 # Resize window
 hyper + alt + {Left,Down,Up,Right} : {Left,Down,Up,Right}
-  bspc node -z {left,bottom,top,right} {-10 0,0 -10,0 10,10 0}
+  bspc node -z {left,bottom,top,right} {-10 0,0 10,0 -10,10 0}
 
 # Kill process
 hyper + shift + k
