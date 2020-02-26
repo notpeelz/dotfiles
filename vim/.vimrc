@@ -266,6 +266,9 @@ nnoremap <silent> <Space>d :q<CR>
 inoremap <silent> <C-s> <ESC>:w<CR>
 nnoremap <silent> <C-s> :w<CR>
 
+" Toggle paste mode
+noremap <silent> <F2> :set paste!<CR>
+
 " NERDTree
 function! OpenNERDTree()
   " Close NERDTree if focused
