@@ -269,6 +269,9 @@ nnoremap <silent> <C-s> :w<CR>
 " Toggle paste mode
 noremap <silent> <F2> :set paste!<CR>
 
+" Toggle line wrapping
+noremap <silent> <F3> :set wrap!<CR>
+
 " NERDTree
 function! OpenNERDTree()
   " Close NERDTree if focused
