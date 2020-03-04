@@ -70,7 +70,7 @@ hyper + q
   bspc node -c
 
 # Lock session and pause all VLC players
-super + l
+super + shift + l
   arr=($(dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply=literal /org/freedesktop/DBus org.freedesktop.DBus.ListNames)); \
   for i in "$\{arr[@]\}"; do \
     [[ "$i" == "org.mpris.MediaPlayer2.vlc"* ]] \
