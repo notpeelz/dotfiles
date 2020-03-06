@@ -60,15 +60,6 @@ source "${ZSH}/oh-my-zsh.sh"
   ZSH_HIGHLIGHT_STYLES[comment]='fg=11'
 }
 
-# Tell zsh how to find installed completions
-for p in ''${(z)NIX_PROFILES}; do
-  fpath+=(
-    "${p}/share/zsh/site-functions"
-    "${p}/share/zsh/${ZSH_VERSION}/functions"
-    "${p}/share/zsh/vendor-completions"
-  )
-done
-
 # Initialize p10k
 __is_tty \
  || [[ -f "${HOME}/.p10k.zsh" ]] && source "${HOME}/.p10k.zsh"
