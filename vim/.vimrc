@@ -252,13 +252,17 @@ nnoremap <silent> <Space><Right> <C-w>l
 
 " Tab navigation
 nnoremap <silent> th :tabfirst<CR>
-nnoremap <silent> tk :tabnext<CR>
-nnoremap <silent> tj :tabprev<CR>
 nnoremap <silent> tl :tablast<CR>
 nnoremap tt :tabedit<Space>
 nnoremap <silent> tn :tabnew<CR>
 nnoremap <silent> <C-t> :tabnew<CR>
+nnoremap <silent> <C-k> :tabnext<CR>
+nnoremap <silent> <C-j> :tabprev<CR>
 nnoremap <silent> td :windo :q<CR>
+
+" Reorder tabs
+nnoremap <silent> tk :silent! tabmove +1<CR>
+nnoremap <silent> tj :silent! tabmove -1<CR>
 
 " Close window
 nnoremap <silent> <Space>d :q<CR>
