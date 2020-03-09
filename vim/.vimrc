@@ -58,6 +58,8 @@ Plug 'andymass/vim-matchup'
 Plug 'RRethy/vim-illuminate'
 Plug 'LnL7/vim-nix'
 Plug 'ryanoasis/vim-devicons'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
 call plug#end()
 
 " Custom intro
