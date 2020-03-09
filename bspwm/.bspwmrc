@@ -53,4 +53,4 @@ bspc rule -a Overcooked2.x86_64 center=true
 
 bspc rule -a Peek state=floating
 
-bspc wm --adopt_orphans
+bspc wm --adopt-orphans
