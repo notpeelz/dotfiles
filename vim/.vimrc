@@ -293,7 +293,7 @@ noremap <silent> <C-\> :NERDTreeFind<CR>
 noremap <silent> \ :call OpenNERDTree()<CR>
 noremap <silent> à :call OpenNERDTree()<CR>
 
-" Open NERDtree when run with no arguments
+" Open NERDTree when run with no arguments
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | call DisplayIntro() | NERDTree | endif
 
@@ -301,8 +301,11 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | call DisplayIntro() |
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Show hidden files but ignore VIM swap files
-let NERDTreeShowHidden=1
-let NERDTreeIgnore=['\..*\.sw[pom]$']
+let g:NERDTreeShowHidden=1
+let g:NERDTreeIgnore=['\..*\.sw[pom]$']
+
+" Hide NERDTree after opening a file
+let g:NERDTreeQuitOnOpen = 1
 
 " Lightline settings
 let g:lightline = {
