@@ -60,6 +60,7 @@ Plug 'LnL7/vim-nix'
 Plug 'ryanoasis/vim-devicons'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
+Plug 'baopham/vim-nerdtree-unfocus'
 call plug#end()
 
 " Custom intro
