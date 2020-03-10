@@ -8,7 +8,7 @@ cd "$DIR"
 git submodule init
 git submodule update
 
-base_apps=(sh vim)
+base_apps=(sh ranger vim)
 user_apps=(term git bspwm rofi)
 
 function stowit() {
