@@ -310,7 +310,24 @@ let g:NERDTreeQuitOnOpen = 1
 " Lightline settings
 let g:lightline = {
   \ 'colorscheme': 'jellybeans',
+  \ 'component_function': {
+  \   'filename': 'LightlineFilename',
+  \ },
+  \ 'tab_component_function': {
+  \   'filename': 'LightlineTabFilename',
+  \ },
   \ }
+
+function! LightlineFilename()
+  return expand('%') !=# '' ? expand('%') : '[No Name]'
+endfunction
+
+function! LightlineTabFilename(n) abort
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  let _ = expand('#'.buflist[winnr - 1])
+  return _ !=# '' ? _ : '[No Name]'
+endfunction
 
 " Prevent vim-illuminate from triggering on NERDTree
 let g:Illuminate_ftblacklist=['nerdtree']
