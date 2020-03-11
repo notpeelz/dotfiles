@@ -24,6 +24,10 @@ hyper + a
 {hyper,super} + {_,shift +} {Left,Down,Up,Right}
   {_,_}bspc node -{f,s} {west,south,north,east}
 
+# Flip desktop
+hyper + z ; {h,v}
+  bspc node @/ -F {horizontal,vertical}
+
 # Rotate desktop
 hyper + {_,shift +} e
   bspc node @/ -R {_,-}90
