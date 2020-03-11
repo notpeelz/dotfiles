@@ -61,6 +61,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 Plug 'baopham/vim-nerdtree-unfocus'
+Plug 'tomtom/tcomment_vim'
 call plug#end()
 
 " Custom intro
