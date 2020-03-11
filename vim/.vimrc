@@ -90,7 +90,7 @@ function! DisplayIntro()
     \ norelativenumber
 
   " Print banner
-  let l:prefix='        '
+  let l:prefix = '        '
   call append('$', l:prefix . '__     _____ __  __')
   call append('$', l:prefix . '\ \   / /_ _|  \/  |')
   call append('$', l:prefix . ' \ \ / / | || |\/| |')
@@ -119,7 +119,7 @@ endfunction
 " https://stackoverflow.com/questions/4292733/vim-creating-parent-directories-on-save
 function! s:MkNonExDir(file, buf)
   if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-    let l:dir=fnamemodify(a:file, ':h')
+    let l:dir = fnamemodify(a:file, ':h')
     if !isdirectory(l:dir)
       call mkdir(l:dir, 'p')
     endif
@@ -140,20 +140,20 @@ function! OpenUrl() abort
   let cl = getline('.')
   let url = escape(matchstr(cl, '[a-z]*:\/\/\/\?[^ >,;()]*'), '#%')
   if cl =~# 'Plug'
-      let pn = cl[match(cl, "'", 0, 1) + 1 :
-                  \ match(cl, "'", 0, 2) - 1]
-      let url = printf('https://github.com/%s', pn)
+    let pn = cl[match(cl, "'", 0, 1) + 1 :
+          \ match(cl, "'", 0, 2) - 1]
+    let url = printf('https://github.com/%s', pn)
   endif
   if !empty(url)
-      let url = substitute(url, "'", '', 'g')
-      let wmctrl = executable('wmctrl') && v:windowid isnot# 0 ?
-                  \ ' && wmctrl -ia ' . v:windowid : ''
-      exe 'silent :!' . (g:is_unix ?
-                  \   'xdg-open ' . shellescape(url) :
-                  \   ' start "' . shellescape(url)) .
-                  \ wmctrl .
-                  \ (g:is_unix ? ' 2> /dev/null &' : '')
-      if !g:is_gui | redraw! | endif
+    let url = substitute(url, "'", '', 'g')
+    let wmctrl = executable('wmctrl') && v:windowid isnot# 0 ?
+          \ ' && wmctrl -ia ' . v:windowid : ''
+    exe 'silent :!' . (g:is_unix ?
+          \   'xdg-open ' . shellescape(url) :
+          \   ' start "' . shellescape(url)) .
+          \ wmctrl .
+          \ (g:is_unix ? ' 2> /dev/null &' : '')
+    if !g:is_gui | redraw! | endif
   endif
 endfun
 nnoremap <silent> gx :call OpenUrl()<CR>
@@ -201,14 +201,14 @@ nnoremap <silent> <CR> :noh<CR><CR>
 
 " Live substitutions
 if has('nvim')
-    set inccommand=split
+  set inccommand=split
 endif
 
 " Highlight yanks for quarter of a second
 let g:highlightedyank_highlight_duration = 250
 
 " Enable persistent undo history
-let s:undodir=$HOME . "/.vim/undodir"
+let s:undodir = $HOME . "/.vim/undodir"
 if !isdirectory(s:undodir)
   echom s:undodir
   call mkdir(s:undodir, 'p')
@@ -287,7 +287,7 @@ function! OpenNERDTree()
   " Close NERDTree if focused
   if (exists("b:NERDTree") && b:NERDTree.isTabTree())
     q
-  " Otherwise open/focus it
+    " Otherwise open/focus it
   else
     NERDTreeFocus
   endif
@@ -297,15 +297,15 @@ noremap <silent> \ :call OpenNERDTree()<CR>
 noremap <silent> à :call OpenNERDTree()<CR>
 
 " Open NERDTree when run with no arguments
-autocmd StdinReadPre * let s:std_in=1
+autocmd StdinReadPre * let s:std_in = 1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | call DisplayIntro() | NERDTree | endif
 
 " Exit VIM when NERDTree is the last open window
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Show hidden files but ignore VIM swap files
-let g:NERDTreeShowHidden=1
-let g:NERDTreeIgnore=['\..*\.sw[pom]$']
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeIgnore = ['\..*\.sw[pom]$']
 
 " Hide NERDTree after opening a file
 let g:NERDTreeQuitOnOpen = 1
@@ -322,33 +322,30 @@ let g:lightline = {
   \ }
 
 function! LightlineFilename()
-  return expand('%') !=# '' ? expand('%') : '[No Name]'
+  return TabooTabName(tabpagenr())
 endfunction
 
 function! LightlineTabFilename(n) abort
-  let buflist = tabpagebuflist(a:n)
-  let winnr = tabpagewinnr(a:n)
-  let _ = expand('#'.buflist[winnr - 1])
-  return _ !=# '' ? _ : '[No Name]'
+  return TabooTabName(v)
 endfunction
 
 " Prevent vim-illuminate from triggering on NERDTree
-let g:Illuminate_ftblacklist=['nerdtree']
+let g:Illuminate_ftblacklist = ['nerdtree']
 
 " Prevent vim-matchup from replacing the status line
-let g:matchup_matchparen_offscreen={'method': ''}
+let g:matchup_matchparen_offscreen = {'method': ''}
 
 " WinResizer
-let g:winresizer_enable=1
-let g:winresizer_horiz_resize=1
-let g:winresizer_vert_resize=1
-let g:winresizer_start_key='<C-q>'
+let g:winresizer_enable = 1
+let g:winresizer_horiz_resize = 1
+let g:winresizer_vert_resize = 1
+let g:winresizer_start_key = '<C-q>'
 " Buggy; https://github.com/simeji/winresizer/issues/18
 "nnoremap <C-e> :WinResizerStartFocus<CR>
-let g:winresizer_keycode_left="\<Left>"
-let g:winresizer_keycode_up="\<Up>"
-let g:winresizer_keycode_right="\<Right>"
-let g:winresizer_keycode_down="\<Down>"
+let g:winresizer_keycode_left = "\<Left>"
+let g:winresizer_keycode_up = "\<Up>"
+let g:winresizer_keycode_right = "\<Right>"
+let g:winresizer_keycode_down = "\<Down>"
 
 " Case-insensitive search 
 " unless there's a capital character
@@ -365,7 +362,7 @@ noremap ;; :%s:::cg<Left><Left><Left><Left>
 
 " Appearance
 "set termguicolors " breaks on urxvt
-let g:gruvbox_italic=1
+let g:gruvbox_italic = 1
 silent! colorscheme gruvbox
 set background=dark
 
@@ -374,11 +371,11 @@ set background=dark
 if has('nvim')
   function! s:CustomizeColors()
     if g:is_gui || has('termguicolors')
-      let cursorline_gui=''
-      let cursorline_cterm='ctermfg=white'
+      let cursorline_gui = ''
+      let cursorline_cterm = 'ctermfg=white'
     else
-      let cursorline_gui='guifg=white'
-      let cursorline_cterm=''
+      let cursorline_gui = 'guifg=white'
+      let cursorline_cterm = ''
     endif
     exec 'hi CursorLine ' . cursorline_gui . ' ' . cursorline_cterm 
   endfunction
