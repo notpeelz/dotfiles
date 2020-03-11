@@ -257,8 +257,8 @@ nnoremap <silent> tl :tablast<CR>
 nnoremap tt :tabedit<Space>
 nnoremap <silent> tn :tabnew<CR>
 nnoremap <silent> <C-t> :tabnew<CR>
-nnoremap <silent> <C-k> :tabnext<CR>
-nnoremap <silent> <C-j> :tabprev<CR>
+nnoremap <silent> <M-C-Right> :tabnext<CR>
+nnoremap <silent> <M-C-Left> :tabprev<CR>
 nnoremap <silent> td :windo :q<CR>
 
 " Reorder tabs
