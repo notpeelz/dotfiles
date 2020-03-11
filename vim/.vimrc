@@ -63,6 +63,7 @@ Plug 'xolox/vim-session'
 Plug 'baopham/vim-nerdtree-unfocus'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
+Plug 'gcmt/taboo.vim'
 call plug#end()
 
 " Custom intro
@@ -207,6 +208,9 @@ endif
 " Highlight yanks for quarter of a second
 let g:highlightedyank_highlight_duration = 250
 
+" Let Taboo save tab names with :mksession
+set sessionoptions+=tabpages,globals
+
 " Enable persistent undo history
 let s:undodir = $HOME . "/.vim/undodir"
 if !isdirectory(s:undodir)
@@ -257,6 +261,7 @@ nnoremap <silent> <Space><Right> <C-w>l
 nnoremap <silent> th :tabfirst<CR>
 nnoremap <silent> tl :tablast<CR>
 nnoremap tt :tabedit<Space>
+nnoremap tr :TabooRename<Space>
 nnoremap <silent> tn :tabnew<CR>
 nnoremap <silent> <C-t> :tabnew<CR>
 nnoremap <silent> ts :tab split<CR>
@@ -321,12 +326,15 @@ let g:lightline = {
   \ },
   \ }
 
+let g:taboo_tabline = 0
+let g:taboo_tab_format = " %r%m "
+
 function! LightlineFilename()
-  return TabooTabName(tabpagenr())
+  return TabooTabTitle(tabpagenr())
 endfunction
 
 function! LightlineTabFilename(n) abort
-  return TabooTabName(v)
+  return TabooTabTitle(a:n)
 endfunction
 
 " Prevent vim-illuminate from triggering on NERDTree
