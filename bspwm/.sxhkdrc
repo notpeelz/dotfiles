@@ -109,7 +109,7 @@ hyper + v
   done
 
 # Swap marked window
-hyper + h
+hyper + x
   bspc node any.marked -s focused; \
   bspc node any.marked -g marked=off
 
@@ -147,8 +147,10 @@ hyper + w
   bspc node -s biggest.local
 
 # Toggle sticky
-hyper + x
-  bspc node -g sticky
+# FIXME: bspwm doesn't put the tree back in its origin state when moving a
+# sticky node between two desktops
+#hyper + h
+#  bspc node -g sticky
 
 # Mute microphone
 hyper + m
