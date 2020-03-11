@@ -62,6 +62,7 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 Plug 'baopham/vim-nerdtree-unfocus'
 Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 " Custom intro
