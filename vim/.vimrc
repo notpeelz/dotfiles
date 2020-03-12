@@ -276,6 +276,9 @@ nnoremap <silent> tj :silent! tabmove -1<CR>
 " Close window
 nnoremap <silent> <Space>d :q<CR>
 
+" Open session
+nnoremap <silent> <Space>s :OpenSession<CR>
+
 " Save
 "inoremap <C-s> <C-o>:w<CR>
 inoremap <silent> <C-s> <ESC>:w<CR>
