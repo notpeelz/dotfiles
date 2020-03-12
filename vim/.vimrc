@@ -275,6 +275,7 @@ nnoremap <silent> <F23> :silent! tabmove -1<CR>
 
 " Close window
 nnoremap <silent> <Space>d :q<CR>
+nnoremap <silent> <Space>q :qa<CR>
 
 " Open session
 nnoremap <Space>s :OpenSession<Space>
