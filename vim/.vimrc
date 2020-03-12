@@ -270,8 +270,8 @@ nnoremap <silent> <M-C-Left> :tabprev<CR>
 nnoremap <silent> td :windo :q<CR>
 
 " Reorder tabs
-nnoremap <silent> tk :silent! tabmove +1<CR>
-nnoremap <silent> tj :silent! tabmove -1<CR>
+nnoremap <silent> <F24> :silent! tabmove +1<CR>
+nnoremap <silent> <F23> :silent! tabmove -1<CR>
 
 " Close window
 nnoremap <silent> <Space>d :q<CR>
