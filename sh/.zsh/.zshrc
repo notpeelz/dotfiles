@@ -85,11 +85,20 @@ bindkey '^f' run_ranger
 # Add hotkey to list files: ctrl+space
 function list_files() {
   zle .push-input
-  BUFFER="ls -l"
+  BUFFER="ls -lh"
   zle .accept-line
 }
 zle -N list_files
 bindkey '^@' list_files
+
+# Add hotkey to list all files: ctrl+shift+space
+function list_all_files() {
+  zle .push-input
+  BUFFER="ls -alh"
+  zle .accept-line
+}
+zle -N list_all_files
+bindkey '^[[21;2~' list_all_files
 
 # Add hotkey to open $EDITOR
 function run_editor() { "$EDITOR" < ${TTY}; }
