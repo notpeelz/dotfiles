@@ -67,7 +67,7 @@ __is_tty \
 # Load direnv
 eval "$(direnv hook zsh)"
 
-# Add hotkey for ranger
+# Add hotkey for ranger: ctrl+f
 function run_ranger() {
   lastdir_file="$(mktemp)"
   function TRAPEXIT() { rm "${lastdir_file}"; }
@@ -81,6 +81,15 @@ function run_ranger() {
 }
 zle -N run_ranger
 bindkey '^f' run_ranger
+
+# Add hotkey to list files: ctrl+space
+function list_files() {
+  zle .push-input
+  BUFFER="ls -l"
+  zle .accept-line
+}
+zle -N list_files
+bindkey '^@' list_files
 
 # Load .shrc
 [[ -s "${HOME}/.shrc" ]] && source "${HOME}/.shrc"
