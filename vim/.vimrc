@@ -277,7 +277,7 @@ nnoremap <silent> <F23> :silent! tabmove -1<CR>
 nnoremap <silent> <Space>d :q<CR>
 
 " Open session
-nnoremap <silent> <Space>s :OpenSession<CR>
+nnoremap <Space>s :OpenSession<Space>
 
 " Save
 "inoremap <C-s> <C-o>:w<CR>
