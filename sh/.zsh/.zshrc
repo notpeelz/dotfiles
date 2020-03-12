@@ -91,5 +91,10 @@ function list_files() {
 zle -N list_files
 bindkey '^@' list_files
 
+# Add hotkey to open $EDITOR
+function run_editor() { "$EDITOR" < ${TTY}; }
+zle -N run_editor
+bindkey '^v' run_editor
+
 # Load .shrc
 [[ -s "${HOME}/.shrc" ]] && source "${HOME}/.shrc"
