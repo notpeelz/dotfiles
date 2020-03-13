@@ -322,9 +322,6 @@ let g:NERDTreeQuitOnOpen = 1
 " Lightline settings
 let g:lightline = {
   \ 'colorscheme': 'jellybeans',
-  \ 'component_function': {
-  \   'filename': 'LightlineFilename',
-  \ },
   \ 'tab_component_function': {
   \   'filename': 'LightlineTabFilename',
   \ },
@@ -332,10 +329,6 @@ let g:lightline = {
 
 let g:taboo_tabline = 0
 let g:taboo_tab_format = " %r%m "
-
-function! LightlineFilename()
-  return TabooTabTitle(tabpagenr())
-endfunction
 
 function! LightlineTabFilename(n) abort
   return TabooTabTitle(a:n)
