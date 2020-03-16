@@ -59,61 +59,12 @@ Plug 'RRethy/vim-illuminate'
 Plug 'LnL7/vim-nix'
 Plug 'ryanoasis/vim-devicons'
 Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
 Plug 'baopham/vim-nerdtree-unfocus'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 Plug 'gcmt/taboo.vim'
+Plug 'mhinz/vim-startify'
 call plug#end()
-
-" Custom intro
-" https://vi.stackexchange.com/questions/627/how-can-i-change-vims-start-or-intro-screen
-function! DisplayIntro()
-  " Don't run if: we have commandline arguments, we don't have an empty
-  " buffer, if we've not invoked as vim or gvim, or if we'e start in insert mode
-  if argc() || line2byte('$') != -1 || v:progname !~? '^[-gmnq]\=vim\=x\=\%[\.exe]$' || &insertmode
-    return
-  endif
-
-  " Start a new buffer ...
-  enew
-
-  " ... and set some options for it
-  setlocal
-    \ bufhidden=wipe
-    \ buftype=nofile
-    \ nobuflisted
-    \ nocursorcolumn
-    \ nocursorline
-    \ nolist
-    \ nonumber
-    \ noswapfile
-    \ norelativenumber
-
-  " Print banner
-  let l:prefix = '        '
-  call append('$', l:prefix . '__     _____ __  __')
-  call append('$', l:prefix . '\ \   / /_ _|  \/  |')
-  call append('$', l:prefix . ' \ \ / / | || |\/| |')
-  call append('$', l:prefix . '  \ V /  | || |  | |')
-  call append('$', l:prefix . '   \_/  |___|_|  |_|')
-
-  " Print a random fortune message (if available)
-  if executable('fortune')
-    call append('$', '')
-    for line in split(system('fortune -a'), '\n')
-      call append('$', l:prefix . l:line)
-    endfor
-  endif
-
-  " No modifications to this buffer
-  setlocal nomodifiable nomodified
-
-  " When we go to insert mode start a new buffer, and start insert
-  nnoremap <buffer><silent> e :enew<CR>
-  nnoremap <buffer><silent> i :enew <bar> startinsert<CR>
-  nnoremap <buffer><silent> o :enew <bar> startinsert<CR>
-endfunction
 
 " Recursively create the directory structure
 " before saving a file
@@ -278,7 +229,7 @@ nnoremap <silent> <Space>d :q<CR>
 nnoremap <silent> <Space>q :qa<CR>
 
 " Open session
-nnoremap <Space>s :OpenSession<Space>
+nnoremap <Space>s :SLoad<Space>
 
 " Save
 "inoremap <C-s> <C-o>:w<CR>
@@ -305,10 +256,6 @@ noremap <silent> <C-\> :NERDTreeFind<CR>
 noremap <silent> \ :call OpenNERDTree()<CR>
 noremap <silent> à :call OpenNERDTree()<CR>
 
-" Open NERDTree when run with no arguments
-autocmd StdinReadPre * let s:std_in = 1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | call DisplayIntro() | NERDTree | endif
-
 " Exit VIM when NERDTree is the last open window
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
@@ -333,6 +280,15 @@ let g:taboo_tab_format = " %r%m "
 function! LightlineTabFilename(n) abort
   return TabooTabTitle(a:n)
 endfunction
+
+" Startify options
+let g:startify_session_dir = '~/.vim/sessions'
+let g:startify_lists = [
+  \ { 'type': 'sessions',  'header': ['   Sessions']       },
+  \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+  \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+  \ { 'type': 'commands',  'header': ['   Commands']       },
+  \ ]
 
 " Prevent vim-illuminate from triggering on NERDTree
 let g:Illuminate_ftblacklist = ['nerdtree']
