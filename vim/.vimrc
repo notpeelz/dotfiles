@@ -57,13 +57,14 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'RRethy/vim-illuminate'
 Plug 'LnL7/vim-nix'
-Plug 'ryanoasis/vim-devicons'
 Plug 'xolox/vim-misc'
 Plug 'baopham/vim-nerdtree-unfocus'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
+" This must be loaded last
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 " Recursively create the directory structure
@@ -266,16 +267,41 @@ let g:NERDTreeIgnore = ['\..*\.sw[pom]$']
 " Hide NERDTree after opening a file
 let g:NERDTreeQuitOnOpen = 1
 
-" Lightline settings
+" Lightline
 let g:lightline = {
   \ 'colorscheme': 'jellybeans',
+  \ 'component_function': {
+  \   'filetype': 'LightlineFiletype',
+  \   'fileformat': 'LightlineFileformat',
+  \ },
   \ 'tab_component_function': {
+  \   'fticon': 'LightlineTabIcon',
   \   'filename': 'LightlineTabFilename',
+  \ },
+  \ 'tab': {
+  \   'active': ['filename', 'fticon'],
+  \   'inactive': ['tabnum', 'filename', 'fticon'],
   \ },
   \ }
 
 let g:taboo_tabline = 0
 let g:taboo_tab_format = " %r%m "
+
+function! LightlineFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! LightlineFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+
+function! LightlineTabIcon(n)
+  let l:buflist = tabpagebuflist(a:n)
+  let l:winnr = tabpagewinnr(a:n)
+  let l:name = expand('#' . l:buflist[l:winnr - 1] . ':t')
+  let l:icon = WebDevIconsGetFileTypeSymbol(l:name)
+  return l:icon !=# '' ? l:icon : ''
+endfunction
 
 function! LightlineTabFilename(n) abort
   return TabooTabTitle(a:n)
