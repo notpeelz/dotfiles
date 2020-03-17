@@ -243,6 +243,9 @@ noremap <silent> <F2> :set paste!<CR>
 " Toggle line wrapping
 noremap <silent> <F3> :set wrap!<CR>
 
+" EditorConfig
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+
 " NERDTree
 function! OpenNERDTree()
   " Close NERDTree if focused
