@@ -24,6 +24,7 @@ __is_tty \
 plugins=(
   git
   sudo
+  zsh-completions
 )
 
 # Load zsh-syntax-highlighting if installed
@@ -107,3 +108,6 @@ bindkey '^v' run_editor
 
 # Load .shrc
 [[ -s "${HOME}/.shrc" ]] && source "${HOME}/.shrc"
+
+# Initialize zsh completion
+autoload -U compinit && compinit

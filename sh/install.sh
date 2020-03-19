@@ -31,6 +31,16 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-${ZSH}/custom}"
   git clone 'https://github.com/ohmyzsh/ohmyzsh.git' "${ZSH}"
 }
 
+zsh_completions_path="${ZSH_CUSTOM}/plugins/zsh-completions"
+[[ -d "${zsh_completions_path}" ]] && {
+  echo "Updating zsh-zsh-completions"
+  cd "${zsh_completions_path}"
+  git pull origin
+} || {
+  echo "Installing zsh-zsh-completions"
+  git clone 'https://github.com/zsh-users/zsh-completions.git' "${zsh_completions_path}"
+}
+
 zsh_syntaxhl_path="${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
 [[ -d "${zsh_syntaxhl_path}" ]] && {
   echo "Updating zsh-syntax-highlighting"
