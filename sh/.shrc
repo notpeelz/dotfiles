@@ -13,6 +13,8 @@ alias gogh='bash -c "$(wget -qO- https://git.io/vQgMr)"'
 alias screenkey='screenkey --no-systray --no-detach'
 alias xcopy='xclip -selection clipboard -in'
 alias xpaste='xclip -selection clipboard -out'
+alias rm='rmtrash'
+alias rmdir='rmdirtrash'
 
 if [[ "$TERM" == "xterm-kitty" ]]; then
   alias icat="kitty +kitten icat"
