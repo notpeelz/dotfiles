@@ -95,10 +95,10 @@ function! OpenUrl() abort
   if cl =~# 'Plug'
     let pn = cl[match(cl, "'", 0, 1) + 1 :
           \ match(cl, "'", 0, 2) - 1]
-    let url = printf('https://github.com/%s', pn)
+    let url = printf("https://github.com/%s", pn)
   endif
   if !empty(url)
-    let url = substitute(url, "'", '', 'g')
+    let url = substitute(url, "['\"]", '', 'g')
     let wmctrl = executable('wmctrl') && v:windowid isnot# 0 ?
           \ ' && wmctrl -ia ' . v:windowid : ''
     exe 'silent :!' . (g:is_unix ?
