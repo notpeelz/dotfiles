@@ -1,6 +1,10 @@
 # Change window state
-hyper + {s,f,t,y}
+hyper + t ; {s,f,t,y}
   bspc node -t '~{pseudo_tiled,fullscreen,tiled,floating}'
+
+# Toggle fullscreen
+hyper + f
+  bspc node -t '~fullscreen'
 
 # Toggle monocle
 # Disables pseudo_tiled state if enabled, then launches a subshell that waits
