@@ -200,6 +200,6 @@ Print
   rm "$tmp"
 
 # Screenshot of all monitors
-alt + shift + Print
+ctrl + shift + Print
   import -window root png:- \
     | xclip -selection clipboard -t image/png
