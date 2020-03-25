@@ -240,6 +240,45 @@ nnoremap <Space>s :SLoad<Space>
 inoremap <silent> <C-s> <ESC>:w<CR>
 nnoremap <silent> <C-s> :w<CR>
 
+
+" Define google helper functions
+command! -nargs=1 Google call <SID>google(<q-args>)
+
+fun! s:google(query)
+  execute "silent !xdg-open https://google.com/search?" . shellescape(s:encode_query(a:query), 1)
+  return
+endfun
+
+fun! s:google_selection(visual)
+  return s:google(s:get_sel(a:visual))
+endfun
+
+fun! s:get_sel(visual)
+  let l:mode = mode()
+  if a:visual == 1
+    let [l:line1, l:col1] = getpos("'<")[1:2]
+    let [l:line2, l:col2] = getpos("'>")[1:2]
+    return getline("'<")[l:col1 - 1: l:col2 - 1]
+  else
+    return expand('<cword>')
+  endif
+endfun
+
+fun! s:encode_query(str)
+python3 << EOF
+import sys, vim
+from urllib.parse import urlencode, quote, quote_plus
+encoded = urlencode({ 'q': vim.eval('a:str') }, quote_via=quote_plus)
+vim.command("return \"" + encoded.replace('"', '\\"') + "\"")
+EOF
+endfun
+
+" Look up on Google
+" TODO: support motions
+nnoremap <Space>gx :<C-u>Google<Space>
+nnoremap <Space>gw :<C-u>call <SID>google_selection(0)<CR>
+vnoremap <Space>g :<C-u>call <SID>google_selection(1)<CR>
+
 " Toggle paste mode
 noremap <silent> <F2> :set paste!<CR>
 
