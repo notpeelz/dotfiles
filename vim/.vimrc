@@ -73,14 +73,14 @@ call plug#end()
 " Recursively create the directory structure
 " before saving a file
 " https://stackoverflow.com/questions/4292733/vim-creating-parent-directories-on-save
-function! s:MkNonExDir(file, buf)
+fun! s:MkNonExDir(file, buf)
   if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
     let l:dir = fnamemodify(a:file, ':h')
     if !isdirectory(l:dir)
       call mkdir(l:dir, 'p')
     endif
   endif
-endfunction
+endfun
 augroup BWCCreateDir
   autocmd!
   autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
@@ -88,7 +88,7 @@ augroup END
 
 " Replace gx to open URLs
 " https://web.archive.org/web/20200129052658/https://old.reddit.com/r/vim/comments/7j9znw/gx_failing_to_open_url_on_vim8/dr6e3ks/
-function! OpenUrl() abort
+fun! OpenUrl() abort
   " Open the current URL
   " - If line begins with "Plug" open the github page
   " of the plugin.
@@ -250,7 +250,7 @@ noremap <silent> <F3> :set wrap!<CR>
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
 " NERDTree
-function! OpenNERDTree()
+fun! OpenNERDTree()
   " Close NERDTree if focused
   if (exists("b:NERDTree") && b:NERDTree.isTabTree())
     q
@@ -258,7 +258,7 @@ function! OpenNERDTree()
   else
     NERDTreeFocus
   endif
-endfunction
+endfun
 noremap <silent> <C-\> :NERDTreeFind<CR>
 noremap <silent> \ :call OpenNERDTree()<CR>
 noremap <silent> à :call OpenNERDTree()<CR>
@@ -281,10 +281,10 @@ augroup filetype_nerdtree
   au WinEnter,BufWinEnter,TabEnter * call s:disable_lightline_on_nerdtree()
 augroup END
 
-function! s:disable_lightline_on_nerdtree() abort
+fun! s:disable_lightline_on_nerdtree() abort
   let nerdtree_winnr = index(map(range(1, winnr('$')), {_,v -> getbufvar(winbufnr(v), '&ft')}), 'nerdtree') + 1
   call timer_start(0, {-> nerdtree_winnr && setwinvar(nerdtree_winnr, '&stl', '%#Normal#')})
-endfunction
+endfun
 
 " Lightline
 let g:lightline = {
@@ -306,25 +306,25 @@ let g:lightline = {
 let g:taboo_tabline = 0
 let g:taboo_tab_format = " %r%m "
 
-function! LightlineFiletype()
+fun! LightlineFiletype()
   return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
-endfunction
+endfun
 
-function! LightlineFileformat()
+fun! LightlineFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
-endfunction
+endfun
 
-function! LightlineTabIcon(n)
+fun! LightlineTabIcon(n)
   let l:buflist = tabpagebuflist(a:n)
   let l:winnr = tabpagewinnr(a:n)
   let l:name = expand('#' . l:buflist[l:winnr - 1] . ':t')
   let l:icon = WebDevIconsGetFileTypeSymbol(l:name)
   return l:icon !=# '' ? l:icon : ''
-endfunction
+endfun
 
-function! LightlineTabFilename(n) abort
+fun! LightlineTabFilename(n) abort
   return TabooTabTitle(a:n)
-endfunction
+endfun
 
 " Startify options
 let g:startify_session_dir = '~/.vim/sessions'
@@ -375,7 +375,7 @@ set background=dark
 " Fix CursorLine highlight problem with nvim
 " https://github.com/neovim/neovim/issues/9019#issuecomment-521532103
 if has('nvim')
-  function! s:CustomizeColors()
+  fun! s:CustomizeColors()
     if g:is_gui || has('termguicolors')
       let cursorline_gui = ''
       let cursorline_cterm = 'ctermfg=white'
@@ -384,7 +384,7 @@ if has('nvim')
       let cursorline_cterm = ''
     endif
     exec 'hi CursorLine ' . cursorline_gui . ' ' . cursorline_cterm 
-  endfunction
+  endfun
 
   augroup OnColorScheme
     autocmd!
