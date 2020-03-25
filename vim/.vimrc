@@ -365,6 +365,7 @@ map g/ <Plug>(incsearch-stay)
 
 " Interactive replace
 noremap ;; :%s:::cg<Left><Left><Left><Left>
+noremap ;: :s:::cg<Left><Left><Left><Left>
 
 " Appearance
 "set termguicolors " breaks on urxvt
