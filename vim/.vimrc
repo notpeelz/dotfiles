@@ -63,6 +63,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
+Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
 " This must be loaded last
