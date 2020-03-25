@@ -241,6 +241,9 @@ inoremap <silent> <C-s> <ESC>:w<CR>
 nnoremap <silent> <C-s> :w<CR>
 
 
+" Split line (symmetrical to J)
+nnoremap K i<CR><Esc>
+
 " Define google helper functions
 command! -nargs=1 Google call <SID>google(<q-args>)
 
