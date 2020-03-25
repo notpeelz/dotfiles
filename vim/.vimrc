@@ -403,7 +403,8 @@ map ? <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
 " Interactive replace
-noremap ;; :%s:::cg<Left><Left><Left><Left>
+nnoremap ;; :%s:::cg<Left><Left><Left><Left>
+vnoremap ;; :s:::cg<Left><Left><Left><Left>
 noremap ;: :s:::cg<Left><Left><Left><Left>
 
 " Appearance
