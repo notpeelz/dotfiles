@@ -61,6 +61,8 @@ Plug 'xolox/vim-misc'
 Plug 'baopham/vim-nerdtree-unfocus'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
 " This must be loaded last
