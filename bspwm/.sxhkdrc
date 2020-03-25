@@ -125,6 +125,10 @@ hyper + x
 #XF86AudioLowerVolume
 #XF86AudioRaiseVolume
 
+# Play/pause through MPRIS
+XF86Audio{Stop,Prev,Play,Next}
+  playerctl {stop,previous,play-pause,next}
+
 # Open terminal
 hyper + Return
   $TERMINAL
