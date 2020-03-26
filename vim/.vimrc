@@ -278,9 +278,9 @@ endfun
 
 " Look up on Google
 " TODO: support motions
-nnoremap <Space>gx :<C-u>Google<Space>
-nnoremap <Space>gw :<C-u>call <SID>google_selection(0)<CR>
-vnoremap <Space>g :<C-u>call <SID>google_selection(1)<CR>
+nnoremap <Space>fx :Google<Space>
+nnoremap <Space>fw :call <SID>google_selection(0)<CR>
+vnoremap <Space>f :<C-u>call <SID>google_selection(1)<CR>
 
 " Toggle paste mode
 noremap <silent> <F2> :set paste!<CR>
