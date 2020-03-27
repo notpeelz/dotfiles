@@ -254,10 +254,7 @@ nnoremap <silent> <Space>Q :qa<CR>
 nnoremap <Space>s :SLoad<Space>
 
 " Save
-"inoremap <C-s> <C-o>:w<CR>
-inoremap <silent> <C-s> <ESC>:w<CR>
-nnoremap <silent> <C-s> :w<CR>
-
+nnoremap <silent> <Space>w :w<CR>
 
 " Split line (symmetrical to J)
 nnoremap K i<CR><Esc>
