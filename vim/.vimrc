@@ -56,6 +56,7 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'RRethy/vim-illuminate'
+Plug 'Yggdroot/indentLine'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
@@ -151,6 +152,11 @@ set cursorline
 " Search highlighting
 set hlsearch
 set incsearch
+
+" Indentline
+let g:indentLine_concealcursor = &concealcursor
+let g:indentLine_char = "┊"
+let g:indentLine_fileTypeExclude = [ 'startify', 'help', 'text' ]
 
 " Disable search highlight after pressing ENTER
 " https://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting
