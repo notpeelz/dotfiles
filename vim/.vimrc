@@ -123,6 +123,10 @@ set backspace=indent,eol,start
 " Always show the status line
 set laststatus=2
 
+" Reduce inactivity delay before writing to swapfile
+" This also allows gitgutter to update faster
+set updatetime=100
+
 " Don't show the mode below the status bar
 set noshowmode
 
