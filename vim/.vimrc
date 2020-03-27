@@ -293,6 +293,12 @@ nnoremap <Space>fx :Google<Space>
 nnoremap <Space>fw :call <SID>google_selection(0)<CR>
 vnoremap <Space>f :<C-u>call <SID>google_selection(1)<CR>
 
+" Git
+nnoremap <silent> <Space>gg :G<CR>
+nnoremap <silent> <Space>gc :Gcommit<CR>
+nnoremap <silent> <Space>gb :Gblame<CR>
+nnoremap <silent> <Space>gl :tabnew <bar> Glog <bar> TabooRename git log<CR>
+
 " Toggle paste mode
 noremap <silent> <F2> :set paste!<CR>
 
