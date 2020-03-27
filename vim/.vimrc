@@ -58,6 +58,7 @@ Plug 'andymass/vim-matchup'
 Plug 'RRethy/vim-illuminate'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
+Plug 'tikhomirov/vim-glsl'
 Plug 'baopham/vim-nerdtree-unfocus'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
@@ -182,6 +183,10 @@ set shiftwidth=2
 set shiftround
 set expandtab
 set fileformat=unix
+
+" Filetypes
+autocmd! BufNewFile,BufRead *.fx set filetype=glsl
+autocmd! BufNewFile,BufRead *.fxh set filetype=glsl
 
 " Move through display lines (with wrap on)
 " instead of full lines
