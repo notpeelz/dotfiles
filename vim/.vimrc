@@ -127,6 +127,9 @@ set laststatus=2
 " This also allows gitgutter to update faster
 set updatetime=100
 
+" Always show signcolumn (so that gitgutter doesn't pop in and out)
+set signcolumn=yes
+
 " Don't show the mode below the status bar
 set noshowmode
 
