@@ -307,6 +307,7 @@ vnoremap <Space>f :<C-u>call <SID>google_selection(1)<CR>
 nnoremap <silent> <Space>gg :G<CR>
 nnoremap <silent> <Space>gc :Gcommit<CR>
 nnoremap <silent> <Space>gb :Gblame<CR>
+nnoremap <silent> <Space>gd :Gdiff<CR>
 nnoremap <silent> <Space>gl :tabnew <bar> Glog <bar> TabooRename git log<CR>
 
 " Toggle paste mode
