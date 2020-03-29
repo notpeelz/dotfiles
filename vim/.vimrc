@@ -127,6 +127,9 @@ set laststatus=2
 " This also allows gitgutter to update faster
 set updatetime=100
 
+" Disable virtualedit
+set virtualedit=
+
 " Always show signcolumn (so that gitgutter doesn't pop in and out)
 set signcolumn=yes
 
