@@ -254,7 +254,7 @@ nnoremap <silent> <F23> :silent! tabmove -1<CR>
 nnoremap <silent> <Space>d :q<CR>
 nnoremap <silent> <Space>D :q!<CR>
 nnoremap <silent> <Space>q :qa<CR>
-nnoremap <silent> <Space>Q :qa<CR>
+nnoremap <silent> <Space>Q :qa!<CR>
 
 " Open session
 nnoremap <Space>s :SLoad<Space>
