@@ -168,6 +168,7 @@ set incsearch
 let g:indentLine_concealcursor = &concealcursor
 let g:indentLine_char = "┊"
 let g:indentLine_fileTypeExclude = [ 'startify', 'help', 'text' ]
+autocmd Filetype json :IndentLinesDisable
 
 " Disable search highlight after pressing ENTER
 " https://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting
