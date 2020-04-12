@@ -150,8 +150,12 @@ hyper + w
   bspc node -s biggest.local
 
 # Mute microphone
-hyper + m
+{hyper + m,button8}
   ~/scripts-and-files/audio/toggle_mic.sh
+
+# Unmap 2nd mouse button
+button9
+  :
 
 # Screenshot of current desktop
 shift + Print
