@@ -55,6 +55,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'haya14busa/incsearch.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
+Plug 'luochen1990/rainbow'
 Plug 'RRethy/vim-illuminate'
 Plug 'Yggdroot/indentLine'
 Plug 'LnL7/vim-nix'
@@ -411,6 +412,9 @@ let g:Illuminate_ftblacklist = ['nerdtree']
 
 " Prevent vim-matchup from replacing the status line
 let g:matchup_matchparen_offscreen = {'method': ''}
+
+" Enable rainbow parentheses
+let g:rainbow_active = 1
 
 " WinResizer
 let g:winresizer_enable = 1
