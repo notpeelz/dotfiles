@@ -56,8 +56,7 @@ hyper + alt + {Left,Down,Up,Right} : {Left,Down,Up,Right}
   bspc node -z {left,bottom,top,right} {-10 0,0 10,0 -10,10 0}
 
 # Close window
-# TODO: add zenity confirmation
-hyper + {_,shift +} q
+hyper + {_,shift +} BackSpace
   bspc node -{c,k}
 
 # Lock session and pause all VLC players
