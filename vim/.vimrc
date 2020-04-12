@@ -307,10 +307,10 @@ vnoremap <Space>f :<C-u>call <SID>google_selection(1)<CR>
 
 " Git
 nnoremap <silent> <Space>gg :G<CR>
-nnoremap <silent> <Space>gc :Gcommit<CR>
-nnoremap <silent> <Space>gb :Gblame<CR>
-nnoremap <silent> <Space>gd :Gdiff<CR>
-nnoremap <silent> <Space>gl :tabnew <bar> Glog <bar> TabooRename git log<CR>
+nnoremap <silent> <Space>gc :G commit<CR>
+nnoremap <silent> <Space>gb :G blame<CR>
+nnoremap <silent> <Space>gd :Gdiffsplit<CR>
+nnoremap <silent> <Space>gl :tabnew <bar> Gclog <bar> TabooRename git log<CR>
 
 " Toggle paste mode
 noremap <silent> <F2> :set paste!<CR>
