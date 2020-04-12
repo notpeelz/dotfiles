@@ -2,6 +2,12 @@
 hyper + t ; {s,f,t,y}
   bspc node -t '~{pseudo_tiled,fullscreen,tiled,floating}'
 
+# Toggle sticky
+# FIXME: bspwm doesn't put the tree back in its origin state when moving a
+# sticky node between two desktops
+hyper + t ; h
+  bspc node -g sticky
+
 # Toggle fullscreen
 hyper + f
   bspc node -t '~fullscreen'
