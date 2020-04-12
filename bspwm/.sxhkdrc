@@ -67,11 +67,7 @@ hyper + {_,shift +} BackSpace
 
 # Lock session and pause all VLC players
 super + shift + l
-  arr=($(dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply=literal /org/freedesktop/DBus org.freedesktop.DBus.ListNames)); \
-  for i in "$\{arr[@]\}"; do \
-    [[ "$i" == "org.mpris.MediaPlayer2.vlc"* ]] \
-      && dbus-send --type=method_call --dest="$i" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause; \
-  done; \
+  playerctl -a pause; \
   dm-tool lock
 
 # Exit session
@@ -112,9 +108,15 @@ hyper + x
   bspc node any.marked -s focused; \
   bspc node any.marked -g marked=off
 
-# TODO: volume controls
-#XF86AudioLowerVolume
-#XF86AudioRaiseVolume
+# Volume control
+{XF86AudioLowerVolume,XF86AudioRaiseVolume}
+  pactl set-sink-volume "alsa_output.usb-Kingston_HyperX_Cloud_Flight_Wireless_Headset-00.iec958-stereo" {-,+}5%; \
+  id="$(aplay -l | grep -oP 'card \K(\d+)(?=:.*HyperX)')"; \
+  amixer -c "$id" cset numid=6 49; \
+  amixer -c "$id" cset numid=6 50;
+
+XF86AudioMute
+  pactl set-sink-mute "alsa_output.usb-Kingston_HyperX_Cloud_Flight_Wireless_Headset-00.iec958-stereo" toggle
 
 # Play/pause through MPRIS
 XF86Audio{Stop,Prev,Play,Next}
