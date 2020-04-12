@@ -118,7 +118,7 @@ hyper + x
 
 # Play/pause through MPRIS
 XF86Audio{Stop,Prev,Play,Next}
-  playerctl {stop,previous,play-pause,next}
+  playerctl -i vlc {stop,previous,play-pause,next}
 
 # Open terminal
 hyper + Return
