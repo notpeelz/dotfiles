@@ -1,0 +1,47 @@
+{
+  "git.addedSign.hlGroup": "GitGutterAdd",
+  "git.changedSign.hlGroup": "GitGutterChange",
+  "git.removedSign.hlGroup": "GitGutterDelete",
+  "git.topRemovedSign.hlGroup": "GitGutterDelete",
+  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
+  "session.saveOnVimLeave": false,
+  "explorer.icon.enableNerdfont": true,
+  "explorer.keyMappings.global": {
+    "u": ["wait", "gotoParent"],
+    "r": "rename",
+    "<cr>": [
+      "expandable?",
+      ["expanded?", "collapse", "expand"],
+      ["open", "quit"]
+    ],
+    "o": ["wait", "expandable?", "cd", "open"]
+  },
+  "list.source.files.args": ["--hidden", "--files"],
+  "list.normalMappings": {
+    "<C-c>": "do:exit"
+  },
+  "list.insertMappings": {
+    "<C-c>": "do:exit"
+  },
+  "list.source.mru.ignoreGitIgnore": true,
+  "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+  "diagnostic.errorSign": "",
+  "diagnostic.hintSign": "",
+  "prettier.disableSuccessMessage": true,
+  "typescript.implementationsCodeLens.enable": false,
+  "codeLens.enable": false,
+  "codeLens.separator": "‣",
+  "codeLens.subseparator": " ",
+  "hover.floatConfig": {
+    "border": false,
+    "highlight": "CocFloating",
+    "focusable": true
+  },
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "css",
+    "markdown"
+  ]
+}
