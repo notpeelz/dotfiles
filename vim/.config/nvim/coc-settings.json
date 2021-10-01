@@ -5,6 +5,7 @@
   "git.topRemovedSign.hlGroup": "GitGutterDelete",
   "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
   "session.saveOnVimLeave": false,
+  "pairs.disableLanguages": ["vim"],
   "explorer.icon.enableNerdfont": true,
   "explorer.keyMappings.global": {
     "u": ["wait", "gotoParent"],
