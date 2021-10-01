@@ -2,7 +2,6 @@
 scriptencoding utf-8
 set nocompatible
 set encoding=utf-8
-set t_Co=256
 set timeoutlen=1000
 set ttimeoutlen=0
 
@@ -75,10 +74,12 @@ Plug 'mhinz/vim-startify'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
-" Unfortunately wilder causes noticeable startup lag over ssh
-" Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'romgrk/fzy-lua-native' " used by wilder
+" Requires cmake, libboost-all-dev, python-dev and libicu-dev
+" FIXME: install.sh exits with exitcode 1
+Plug 'nixprime/cpsm', { 'do': './install.sh' } " used by wilder
 Plug 'puremourning/vimspector'
-Plug 'HerringtonDarkholme/yats.vim'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
@@ -183,8 +184,7 @@ set mouse=a
 
 " Enable wildmenu
 set wildmenu
-" set wildmode=full
-set wildmode=list:full,full
+set wildmode=full
 
 " Highlight current line
 set cursorline nocursorcolumn
@@ -203,9 +203,6 @@ set incsearch
 " unless there's a capital character
 set ignorecase
 set smartcase
-
-" Remap the search key on en-us kb layout
-nnoremap ` /
 
 " Disable search highlight after pressing ENTER
 " https://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting
@@ -354,6 +351,7 @@ inoremap <S-Right> <C-o>e
 nnoremap <silent> th :tabfirst<CR>
 nnoremap <silent> tl :tablast<CR>
 nnoremap tt :tabedit<Space>
+nnoremap te :edit<Space>
 nnoremap tr :TabooRename<Space>
 nnoremap <silent> tn :tabnew<CR>
 " nnoremap <silent> <C-t> :tabnew<CR>
@@ -469,6 +467,7 @@ nnoremap <silent> <Space>ws :call WindowSwap#EasyWindowSwap()<CR>
 " ReplaceWithRegister {{{
 nnoremap r <nop>
 nnoremap rc r
+xnoremap rc r
 nmap rr <Plug>ReplaceWithRegisterOperator
 xmap rr <Plug>ReplaceWithRegisterVisual
 nmap r^ <Plug>ReplaceWithRegisterLine
@@ -571,25 +570,17 @@ let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-html',
   \ 'coc-json',
-  \ ]
-
-" JS extensions
-let g:coc_global_extensions += [
   \ 'coc-eslint',
   \ 'coc-tsserver',
   \ 'coc-prettier',
-  \ ]
-
-" C# extensions
-let g:coc_global_extensions += [
   \ 'coc-omnisharp',
   \ ]
 
 " Prevents the cursor from disappearing when pressing ctrl-c in :CocList
 " let g:coc_disable_transparent_cursor = 1
 
-nnoremap <silent> <Bar> :CocCommand explorer --sources=buffer+<CR>
-nnoremap <silent> \ :CocCommand explorer --sources=file+<CR>
+nnoremap <silent> <Bar> :CocCommand explorer --sources=buffer+,file-<CR>
+nnoremap <silent> \ :CocCommand explorer --sources=buffer-,file+<CR>
 nnoremap <silent> à :CocCommand explorer<CR>
 
 " Close vim if coc-explorer is the last open window
@@ -635,10 +626,14 @@ augroup END
 " Scrolling in floating windows {{{
 nnoremap <expr> <C-e> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<C-e>"
 nnoremap <expr> <C-y> coc#float#has_scroll() ? coc#float#scroll(0, 1) : "\<C-y>"
+inoremap <silent> <expr> <C-e> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0, 1)\<CR>" : "\<End>"
+inoremap <silent> <expr> <C-y> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1, 1)\<CR>" : ""
 vnoremap <expr> <C-e> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<C-e>"
 vnoremap <expr> <C-y> coc#float#has_scroll() ? coc#float#scroll(0, 1) : "\<C-y>"
 nnoremap <expr> <PageDown> coc#float#has_scroll() ? coc#float#scroll(1) : "\<PageDown>"
 nnoremap <expr> <PageUp> coc#float#has_scroll() ? coc#float#scroll(0) : "\<PageUp>"
+inoremap <silent> <expr> <PageDown> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1)\<CR>" : "\<PageDown>"
+inoremap <silent> <expr> <PageUp> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0)\<CR>" : "\<PageUp>"
 vnoremap <expr> <PageDown> coc#float#has_scroll() ? coc#float#scroll(1) : "\<PageDown>"
 vnoremap <expr> <PageUp> coc#float#has_scroll() ? coc#float#scroll(0) : "\<PageUp>"
 " }}}
@@ -705,7 +700,7 @@ nnoremap <silent> <C-a> :call <SID>ShowDocumentation()<CR>
 " }}}
 
 " Formatting selected code {{{
-xmap <Space>dff <Plug>(coc-format-selected)
+xmap <Space>dff <Plug>(coc-format)
 nmap <Space>dff <Plug>(coc-format-selected)
 " }}}
 
@@ -758,43 +753,98 @@ augroup END
 "show_documentation }}}
 
 " wilder {{{
-" call wilder#setup({
-"   \ 'modes': [':', '/', '?'],
-"   \ 'next_key': '<Tab>',
-"   \ 'previous_key': '<S-Tab>',
-"   \ 'accept_key': '<Down>',
-"   \ 'reject_key': '<Up>',
-"   \ })
-" " File finder
-" call wilder#set_option('pipeline', [
-"   \   wilder#branch(
-"   \     wilder#python_file_finder_pipeline({
-"   \       'file_command': ['rg', '--files', '--hidden', '--glob', '!.git'],
-"   \       'dir_command': ['find', '.', '-type', 'd', '-printf', '%P\n'],
-"   \       'filters': ['fuzzy_filter', 'difflib_sorter'],
-"   \     }),
-"   \     wilder#cmdline_pipeline(),
-"   \     wilder#python_search_pipeline(),
-"   \   ),
-"   \ ])
+augroup WilderConfig
+  autocmd!
+  autocmd CmdlineEnter * ++once call <SID>WilderInit()
+augroup END
 
-" " Workaround for a neovim bug (#14304)
-" " https://github.com/gelguy/wilder.nvim/issues/41#issuecomment-860025867
-" fun! SetShortmessF(on) abort
-"   if a:on
-"     set shortmess+=F
-"   else
-"     set shortmess-=F
-"   endif
-"   return ''
-" endfun
+fun! s:WilderInit()
+  call wilder#setup({
+    \ 'modes': [':', '/', '?'],
+    \ 'next_key': '<Tab>',
+    \ 'previous_key': '<S-Tab>',
+    \ 'accept_key': '<Down>',
+    \ 'reject_key': '<Up>',
+    \ })
 
-" nnoremap <expr> : SetShortmessF(1) . ':'
+  let s:highlighters = [
+    \ wilder#pcre2_highlighter(),
+    \ wilder#basic_highlighter(),
+    \ ]
 
-" augroup WilderShortmessFix
-"   autocmd!
-"   autocmd CmdlineLeave * call SetShortmessF(0)
-" augroup END
+  let s:popupmenu_renderer = wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
+    \ 'border': 'rounded',
+    \ 'empty_message': wilder#popupmenu_empty_message_with_spinner(),
+    \ 'highlighter': s:highlighters,
+    \ 'left': [
+    \   ' ',
+    \   wilder#popupmenu_devicons(),
+    \   wilder#popupmenu_buffer_flags({
+    \     'flags': ' a + ',
+    \     'icons': {'+': '', 'a': '', 'h': ''},
+    \   }),
+    \ ],
+    \ 'right': [
+    \   ' ',
+    \   wilder#popupmenu_scrollbar(),
+    \ ],
+    \ }))
+
+  call wilder#set_option('pipeline', [
+    \   wilder#branch(
+    \     wilder#python_file_finder_pipeline({
+    \       'file_command': {_, arg -> stridx(arg, '.') != -1 ? ['fd', '-tf', '-H'] : ['fd', '-tf']},
+    \       'dir_command': ['fd', '-td'],
+    \       'filters': ['cpsm_filter'],
+    \     }),
+    \     wilder#cmdline_pipeline({
+    \       'fuzzy': 1,
+    \       'fuzzy_filter': wilder#lua_fzy_filter(),
+    \       'hide_in_substitute': 1,
+    \     }),
+    \     [
+    \       wilder#check({_, x -> empty(x)}),
+    \       wilder#history(),
+    \     ],
+    \     wilder#python_search_pipeline({
+    \       'pattern': wilder#python_fuzzy_pattern({
+    \         'start_at_boundary': 0,
+    \       }),
+    \     }),
+    \   ),
+    \ ])
+
+  let s:wildmenu_renderer = wilder#wildmenu_renderer({
+    \ 'highlighter': s:highlighters,
+    \ 'separator': ' · ',
+    \ 'left': [' ', wilder#wildmenu_spinner(), ' '],
+    \ 'right': [' ', wilder#wildmenu_index()],
+    \ })
+
+  call wilder#set_option('renderer', wilder#renderer_mux({
+    \ ':': s:popupmenu_renderer,
+    \ '/': s:wildmenu_renderer,
+    \ }))
+
+endfun
+
+" Workaround for a neovim bug (#14304)
+" https://github.com/gelguy/wilder.nvim/issues/41#issuecomment-860025867
+fun! SetShortmessF(on) abort
+  if a:on
+    set shortmess+=F
+  else
+    set shortmess-=F
+  endif
+  return ''
+endfun
+
+nnoremap <expr> : SetShortmessF(1) . ':'
+
+augroup WilderShortmessFix
+  autocmd!
+  autocmd CmdlineLeave * call SetShortmessF(0)
+augroup END
 " }}}
 
 " Lightline {{{
@@ -883,10 +933,10 @@ fun! s:SetColorschemePreferences()
   " By default, faded-out text (i.e. unused code) defaults to the Conceal group,
   " which is khaki green on Gruvbox.
   " This makes it gray.
-  execute 'hi! CocFadeOut'
-    \ ' ctermfg=' . synIDattr(synIDtrans(hlID('NonText')), 'fg', 'cterm')
-    \ ' guifg=#70708a'
-  " hi! link CocFadeOut NonText
+  " execute 'hi! CocFadeOut'
+  "   \ ' ctermfg=' . synIDattr(synIDtrans(hlID('NonText')), 'fg', 'cterm')
+  "   \ ' guifg=#70708a'
+  hi! link CocFadeOut NonText
 
   " https://github.com/morhetz/gruvbox/issues/260
   hi clear Operator
@@ -905,11 +955,11 @@ set termguicolors " Enable True Color (24-bit)
 set background=dark
 colorscheme gruvbox
 
-function! s:SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-nmap <expr> q <SID>SynStack()
+" function! s:SynStack()
+"   if !exists("*synstack")
+"     return
+"   endif
+"   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+" endfunc
+" nmap <expr> q <SID>SynStack()
 " }}}
