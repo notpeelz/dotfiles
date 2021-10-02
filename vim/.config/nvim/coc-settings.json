@@ -4,6 +4,8 @@
   "git.removedSign.hlGroup": "GitGutterDelete",
   "git.topRemovedSign.hlGroup": "GitGutterDelete",
   "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
+  "prettier.requireConfig": true,
+  "prettier.disableSuccessMessage": true,
   "session.saveOnVimLeave": false,
   "pairs.disableLanguages": ["vim"],
   "explorer.icon.enableNerdfont": true,
@@ -17,6 +19,14 @@
     ],
     "o": ["wait", "expandable?", "cd", "open"]
   },
+  "explorer.file.hiddenRules": {
+    "extensions": ["o", "a", "obj", "pyc"],
+    "filenames": ["node_modules", "lib"],
+    "patternMatches": ["^\\."]
+  },
+  "explorer.file.reveal.filter": {
+    "literals": ["node_modules"]
+  },
   "list.source.files.args": ["--hidden", "--files"],
   "list.normalMappings": {
     "<C-c>": "do:exit"
@@ -29,7 +39,6 @@
   "diagnostic.infoSign": "",
   "diagnostic.errorSign": "",
   "diagnostic.hintSign": "",
-  "prettier.disableSuccessMessage": true,
   "typescript.implementationsCodeLens.enable": false,
   "codeLens.enable": false,
   "codeLens.separator": "‣",

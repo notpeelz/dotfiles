@@ -50,15 +50,21 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'tweekmonster/startuptime.vim'
 Plug 'morhetz/gruvbox'
+Plug 'sainnhe/gruvbox-material'
 Plug 'shinchu/lightline-gruvbox.vim'
 " Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'simeji/winresizer'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'mg979/vim-visual-multi'
 Plug 'itchyny/lightline.vim'
+Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'tversteeg/registers.nvim', { 'branch': 'main' }
 Plug 'machakann/vim-highlightedyank'
-Plug 'luochen1990/rainbow'
+Plug 'psliwka/vim-smoothie'
+Plug 'nacro90/numb.nvim'
+Plug 'ellisonleao/glow.nvim'
 Plug 'wesQ3/vim-windowswap'
+" Plug 'mattboehm/vim-accordion'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
@@ -69,6 +75,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'PeterRincker/vim-argumentative'
+Plug 'chaoren/vim-wordmotion'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -165,6 +172,13 @@ set breakat=" 	!@*-+;:,./?"
 set number norelativenumber
 set numberwidth=5
 
+" Always show at least one one line above/below the cursor
+set scrolloff=1
+set sidescrolloff=5
+
+" Set max command history
+set history=10000
+
 " Always show the signcolumn, otherwise it would shift the text each time the
 " signcolumn is triggered
 set signcolumn=yes:1
@@ -191,7 +205,8 @@ set cursorline nocursorcolumn
 
 " Unmap C-c to prevent the "Type :qa and press <Enter> to exit Nvim" message
 " from showing up
-noremap <C-c> <nop>
+" noremap <C-c> <nop>
+noremap <silent> <C-c> :confirm q<CR>
 "}}}
 
 " Search and substitution {{{
@@ -228,9 +243,13 @@ set shortmess+=c
 " set shortmess+=F
 " }}}
 
-" vim-highlightedyank {{{
+" highlightedyank {{{
 " Highlight yanks for quarter of a second
 let g:highlightedyank_highlight_duration = 250
+" }}}
+
+" wordmotion {{{
+let g:wordmotion_uppercase_spaces = ['=', '(', ')', '[', ']', '{', '}']
 " }}}
 
 " Sessions {{{
@@ -405,7 +424,7 @@ nnoremap <silent> <Space>gl :tabnew <bar> Gclog <bar> TabooRename git log<CR>
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 " }}}
 
-" vim-visual-multi {{{
+" visual-multi {{{
 " Prevent vim-visual-multi from adding maps to the leader key,
 " as those conflict with other mappings
 let g:VM_default_mappings = 0
@@ -424,9 +443,20 @@ let g:startify_lists = [
   \ ]
 " }}}
 
-" Rainbow {{{
-" Enable rainbow parentheses
-let g:rainbow_active = 1
+" indent-blankline {{{
+lua << EOF
+require("indent_blankline").setup {
+  char = "|",
+  buftype_exclude = {"terminal"},
+  filetype_exclude = {"startify"},
+}
+EOF
+" }}}
+
+" numb {{{
+lua <<EOF
+require('numb').setup()
+EOF
 " }}}
 
 " Winresizer {{{
@@ -464,6 +494,10 @@ let g:windowswap_map_keys = 0
 nnoremap <silent> <Space>ws :call WindowSwap#EasyWindowSwap()<CR>
 " }}}
 
+" registers {{{
+let g:registers_delay = 500
+" }}}
+
 " ReplaceWithRegister {{{
 nnoremap r <nop>
 nnoremap rc r
@@ -494,14 +528,15 @@ let g:vimspector_install_gadgets = [
   \ ]
 
 nmap <F5> <Plug>VimspectorContinue
-" shift-F5 = <S-F3>
-nmap <S-F3> <Plug>VimspectorStop
+" <F15> = shift-f5
+nmap <F15> <Plug>VimspectorStop
 " ctrl-shift-F5 doesn't work in the terminal
 nmap <F4> <Plug>VimspectorRestart
 nmap <F6> <Plug>VimspectorPause
 nmap <F9> <Plug>VimspectorToggleBreakpoint
 nmap <F10> <Plug>VimspectorStepOver
 nmap <F11> <Plug>VimspectorStepInto
+" shift-F11 doesn't work in the terminal
 nmap <F12> <Plug>VimspectorStepOut
 nmap <C-x> <Plug>VimspectorToggleBreakpoint
 
@@ -512,26 +547,41 @@ vmap <silent> <Space>de <Plug>VimspectorBalloonEval
 " Signs
 fun! s:SetVimspectorColorschemePreferences()
   execute 'hi! vimspectorBP' .
-    \ ' ctermfg= ' . synIDattr(synIDtrans(hlID('WarningMsg')), 'fg', 'cterm')
-    \ ' ctermbg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-    \ ' guifg= ' . synIDattr(synIDtrans(hlID('WarningMsg')), 'fg', 'gui')
-    \ ' guibg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-execute 'hi! vimspectorBPCond' .
-  \ ' ctermfg= ' . synIDattr(synIDtrans(hlID('WarningMsg')), 'fg', 'cterm')
-  \ ' ctermbg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-  \ ' guifg= ' . synIDattr(synIDtrans(hlID('WarningMsg')), 'fg', 'gui')
-  \ ' guibg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-execute 'hi! vimspectorBPLog' .
-  \ ' ctermfg= ' . synIDattr(synIDtrans(hlID('Underlined')), 'fg', 'cterm')
-  \ ' ctermbg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-  \ ' guifg= ' . synIDattr(synIDtrans(hlID('Underlined')), 'fg', 'gui')
-  \ ' guibg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-  " \ ' cterm=underline gui=underline'
-execute 'hi! vimspectorBPDisabled' .
-  \ ' ctermfg= ' . synIDattr(synIDtrans(hlID('LineNr')), 'fg', 'cterm')
-  \ ' ctermbg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-  \ ' guifg= ' . synIDattr(synIDtrans(hlID('LineNr')), 'fg', 'gui')
-  \ ' guibg= ' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
+    \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
+    \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
+    \ ' ctermfg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'cterm')
+    \ ' guifg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'gui')
+  execute 'hi! vimspectorBPCond' .
+    \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
+    \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
+    \ ' ctermfg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'cterm')
+    \ ' guifg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'gui')
+  if get(g:, 'colors_name') == 'gruvbox'
+    execute 'hi! vimspectorBPLog' .
+      \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
+      \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
+      \ ' ctermfg=' . synIDattr(synIDtrans(hlID('Underlined')), 'fg', 'cterm')
+      \ ' guifg=' . synIDattr(synIDtrans(hlID('Underlined')), 'fg', 'gui')
+      " \ ' cterm=underline gui=underline'
+  elseif get(g:, 'colors_name') == 'gruvbox-material'
+    execute 'hi! vimspectorBPLog' .
+      \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
+      \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
+      " \ ' cterm=underline gui=underline'
+  endif
+  execute 'hi! vimspectorBPDisabled' .
+    \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
+    \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
+    \ ' ctermfg=' . synIDattr(synIDtrans(hlID('LineNr')), 'fg', 'cterm')
+    \ ' guifg=' . synIDattr(synIDtrans(hlID('LineNr')), 'fg', 'gui')
+
+  " hi! vimspectorCursorLine ctermbg=236 guibg=#16162a
+  " hi! vimspectorCursorLine ctermbg=236 guibg=#151d29
+  " hi! vimspectorCursorLine ctermbg=236 guibg=#212429
+  hi! vimspectorCursorLine ctermbg=236 guibg=#181e29
+  execute 'hi! vimspectorCursorLineSpecial ctermbg=236 guibg=#181e29'
+    \ ' ctermfg='. synIDattr(synIDtrans(hlID('Special')), 'fg', 'cterm')
+    \ ' guifg='. synIDattr(synIDtrans(hlID('Special')), 'fg', 'gui')
 endfun
 
 augroup VimspectorColorschemePreferences
@@ -543,10 +593,10 @@ sign define vimspectorBP            text=\ ● texthl=vimspectorBP
 sign define vimspectorBPCond        text=\ ◆ texthl=vimspectorBPCond
 sign define vimspectorBPLog         text=\ ◆ texthl=vimspectorBPLog
 sign define vimspectorBPDisabled    text=\ ● texthl=vimspectorBPDisabled
-sign define vimspectorPC            text=\ ▶ texthl=MatchParen linehl=CursorLine
-sign define vimspectorPCBP          text=●▶  texthl=MatchParen linehl=CursorLine
-sign define vimspectorCurrentThread text=▶   texthl=MatchParen linehl=CursorLine
-sign define vimspectorCurrentFrame  text=▶   texthl=Special    linehl=CursorLine
+sign define vimspectorPC            text=\ ▶ texthl=vimspectorCursorLine linehl=vimspectorCursorLine numhl=vimspectorCursorLine
+sign define vimspectorPCBP          text=●▶  texthl=vimspectorCursorLine linehl=vimspectorCursorLine numhl=vimspectorCursorLine
+sign define vimspectorCurrentThread text=▶   texthl=vimspectorCursorLine linehl=vimspectorCursorLine numhl=vimspectorCursorLine
+sign define vimspectorCurrentFrame  text=▶   texthl=vimspectorCursorLineSpecial linehl=vimspectorCursorLine numhl=vimspectorCursorLine
 
 " Make vimspector signs have priority over git signs
 let g:vimspector_sign_priority = {
@@ -579,8 +629,8 @@ let g:coc_global_extensions = [
 " Prevents the cursor from disappearing when pressing ctrl-c in :CocList
 " let g:coc_disable_transparent_cursor = 1
 
-nnoremap <silent> <Bar> :CocCommand explorer --sources=buffer+,file-<CR>
-nnoremap <silent> \ :CocCommand explorer --sources=buffer-,file+<CR>
+nnoremap <silent> <Bar> :CocCommand explorer --sources=buffer+<CR>
+nnoremap <silent> \ :CocCommand explorer --sources=file+<CR>
 nnoremap <silent> à :CocCommand explorer<CR>
 
 " Close vim if coc-explorer is the last open window
@@ -639,31 +689,40 @@ vnoremap <expr> <PageUp> coc#float#has_scroll() ? coc#float#scroll(0) : "\<PageU
 " }}}
 
 " Completion popup navigation {{{
+" TODO: disable CoC suggestions while filling out a snippet
+"       -> let b:coc_suggest_disable = 1
 inoremap <silent> <expr> <Tab>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<Tab>" :
-  \ coc#refresh()
-inoremap <silent> <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
-" Navigating the completion menu with arrows is a bad idea... 
-" It gets in the way too often
-" inoremap <silent> <expr> <Down>
-"   \ pumvisible() ? "\<C-n>" :
-"   \ "\<Down>"
-" inoremap <silent> <expr> <Up>
-"   \ pumvisible() ? "\<C-p>" :
-"   \ "\<Up>"
+  \ &ft == 'registers'
+  \   ? "\<Down>" :
+  \ !coc#expandable() && coc#expandableOrJumpable()
+  \   ? "\<C-r>=coc#rpc#request('snippetNext', [])\<CR>" :
+  \ pumvisible()
+  \   ? "\<C-n>" :
+  \ <SID>can_suggest()
+  \   ? coc#refresh()
+  \   : "\<Tab>"
+inoremap <silent> <expr> <S-Tab>
+  \ &ft == 'registers'
+  \   ? "\<Up>" :
+  \ !coc#expandable() && coc#expandableOrJumpable()
+  \   ? "\<C-r>=coc#rpc#request('snippetPrev'])\<CR>" :
+  \ pumvisible()
+  \   ? "\<C-p>"
+  \   : "\<C-h>"
 
-fun! s:check_back_space() abort
+fun! s:can_suggest() abort
   let col = col('.') - 1
-  return !col || getline('.')[col - 1] =~# '\s'
+  if !col | return v:false | endif
+  let c = getline('.')[col - 1]
+  return l:c !~# '\s' && l:c !~# '\\'
 endfun
 
 " Refresh the completion suggestions
 inoremap <silent> <expr> <C-Space> coc#refresh()
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent> <expr> <cr>
+" format on enter, <CR> could be remapped by other vim plugin
+inoremap <silent> <expr> <CR>
   \ pumvisible()
   \ ? coc#_select_confirm()
   \ : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
@@ -712,6 +771,17 @@ nmap <Space>dfx <Plug>(coc-fix-current)
 nmap <silent> <Space>dfu :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
 " }}}
 
+" Preview document (markdown) {{{
+fun! s:PreviewDocument()
+  if &ft != 'markdown' | return | endif
+  execute 'Glow'
+  execute "normal! \<C-w>|\<C-w>_"
+  call nvim_win_set_config(0, {'border': 'none'})
+endfun
+
+nnoremap <silent> <Space>dp :call <SID>PreviewDocument()<CR>
+" }}}
+
 " CocList {{{
 nnoremap <silent> <Space>do :CocList outline<CR>
 nnoremap <silent> <Space>ds :CocList -I symbols<CR>
@@ -724,6 +794,7 @@ nnoremap <silent> <C-t>r :CocList mru<CR>
 nnoremap <silent> <C-t><C-r> :CocList mru<CR>
 nnoremap <silent> <C-t>f :CocList files<CR>
 nnoremap <silent> <C-t><C-f> :CocList files<CR>
+nnoremap <silent> <C-f> :CocList grep<CR>
 " }}}
 
 " Text objects {{{
@@ -928,21 +999,22 @@ fun! s:SetColorschemePreferences()
   " These preferences clear some gruvbox background colours,
   " allowing transparency.
   " hi SignColumn ctermbg=NONE guibg=NONE
-  hi Todo ctermbg=NONE guibg=NONE
+  hi! Todo ctermbg=NONE guibg=NONE
 
-  " By default, faded-out text (i.e. unused code) defaults to the Conceal group,
-  " which is khaki green on Gruvbox.
-  " This makes it gray.
-  " execute 'hi! CocFadeOut'
-  "   \ ' ctermfg=' . synIDattr(synIDtrans(hlID('NonText')), 'fg', 'cterm')
-  "   \ ' guifg=#70708a'
+  " This makes unused code gray
   hi! link CocFadeOut NonText
 
+  " The background is wrong
   " https://github.com/morhetz/gruvbox/issues/260
-  hi clear Operator
-  hi link vimUserFunc clear
-  " the rainbow plugin takes care of highlighting those
-  hi! clear typeScriptBraces
+  hi! link vimUserFunc clear
+  hi! clear Operator
+  hi! htmlBold cterm=bold ctermfg=223 ctermbg=NONE gui=bold guifg=fg guibg=NONE
+  hi! htmlItalic cterm=italic ctermfg=223 ctermbg=NONE gui=italic guifg=fg guibg=NONE
+  hi! htmlBoldItalic cterm=bold,italic ctermfg=223 ctermbg=NONE gui=bold,italic guifg=fg guibg=NONE
+  hi! htmlUnderlineItalic cterm=underline,italic ctermfg=223 ctermbg=NONE gui=underline,italic guifg=fg guibg=NONE
+  hi! htmlBoldUnderline cterm=bold,underline ctermfg=223 ctermbg=NONE gui=bold,underline guifg=fg guibg=NONE
+  hi! htmlUnderline cterm=underline ctermfg=223 ctermbg=NONE gui=underline guifg=fg guibg=NONE
+  hi! htmlBoldUnderlineItalic cterm=bold,underline,italic ctermfg=223 ctermbg=NONE gui=bold,underline,italic guifg=fg guibg=NONE
 endfun
 
 augroup ColorschemePreferences
@@ -953,7 +1025,7 @@ augroup END
 let g:gruvbox_italic = 1
 set termguicolors " Enable True Color (24-bit)
 set background=dark
-colorscheme gruvbox
+colorscheme gruvbox-material
 
 " function! s:SynStack()
 "   if !exists("*synstack")
@@ -961,5 +1033,5 @@ colorscheme gruvbox
 "   endif
 "   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 " endfunc
-" nmap <expr> q <SID>SynStack()
+" nnoremap <silent> q :call <SID>SynStack()<CR>
 " }}}
