@@ -29,17 +29,17 @@ if g:is_unix
   if has('nvim')
     if !filereadable(expand('~/.local/share/nvim/site/autoload/plug.vim'))
       silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-            \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
       autocmd VimEnter * PlugInstall | source $MYVIMRC
     endif
   else
     if !filereadable(expand('~/.vim/autoload/plug.vim'))
       silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-            \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
       autocmd VimEnter * PlugInstall | source $MYVIMRC
     endif
   endif
-elseif has('win32')
+else
   if !filereadable(expand('~/vimfiles/autoload/plug.vim'))
     echom "Install vim-plug!"
   endif
@@ -62,13 +62,20 @@ Plug 'tversteeg/registers.nvim', { 'branch': 'main' }
 Plug 'machakann/vim-highlightedyank'
 Plug 'psliwka/vim-smoothie'
 Plug 'nacro90/numb.nvim'
+Plug 'airblade/vim-rooter'
+Plug 'folke/todo-comments.nvim'
+Plug 'nvim-lua/plenary.nvim'
 Plug 'ellisonleao/glow.nvim'
 Plug 'wesQ3/vim-windowswap'
-" Plug 'mattboehm/vim-accordion'
+Plug 'numtostr/FTerm.nvim'
+Plug 'kwkarlwang/bufresize.nvim'
+" Automatically creates missing LSP diagnostics highlight groups
+Plug 'folke/lsp-colors.nvim'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
 Plug 'tpope/vim-commentary'
+Plug 'AndrewRadev/tagalong.vim'
 Plug 'lambdalisue/suda.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -78,8 +85,11 @@ Plug 'PeterRincker/vim-argumentative'
 Plug 'chaoren/vim-wordmotion'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': {-> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
+" This replaces the gd/gr/gy/gi mappings from CoC
+Plug 'antoinemadec/coc-fzf'
 Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'romgrk/fzy-lua-native' " used by wilder
@@ -87,7 +97,7 @@ Plug 'romgrk/fzy-lua-native' " used by wilder
 " FIXME: install.sh exits with exitcode 1
 Plug 'nixprime/cpsm', { 'do': './install.sh' } " used by wilder
 Plug 'puremourning/vimspector'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'honza/vim-snippets'
@@ -119,25 +129,26 @@ fun! OpenUrl() abort
   " - If line begins with "Plug" open the github page
   " of the plugin.
 
-  let cl = getline('.')
-  let url = escape(matchstr(cl, '[a-z]*:\/\/\/\?[^ >,;()]*'), '#%')
-  if cl =~# 'Plug'
-    let pn = cl[match(cl, "'", 0, 1) + 1 :
-          \ match(cl, "'", 0, 2) - 1]
-    let url = printf("https://github.com/%s", pn)
+  let l:cl = getline('.')
+  let l:url = escape(matchstr(l:cl, '[a-z]*:\/\/\/\?[^ >,;()]*'), '#%')
+  if l:cl =~# 'Plug'
+    let pn = l:cl[match(l:cl, "'", 0, 1) + 1 :
+          \ match(l:cl, "'", 0, 2) - 1]
+    let l:url = printf("https://github.com/%s", pn)
   endif
-  if !empty(url)
-    let url = substitute(url, "['\"]", '', 'g')
-    let wmctrl = executable('wmctrl') && v:windowid isnot# 0 ?
-          \ ' && wmctrl -ia ' . v:windowid : ''
+  if !empty(l:url)
+    let l:url = substitute(l:url, "['\"]", '', 'g')
+    let l:wmctrl = executable('wmctrl') && v:windowid isnot# 0 ?
+      \ ' && wmctrl -ia ' . v:windowid : ''
     exe 'silent :!' . (g:is_unix ?
-          \   'xdg-open ' . shellescape(url) :
-          \   ' start "' . shellescape(url)) .
-          \ wmctrl .
-          \ (g:is_unix ? ' 2> /dev/null &' : '')
+      \   'xdg-open ' . shellescape(l:url) :
+      \   ' start "' . shellescape(l:url)) .
+      \ l:wmctrl .
+      \ (g:is_unix ? ' 2> /dev/null &' : '')
     if !g:is_gui | redraw! | endif
   endif
 endfun
+
 nnoremap <silent> gx :call OpenUrl()<CR>
 " }}}
 
@@ -249,7 +260,7 @@ let g:highlightedyank_highlight_duration = 250
 " }}}
 
 " wordmotion {{{
-let g:wordmotion_uppercase_spaces = ['=', '(', ')', '[', ']', '{', '}']
+let g:wordmotion_uppercase_spaces = [',', '-', '+', '=', '(', ')', '[', ']', '{', '}', '<', '>']
 " }}}
 
 " Sessions {{{
@@ -441,6 +452,24 @@ let g:startify_lists = [
   \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
   \ { 'type': 'commands',  'header': ['   Commands']       },
   \ ]
+let g:startify_custom_header =
+  \ startify#fortune#cowsay('', '═','║','╔','╗','╝','╚')
+" }}}
+
+" rooter {{{
+let g:rooter_cd_cmd = 'tcd'
+
+fun! s:RootStartifiedWindow()
+  if !get(w:, 'startified', 0) | return | endif
+  let w:startified = 0
+  execute('Rooter')
+endfun
+
+augroup StartifyRooterCompat
+  autocmd!
+  autocmd User Startified let w:startified = 1
+  autocmd BufEnter * call <SID>RootStartifiedWindow()
+augroup END
 " }}}
 
 " indent-blankline {{{
@@ -448,7 +477,7 @@ lua << EOF
 require("indent_blankline").setup {
   char = "|",
   buftype_exclude = {"terminal"},
-  filetype_exclude = {"startify"},
+  filetype_exclude = {"startify", "help"},
 }
 EOF
 " }}}
@@ -457,6 +486,26 @@ EOF
 lua <<EOF
 require('numb').setup()
 EOF
+" }}}
+
+" todo-comments {{{
+lua << EOF
+  require("todo-comments").setup {
+    FIX = {
+      icon = " ", -- icon used for the sign, and in search results
+      color = "error", -- can be a hex color, or a named color (see below)
+      alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+      -- signs = false, -- configure signs for some keywords individually
+    },
+    TODO = { icon = " ", color = "info" },
+    HACK = { icon = " ", color = "warning" },
+    WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+    PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+    NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+  }
+EOF
+
+nnoremap <silent> <Space>dt :TodoLocList<CR>
 " }}}
 
 " Winresizer {{{
@@ -468,6 +517,12 @@ let g:winresizer_keycode_left = "\<Left>"
 let g:winresizer_keycode_up = "\<Up>"
 let g:winresizer_keycode_right = "\<Right>"
 let g:winresizer_keycode_down = "\<Down>"
+" }}}
+
+" bufresize {{{
+lua <<EOF
+require("bufresize").setup()
+EOF
 " }}}
 
 " Folds {{{
@@ -492,6 +547,15 @@ noremap ;: :s:::cg<Left><Left><Left><Left>
 " Windowswap {{{
 let g:windowswap_map_keys = 0
 nnoremap <silent> <Space>ws :call WindowSwap#EasyWindowSwap()<CR>
+" }}}
+
+" asynctasks {{{
+let g:asyncrun_open = 6
+" }}}
+
+" fterm {{{
+nnoremap <silent> <Space>t :lua require('FTerm').toggle()<CR>
+tnoremap <Esc> <C-\><C-n>
 " }}}
 
 " registers {{{
@@ -612,6 +676,7 @@ let g:vimspector_sign_priority = {
 let g:coc_global_extensions = [
   \ 'coc-explorer',
   \ 'coc-git',
+  \ 'coc-fzf-preview',
   \ 'coc-highlight',
   \ 'coc-pairs',
   \ 'coc-tasks',
@@ -630,6 +695,7 @@ let g:coc_global_extensions = [
 " let g:coc_disable_transparent_cursor = 1
 
 nnoremap <silent> <Bar> :CocCommand explorer --sources=buffer+<CR>
+" nnoremap <silent> <Bar> :CocCommand fzf-preview.Buffers<CR>
 nnoremap <silent> \ :CocCommand explorer --sources=file+<CR>
 nnoremap <silent> à :CocCommand explorer<CR>
 
@@ -656,8 +722,8 @@ augroup CocExplorerFixMappings
 augroup END
 
 fun! s:DisableCocExplorerStatusline()
-  let wincount = winnr('$')
-  let coc_ex_winnr = index(
+  let l:wincount = winnr('$')
+  let l:coc_ex_winnr = index(
     \   map(range(1, l:wincount), {_,v -> getbufvar(winbufnr(v), '&ft')}),
     \   'coc-explorer'
     \ ) + 1
@@ -689,43 +755,56 @@ vnoremap <expr> <PageUp> coc#float#has_scroll() ? coc#float#scroll(0) : "\<PageU
 " }}}
 
 " Completion popup navigation {{{
-" TODO: disable CoC suggestions while filling out a snippet
-"       -> let b:coc_suggest_disable = 1
+" This enables:
+"   - registers.nvim navigation
+"   - snippet jumping
+"   - suggestions
 inoremap <silent> <expr> <Tab>
   \ &ft == 'registers'
   \   ? "\<Down>" :
-  \ !coc#expandable() && coc#expandableOrJumpable()
-  \   ? "\<C-r>=coc#rpc#request('snippetNext', [])\<CR>" :
   \ pumvisible()
   \   ? "\<C-n>" :
+  \ coc#jumpable()
+  \   ? "\<C-r>=coc#rpc#request('snippetNext', [])\<CR>" :
   \ <SID>can_suggest()
   \   ? coc#refresh()
+  \   : "\<Tab>"
+snoremap <silent> <expr> <Tab>
+  \ coc#jumpable()
+  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetNext', [])\<CR>"
   \   : "\<Tab>"
 inoremap <silent> <expr> <S-Tab>
   \ &ft == 'registers'
   \   ? "\<Up>" :
-  \ !coc#expandable() && coc#expandableOrJumpable()
-  \   ? "\<C-r>=coc#rpc#request('snippetPrev'])\<CR>" :
   \ pumvisible()
-  \   ? "\<C-p>"
+  \   ? "\<C-p>" :
+  \ coc#jumpable()
+  \   ? "\<C-r>=coc#rpc#request('snippetPrev', [])\<CR>"
   \   : "\<C-h>"
+snoremap <silent> <expr> <S-Tab>
+  \ coc#jumpable()
+  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetPrev', [])\<CR>"
+  \   : "\<S-Tab>"
+inoremap <silent> <expr> <CR>
+  \ pumvisible()
+  \ ? "\<C-y>"
+  \ : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
 
 fun! s:can_suggest() abort
-  let col = col('.') - 1
-  if !col | return v:false | endif
-  let c = getline('.')[col - 1]
-  return l:c !~# '\s' && l:c !~# '\\'
+  let l:col = col('.') - 1
+  if !l:col | return v:false | endif
+  let l:c = getline('.')[col - 1]
+  " Suppress suggestions when pressing TAB on:
+  " - spaces (indentation)
+  if l:c =~# '\s' | return v:false | endif
+  " - backslash (shell/vim line continuation)
+  if l:c =~# '\\' | return v:false | endif
+  " Otherwise enable suggestions
+  return v:true
 endfun
 
 " Refresh the completion suggestions
 inoremap <silent> <expr> <C-Space> coc#refresh()
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <CR> could be remapped by other vim plugin
-inoremap <silent> <expr> <CR>
-  \ pumvisible()
-  \ ? coc#_select_confirm()
-  \ : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
 " }}}
 
 " Diagnostics {{{
@@ -737,6 +816,10 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+nnoremap <silent> <Space>dci :call CocAction('showIncomingCalls')<CR>
+nnoremap <silent> <Space>dco :call CocAction('showOutgoingCalls')<CR>
+nnoremap <silent> <Space>do :call CocAction('showOutline')<CR>
 " }}}
 
 " Symbol renaming {{{
@@ -759,8 +842,8 @@ nnoremap <silent> <C-a> :call <SID>ShowDocumentation()<CR>
 " }}}
 
 " Formatting selected code {{{
-xmap <Space>dff <Plug>(coc-format)
-nmap <Space>dff <Plug>(coc-format-selected)
+xmap <Space>dff <Plug>(coc-format-selected)
+nmap <Space>dff <Plug>(coc-format)
 " }}}
 
 " Code actions {{{
@@ -783,18 +866,28 @@ nnoremap <silent> <Space>dp :call <SID>PreviewDocument()<CR>
 " }}}
 
 " CocList {{{
-nnoremap <silent> <Space>do :CocList outline<CR>
 nnoremap <silent> <Space>ds :CocList -I symbols<CR>
-nnoremap <silent> <C-t>w :CocList windows<CR>
-nnoremap <silent> <C-t><C-w> :CocList windows<CR>
-nnoremap <silent> <C-t>b :CocList buffers<CR>
-nnoremap <silent> <C-t>t :CocList tasks<CR>
-nnoremap <silent> <C-t><C-t> :CocList tasks<CR>
+nnoremap <silent> <C-t> <nop>
 nnoremap <silent> <C-t>r :CocList mru<CR>
 nnoremap <silent> <C-t><C-r> :CocList mru<CR>
-nnoremap <silent> <C-t>f :CocList files<CR>
-nnoremap <silent> <C-t><C-f> :CocList files<CR>
-nnoremap <silent> <C-f> :CocList grep<CR>
+nnoremap <silent> <C-t>w :CocList windows<CR>
+nnoremap <silent> <C-t><C-w> :CocList windows<CR>
+" nnoremap <silent> <C-t>b :CocList buffers<CR>
+nnoremap <silent> <C-t>b :CocCommand fzf-preview.Buffers<CR>
+nnoremap <silent> <C-t>t :CocList tasks<CR>
+nnoremap <silent> <C-t><C-t> :CocList tasks<CR>
+
+nnoremap <silent> <C-f> <nop>
+" FIXME: make use of non-git resources; https://github.com/yuki-yano/fzf-preview.vim/issues/290
+nnoremap <silent> <C-f>/ :CocCommand fzf-preview.Lines --add-fzf-arg=--no-sort --add-fzf-arg=--query="'"<CR>
+nnoremap <silent> <C-f><C-_> :CocCommand fzf-preview.Lines --add-fzf-arg=--no-sort --add-fzf-arg=--query="'"<CR>
+nnoremap <silent> <C-f>f :CocCommand fzf-preview.FromResources project_mru git<CR>
+nnoremap <silent> <C-f><C-f> :CocCommand fzf-preview.FromResources project_mru git<CR>
+nnoremap <silent> <C-f>g :CocCommand fzf-preview.ProjectGrepRecall<CR>
+nnoremap <silent> <C-f><C-g> :CocCommand fzf-preview.ProjectGrepRecall<CR>
+
+" Unmap ctrl-b because it's the tmux leader
+nnoremap <silent> <C-b> <nop>
 " }}}
 
 " Text objects {{{
