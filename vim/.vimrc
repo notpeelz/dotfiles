@@ -1,3 +1,5 @@
+" vim:foldmethod=marker
+
 " Compatibility {{{
 scriptencoding utf-8
 set nocompatible
@@ -82,12 +84,15 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'PeterRincker/vim-argumentative'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-fold'
 Plug 'chaoren/vim-wordmotion'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
 Plug 'junegunn/fzf', { 'do': {-> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
+Plug 'pbogut/fzf-mru.vim'
 " This replaces the gd/gr/gy/gi mappings from CoC
 Plug 'antoinemadec/coc-fzf'
 Plug 'antoinemadec/FixCursorHold.nvim'
@@ -116,7 +121,8 @@ fun! s:MkNonExDir(file, buf)
     endif
   endif
 endfun
-augroup BWCCreateDir
+
+augroup vimrc_Mkdirp
   autocmd!
   autocmd BufWritePre * call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
@@ -124,7 +130,7 @@ augroup END
 
 " Replace gx to open urls {{{
 " https://web.archive.org/web/20200129052658/https://old.reddit.com/r/vim/comments/7j9znw/gx_failing_to_open_url_on_vim8/dr6e3ks/
-fun! OpenUrl() abort
+fun! s:OpenUrl() abort
   " Open the current URL
   " - If line begins with "Plug" open the github page
   " of the plugin.
@@ -149,7 +155,7 @@ fun! OpenUrl() abort
   endif
 endfun
 
-nnoremap <silent> gx :call OpenUrl()<CR>
+nnoremap <silent> gx :call <SID>OpenUrl()<CR>
 " }}}
 
 " General settings {{{
@@ -203,6 +209,9 @@ set ruler
 
 " Make undesirable characters more apparent
 set list listchars=tab:→\ ,nbsp:␣,trail:·,extends:▶,precedes:◀
+
+" Set the filling characters
+set fillchars=eob:\ ,stl:\ ,stlnc:\ ,vert:\|,fold:·,diff:-
 
 " Enable mouse interaction
 set mouse=a
@@ -260,7 +269,7 @@ let g:highlightedyank_highlight_duration = 250
 " }}}
 
 " wordmotion {{{
-let g:wordmotion_uppercase_spaces = [',', '-', '+', '=', '(', ')', '[', ']', '{', '}', '<', '>']
+let g:wordmotion_uppercase_spaces = [',', '=', '(', ')', '[', ']', '{', '}', '<', '>']
 " }}}
 
 " Sessions {{{
@@ -289,7 +298,7 @@ let g:vim_indent_cont = &shiftwidth
 " }}}
 
 " Disable automatic continuation of multiline comments {{{
-augroup set_formatoptions
+augroup vimrc_FormatOptions
   autocmd!
   autocmd FileType * set formatoptions-=ro
 augroup END
@@ -313,7 +322,7 @@ let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {
   \ '^\.eslintrc.*': "\ue615",
   \ }
 
-augroup CustomFiletypes
+augroup vimrc_FileTypes
   autocmd! BufNewFile,BufRead *.fx set filetype=glsl
   autocmd! BufNewFile,BufRead *.fxh set filetype=glsl
   autocmd! BufNewFile,BufRead .ignore set filetype=conf
@@ -465,7 +474,7 @@ fun! s:RootStartifiedWindow()
   execute('Rooter')
 endfun
 
-augroup StartifyRooterCompat
+augroup vimrc_StartifyRooterCompat
   autocmd!
   autocmd User Startified let w:startified = 1
   autocmd BufEnter * call <SID>RootStartifiedWindow()
@@ -477,7 +486,7 @@ lua << EOF
 require("indent_blankline").setup {
   char = "|",
   buftype_exclude = {"terminal"},
-  filetype_exclude = {"startify", "help"},
+  filetype_exclude = {"startify", "help", "coc-explorer", "coctree"},
 }
 EOF
 " }}}
@@ -489,21 +498,32 @@ EOF
 " }}}
 
 " todo-comments {{{
-lua << EOF
+augroup vimrc_TodoComments
+  autocmd!
+  autocmd User vimrc_ColorSchemePost call <SID>SetupTodoComments()
+augroup END
+
+fun! s:SetupTodoComments()
+  lua << EOF
   require("todo-comments").setup {
-    FIX = {
-      icon = " ", -- icon used for the sign, and in search results
-      color = "error", -- can be a hex color, or a named color (see below)
-      alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-      -- signs = false, -- configure signs for some keywords individually
-    },
-    TODO = { icon = " ", color = "info" },
-    HACK = { icon = " ", color = "warning" },
-    WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-    PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-    NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+    signs = true,
+    signs_priority = 8,
+    keywords = {
+      FIX = {
+        icon = " ", -- icon used for the sign, and in search results
+        color = "error", -- can be a hex color, or a named color (see below)
+        alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+        -- signs = false, -- configure signs for some keywords individually
+      },
+      TODO = { icon = " ", color = "info" },
+      HACK = { icon = " ", color = "warning" },
+      WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+      PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+      NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+    }
   }
 EOF
+endfun
 
 nnoremap <silent> <Space>dt :TodoLocList<CR>
 " }}}
@@ -526,15 +546,21 @@ EOF
 " }}}
 
 " Folds {{{
-set foldmethod=syntax
-set foldignore=
 " Start with everything unfolded
 set foldlevelstart=99
 
-augroup vimrc_folds
+fun! s:SetFoldSettings()
+  set foldcolumn=0
+  set foldmethod=syntax
+  set foldignore=
+  if &ft == 'vim'
+    set foldmethod=marker
+  endif
+endfun
+
+augroup vimrc_VimFolds
   autocmd!
-  autocmd FileType * setl foldmethod=syntax
-  autocmd FileType vim setl foldmethod=marker
+  autocmd FileType * call <SID>SetFoldSettings()
 augroup END
 " }}}
 
@@ -559,7 +585,7 @@ tnoremap <Esc> <C-\><C-n>
 " }}}
 
 " registers {{{
-let g:registers_delay = 500
+let g:registers_delay = 0
 " }}}
 
 " ReplaceWithRegister {{{
@@ -571,6 +597,7 @@ xmap rr <Plug>ReplaceWithRegisterVisual
 nmap r^ <Plug>ReplaceWithRegisterLine
 " }}}
 
+" Custom textobjects {{{
 " Argumentative {{{
 let g:argumentative_no_mappings = 1
 nmap ,b <Plug>Argumentative_Prev
@@ -583,6 +610,48 @@ xmap ia <Plug>Argumentative_InnerTextObject
 xmap aa <Plug>Argumentative_OuterTextObject
 omap ia <Plug>Argumentative_OpPendingInnerTextObject
 omap aa <Plug>Argumentative_OpPendingOuterTextObject
+" }}}
+
+" Spaces {{{
+call textobj#user#plugin('space', {
+\   '-': {
+\     '*sfile*': expand('<sfile>:p'),
+\     'select-a': 'a<Space>', '*select-a-function*': 's:SelectSpaces_a',
+\     'select-i': 'i<Space>', '*select-i-function*': 's:SelectSpaces_i',
+\   }
+\ })
+
+omap aS <Plug>(textobj-space-a)
+omap iS <Plug>(textobj-space-i)
+
+fun! s:SelectSpaces_a()
+  return s:SelectSpaces(0)
+endfun
+
+fun! s:SelectSpaces_i()
+  return s:SelectSpaces(1)
+endfun
+
+fun! s:SelectSpaces(inner)
+  let l:pattern = '[[:blank:]　]\+'
+  if matchstr(getline('.'), '.', col('.') - 1) !~ l:pattern
+    call search(l:pattern)
+    if matchstr(getline('.'), '.', col('.') - 1) !~ l:pattern
+      return
+    endif
+  endif
+
+  call search(l:pattern,'bc')
+  let l:start = getpos('.')
+  call search(l:pattern, 'ce')
+  let l:end = getpos('.')
+  if a:inner && (l:end[2] - l:start[2]) > 1
+    let l:end[2] -= 1
+    return ['v', l:start, l:end]
+  endif
+  return ['v', l:start, l:end]
+endfun
+" }}}
 " }}}
 
 " Vimspector {{{
@@ -648,7 +717,7 @@ fun! s:SetVimspectorColorschemePreferences()
     \ ' guifg='. synIDattr(synIDtrans(hlID('Special')), 'fg', 'gui')
 endfun
 
-augroup VimspectorColorschemePreferences
+augroup vimrc_VimspectorColorschemePreferences
   autocmd!
   autocmd ColorScheme * call <SID>SetVimspectorColorschemePreferences()
 augroup END
@@ -673,10 +742,10 @@ let g:vimspector_sign_priority = {
 " }}}
 
 " CoC {{{
+" WARN: coc-sh is nice but the LSP symbol resolution is slow/buggy
 let g:coc_global_extensions = [
   \ 'coc-explorer',
   \ 'coc-git',
-  \ 'coc-fzf-preview',
   \ 'coc-highlight',
   \ 'coc-pairs',
   \ 'coc-tasks',
@@ -689,55 +758,110 @@ let g:coc_global_extensions = [
   \ 'coc-tsserver',
   \ 'coc-prettier',
   \ 'coc-omnisharp',
+  \ 'coc-pyright',
+  \ 'coc-vimlsp',
+  \ 'coc-sh',
   \ ]
 
 " Prevents the cursor from disappearing when pressing ctrl-c in :CocList
 " let g:coc_disable_transparent_cursor = 1
 
 nnoremap <silent> <Bar> :CocCommand explorer --sources=buffer+<CR>
-" nnoremap <silent> <Bar> :CocCommand fzf-preview.Buffers<CR>
 nnoremap <silent> \ :CocCommand explorer --sources=file+<CR>
 nnoremap <silent> à :CocCommand explorer<CR>
 
-" Close vim if coc-explorer is the last open window
-augroup CocExplorerAutoClose
-  autocmd!
-  autocmd BufEnter * if (winnr('$') == 1 && &ft == 'coc-explorer') | q | endif
-augroup END
+" Close vim if coc-explorer/coc-tree is the last open window {{{
+fun! s:CocAutoClose()
+  let l:filetypes = ['coc-explorer', 'coctree']
+  let l:wincount = winnr('$')
+  let l:windows = map(range(1, l:wincount), {_,v -> {
+    \   'id': v,
+    \   'ft': getbufvar(winbufnr(v), '&ft'),
+    \ } })
+  call filter(l:windows, {_,v -> index(l:filetypes, v.ft) >= 0})
+  " If the only windows left open are the filtered ones, close them all
+  if l:wincount != len(l:windows) | return | endif
+  " Close the windows from the highest id to the lowest, preventing the ids
+  " from changing
+  call reverse(l:windows)
+  for w in l:windows
+    execute('silent' . l:w.id .  'windo q')
+  endfor
+endfun
 
-fun! s:FixCocExplorerMappings()
+augroup vimrc_CocAutoClose
+  autocmd!
+  autocmd BufEnter * call s:CocAutoClose()
+augroup END
+" }}}
+
+" coc-explorer mappings {{{
+fun! s:CocExplorerMappings()
   if &ft != 'coc-explorer' | return | endif
-  if exists('b:coc_explorer_mapping_fix') | return | endif
+  if exists('b:coc_explorer_mappings') | return | endif
   let b:coc_explorer_mapping_fix = 1
 
-  " Prevent r mappings from conflicting with the rename function
-  nmap <buffer> <nowait> r <Plug>(coc-explorer-key-n-r)
-  nmap <buffer> <nowait> t <Plug>(coc-explorer-key-n-t)
+  " Prevent coc-explorer's mappings from conflicting with ours
+  nmap <nowait> <buffer> r <Plug>(coc-explorer-key-n-r)
+  nmap <nowait> <buffer> t <Plug>(coc-explorer-key-n-t)
 endfun
 
-augroup CocExplorerFixMappings
+augroup vimrc_CocExplorerMappings
   autocmd!
-  " Our function needs to execute after coc-explorer is done
-  autocmd BufEnter * call timer_start(0, {-> <SID>FixCocExplorerMappings()})
+  " Our function needs to execute after coc-explorer is done initializing
+  autocmd BufEnter,WinEnter * call timer_start(1000, {-> <SID>CocExplorerMappings() })
 augroup END
+" }}}
 
-fun! s:DisableCocExplorerStatusline()
+" coctree mappings {{{
+fun! s:CocTreeMappings()
+  if &ft != 'coctree' | return | endif
+  if exists('b:coc_tree_mappings') | return | endif
+  let b:coc_tree_mappings = 1
+  nnoremap <silent> <buffer> <C-c> :q<CR>
+  nunmap <buffer> <Space>
+endfun
+
+augroup vimrc_CocTreeMappings
+  autocmd!
+  " Our function needs to execute after coctree is done initializing
+  autocmd BufEnter * call timer_start(0, {-> <SID>CocTreeMappings()})
+augroup END
+" }}}
+
+" Disable line wrapping for coctree {{{
+augroup vimrc_CocTreeDisableWrap
+  autocmd!
+  autocmd FileType coctree set nowrap
+augroup END
+" }}}
+
+" Hide status line for coc-explorer/coctree {{{
+" FIXME: this is buggy. Ideally airline should have a user event to hook
+fun! s:CocDisableStatusLine()
+  let l:filetypes = ['coc-explorer', 'coctree']
   let l:wincount = winnr('$')
-  let l:coc_ex_winnr = index(
-    \   map(range(1, l:wincount), {_,v -> getbufvar(winbufnr(v), '&ft')}),
-    \   'coc-explorer'
-    \ ) + 1
-  call timer_start(0, {->
-    \ l:wincount == winnr('$')
-    \ && l:coc_ex_winnr
-    \ && setwinvar(l:coc_ex_winnr, '&stl', '%#Normal#')})
+  let l:windows = map(range(1, l:wincount), {_,v -> {
+    \   'id': v,
+    \   'ft': getbufvar(winbufnr(v), '&ft'),
+    \ } })
+  call filter(l:windows, {_,v -> index(l:filetypes, v.ft) >= 0 })
+  fun! s:CocDisableStatusLineCb(_) closure
+    if l:wincount != winnr('$') | return | endif
+    for w in l:windows
+      call setwinvar(l:w.id, '&stl', '%#Normal#')
+    endfor
+  endfun
+  call timer_start(0, function('<SID>CocDisableStatusLineCb'))
 endfun
 
-augroup CocExplorerDisableStatusLine
+augroup vimrc_CocDisableStatusLine
   autocmd!
-  autocmd WinEnter,BufWinEnter,TabEnter * call <SID>DisableCocExplorerStatusline()
-  autocmd FileType coc-explorer call <SID>DisableCocExplorerStatusline()
+  autocmd BufEnter,BufWinEnter,TabEnter * call <SID>CocDisableStatusLine()
+  autocmd FileType coc-explorer call <SID>CocDisableStatusLine()
+  autocmd FileType coctree call <SID>CocDisableStatusLine()
 augroup END
+" }}}
 
 " Scrolling in floating windows {{{
 nnoremap <expr> <C-e> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<C-e>"
@@ -766,7 +890,7 @@ inoremap <silent> <expr> <Tab>
   \   ? "\<C-n>" :
   \ coc#jumpable()
   \   ? "\<C-r>=coc#rpc#request('snippetNext', [])\<CR>" :
-  \ <SID>can_suggest()
+  \ <SID>CanSuggest()
   \   ? coc#refresh()
   \   : "\<Tab>"
 snoremap <silent> <expr> <Tab>
@@ -790,7 +914,7 @@ inoremap <silent> <expr> <CR>
   \ ? "\<C-y>"
   \ : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
 
-fun! s:can_suggest() abort
+fun! s:CanSuggest() abort
   let l:col = col('.') - 1
   if !l:col | return v:false | endif
   let l:c = getline('.')[col - 1]
@@ -805,6 +929,9 @@ endfun
 
 " Refresh the completion suggestions
 inoremap <silent> <expr> <C-Space> coc#refresh()
+
+" Alternative snippet completion mapping
+inoremap <silent> <expr> <C-y> "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])"
 " }}}
 
 " Diagnostics {{{
@@ -822,23 +949,16 @@ nnoremap <silent> <Space>dco :call CocAction('showOutgoingCalls')<CR>
 nnoremap <silent> <Space>do :call CocAction('showOutline')<CR>
 " }}}
 
-" Symbol renaming {{{
-nmap <Space>dr <Plug>(coc-rename)
+" Refactoring {{{
+" Rename symbol
+nmap <Space>drr <Plug>(coc-rename)
+
+" Rename file
+nnoremap <silent> <Space>drf :CocCommand workspace.renameCurrentFile<CR>
 " }}}
 
 " Show documentation {{{
-fun! s:ShowDocumentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    echom "CoC RPC not ready"
-    " execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfun
-
-nnoremap <silent> <C-a> :call <SID>ShowDocumentation()<CR>
+nnoremap <silent> <C-a> :call CocActionAsync('doHover')<CR>
 " }}}
 
 " Formatting selected code {{{
@@ -866,25 +986,23 @@ nnoremap <silent> <Space>dp :call <SID>PreviewDocument()<CR>
 " }}}
 
 " CocList {{{
-nnoremap <silent> <Space>ds :CocList -I symbols<CR>
 nnoremap <silent> <C-t> <nop>
-nnoremap <silent> <C-t>r :CocList mru<CR>
-nnoremap <silent> <C-t><C-r> :CocList mru<CR>
-nnoremap <silent> <C-t>w :CocList windows<CR>
-nnoremap <silent> <C-t><C-w> :CocList windows<CR>
-" nnoremap <silent> <C-t>b :CocList buffers<CR>
-nnoremap <silent> <C-t>b :CocCommand fzf-preview.Buffers<CR>
 nnoremap <silent> <C-t>t :CocList tasks<CR>
 nnoremap <silent> <C-t><C-t> :CocList tasks<CR>
 
 nnoremap <silent> <C-f> <nop>
-" FIXME: make use of non-git resources; https://github.com/yuki-yano/fzf-preview.vim/issues/290
-nnoremap <silent> <C-f>/ :CocCommand fzf-preview.Lines --add-fzf-arg=--no-sort --add-fzf-arg=--query="'"<CR>
-nnoremap <silent> <C-f><C-_> :CocCommand fzf-preview.Lines --add-fzf-arg=--no-sort --add-fzf-arg=--query="'"<CR>
-nnoremap <silent> <C-f>f :CocCommand fzf-preview.FromResources project_mru git<CR>
-nnoremap <silent> <C-f><C-f> :CocCommand fzf-preview.FromResources project_mru git<CR>
-nnoremap <silent> <C-f>g :CocCommand fzf-preview.ProjectGrepRecall<CR>
-nnoremap <silent> <C-f><C-g> :CocCommand fzf-preview.ProjectGrepRecall<CR>
+nnoremap <silent> <C-f><C-r> :FZFMru<CR>
+nnoremap <silent> <C-f>r :FZFMru<CR>
+nnoremap <silent> <C-f><C-f> :FZF<CR>
+nnoremap <silent> <C-f>f :FZF<CR>
+nnoremap <silent> <C-f><C-g> :Rg<CR>
+nnoremap <silent> <C-f>g :Rg<CR>
+nnoremap <silent> <C-f><C-b> :Rg<CR>
+nnoremap <silent> <C-f>b :Buffers<CR>
+nnoremap <silent> <C-h> :Buffers<CR>
+nnoremap <silent> <C-f>/ :Lines<CR>
+nnoremap <silent> <C-f><C-_> :Lines<CR>
+nnoremap <silent> <C-_> :BLines<CR>
 
 " Unmap ctrl-b because it's the tmux leader
 nnoremap <silent> <C-b> <nop>
@@ -902,7 +1020,7 @@ xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 " }}}
 
-augroup CocActions
+augroup vimrc_CocActions
   autocmd!
 
   " Highlight symbols on hover
@@ -914,14 +1032,9 @@ augroup CocActions
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup END
-"show_documentation }}}
+" }}}
 
 " wilder {{{
-augroup WilderConfig
-  autocmd!
-  autocmd CmdlineEnter * ++once call <SID>WilderInit()
-augroup END
-
 fun! s:WilderInit()
   call wilder#setup({
     \ 'modes': [':', '/', '?'],
@@ -955,27 +1068,27 @@ fun! s:WilderInit()
     \ }))
 
   call wilder#set_option('pipeline', [
-    \   wilder#branch(
-    \     wilder#python_file_finder_pipeline({
-    \       'file_command': {_, arg -> stridx(arg, '.') != -1 ? ['fd', '-tf', '-H'] : ['fd', '-tf']},
-    \       'dir_command': ['fd', '-td'],
-    \       'filters': ['cpsm_filter'],
+    \ wilder#branch(
+    \   wilder#python_file_finder_pipeline({
+    \     'file_command': {_, arg -> stridx(arg, '.') != -1 ? ['fd', '-tf', '-H'] : ['fd', '-tf']},
+    \     'dir_command': ['fd', '-td'],
+    \     'filters': ['cpsm_filter'],
+    \   }),
+    \   wilder#cmdline_pipeline({
+    \     'fuzzy': 1,
+    \     'fuzzy_filter': wilder#lua_fzy_filter(),
+    \     'hide_in_substitute': 1,
+    \   }),
+    \   [
+    \     wilder#check({_, x -> empty(x)}),
+    \     wilder#history(),
+    \   ],
+    \   wilder#python_search_pipeline({
+    \     'pattern': wilder#python_fuzzy_pattern({
+    \       'start_at_boundary': 0,
     \     }),
-    \     wilder#cmdline_pipeline({
-    \       'fuzzy': 1,
-    \       'fuzzy_filter': wilder#lua_fzy_filter(),
-    \       'hide_in_substitute': 1,
-    \     }),
-    \     [
-    \       wilder#check({_, x -> empty(x)}),
-    \       wilder#history(),
-    \     ],
-    \     wilder#python_search_pipeline({
-    \       'pattern': wilder#python_fuzzy_pattern({
-    \         'start_at_boundary': 0,
-    \       }),
-    \     }),
-    \   ),
+    \   }),
+    \ ),
     \ ])
 
   let s:wildmenu_renderer = wilder#wildmenu_renderer({
@@ -989,12 +1102,16 @@ fun! s:WilderInit()
     \ ':': s:popupmenu_renderer,
     \ '/': s:wildmenu_renderer,
     \ }))
-
 endfun
+
+augroup vimrc_WilderConfig
+  autocmd!
+  autocmd CmdlineEnter * ++once call <SID>WilderInit()
+augroup END
 
 " Workaround for a neovim bug (#14304)
 " https://github.com/gelguy/wilder.nvim/issues/41#issuecomment-860025867
-fun! SetShortmessF(on) abort
+fun! s:SetShortmessF(on) abort
   if a:on
     set shortmess+=F
   else
@@ -1003,11 +1120,11 @@ fun! SetShortmessF(on) abort
   return ''
 endfun
 
-nnoremap <expr> : SetShortmessF(1) . ':'
+nnoremap <expr> : <SID>SetShortmessF(1) . ':'
 
-augroup WilderShortmessFix
+augroup vimrc_WilderShortmessFix
   autocmd!
-  autocmd CmdlineLeave * call SetShortmessF(0)
+  autocmd CmdlineLeave * call <SID>SetShortmessF(0)
 augroup END
 " }}}
 
@@ -1108,9 +1225,11 @@ fun! s:SetColorschemePreferences()
   hi! htmlBoldUnderline cterm=bold,underline ctermfg=223 ctermbg=NONE gui=bold,underline guifg=fg guibg=NONE
   hi! htmlUnderline cterm=underline ctermfg=223 ctermbg=NONE gui=underline guifg=fg guibg=NONE
   hi! htmlBoldUnderlineItalic cterm=bold,underline,italic ctermfg=223 ctermbg=NONE gui=bold,underline,italic guifg=fg guibg=NONE
+
+  doautocmd User vimrc_ColorSchemePost
 endfun
 
-augroup ColorschemePreferences
+augroup vimrc_ColorschemePreferences
   autocmd!
   autocmd ColorScheme * call <SID>SetColorschemePreferences()
 augroup END

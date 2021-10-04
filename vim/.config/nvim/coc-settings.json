@@ -42,6 +42,8 @@
   "diagnostic.infoSign": "",
   "diagnostic.errorSign": "",
   "diagnostic.hintSign": "",
+  "diagnostic.signPriority": 9,
+  "git.signPriority": 11,
   "typescript.implementationsCodeLens.enable": false,
   "codeLens.enable": false,
   "codeLens.separator": "‣",
