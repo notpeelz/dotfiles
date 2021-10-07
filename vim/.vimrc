@@ -7,6 +7,9 @@ set encoding=utf-8
 set timeoutlen=1000
 set ttimeoutlen=0
 
+" Fix certain terminals not getting recognized as 256-color capable
+set t_Co=256
+
 let g:is_unix = has('unix')
 let g:is_win = has('win32')
 let g:is_gui = has('gui_running')
@@ -73,6 +76,7 @@ Plug 'numtostr/FTerm.nvim'
 Plug 'kwkarlwang/bufresize.nvim'
 " Automatically creates missing LSP diagnostics highlight groups
 Plug 'folke/lsp-colors.nvim'
+Plug 'kevinoid/vim-jsonc'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
@@ -138,7 +142,7 @@ fun! s:OpenUrl() abort
   let l:cl = getline('.')
   let l:url = escape(matchstr(l:cl, '[a-z]*:\/\/\/\?[^ >,;()]*'), '#%')
   if l:cl =~# 'Plug'
-    let pn = l:cl[match(l:cl, "'", 0, 1) + 1 :
+    let l:pn = l:cl[match(l:cl, "'", 0, 1) + 1 :
           \ match(l:cl, "'", 0, 2) - 1]
     let l:url = printf("https://github.com/%s", pn)
   endif
@@ -617,12 +621,14 @@ call textobj#user#plugin('space', {
 \   '-': {
 \     '*sfile*': expand('<sfile>:p'),
 \     'select-a': 'a<Space>', '*select-a-function*': 's:SelectSpaces_a',
+\     'select': '<Space>', '*select-function*': 's:SelectSpaces_i',
 \     'select-i': 'i<Space>', '*select-i-function*': 's:SelectSpaces_i',
 \   }
 \ })
 
 omap aS <Plug>(textobj-space-a)
 omap iS <Plug>(textobj-space-i)
+omap S <Plug>(textobj-space-i)
 
 fun! s:SelectSpaces_a()
   return s:SelectSpaces(0)
@@ -741,6 +747,10 @@ let g:vimspector_sign_priority = {
 \ }
 " }}}
 
+" FZF {{{
+let $FZF_DEFAULT_COMMAND='rg --files --hidden -- '
+" }}}
+
 " CoC {{{
 " WARN: coc-sh is nice but the LSP symbol resolution is slow/buggy
 let g:coc_global_extensions = [
@@ -756,6 +766,7 @@ let g:coc_global_extensions = [
   \ 'coc-json',
   \ 'coc-eslint',
   \ 'coc-tsserver',
+  \ 'coc-docthis',
   \ 'coc-prettier',
   \ 'coc-omnisharp',
   \ 'coc-pyright',
@@ -797,35 +808,50 @@ augroup END
 
 " coc-explorer mappings {{{
 fun! s:CocExplorerMappings()
-  if &ft != 'coc-explorer' | return | endif
-  if exists('b:coc_explorer_mappings') | return | endif
-  let b:coc_explorer_mapping_fix = 1
+  let l:bufid = bufnr()
+  fun! s:CocExplorerMappingsCb(_) closure
+    " NOTE: This check is done here since &ft isn't yet initialized in s:_CocExporerMappings()
+    if getbufvar(l:bufid, '&ft') != 'coc-explorer' | return | endif
+    if getbufvar(l:bufid, 'coc_explorer_mappings', 0) | return | endif
+    call setbufvar(l:bufid, 'coc_explorer_mappings', 1)
 
-  " Prevent coc-explorer's mappings from conflicting with ours
-  nmap <nowait> <buffer> r <Plug>(coc-explorer-key-n-r)
-  nmap <nowait> <buffer> t <Plug>(coc-explorer-key-n-t)
+    " Prevent coc-explorer's mappings from conflicting with ours
+    call nvim_buf_set_keymap(l:bufid,
+      \ 'n', 'r', '<Plug>(coc-explorer-key-n-r)', {'nowait': v:true})
+    call nvim_buf_set_keymap(l:bufid,
+      \ 'n', 't', '<Plug>(coc-explorer-key-n-t)', {'nowait': v:true})
+    call nvim_buf_set_keymap(l:bufid,
+      \ 'n', '<C-t>', '<Plug>(coc-explorer-key-n-[C-t])', {'nowait': v:true})
+  endfun
+  call timer_start(0, function('<SID>CocExplorerMappingsCb'))
 endfun
 
 augroup vimrc_CocExplorerMappings
   autocmd!
-  " Our function needs to execute after coc-explorer is done initializing
-  autocmd BufEnter,WinEnter * call timer_start(1000, {-> <SID>CocExplorerMappings() })
+  autocmd BufEnter,WinEnter * call <SID>CocExplorerMappings()
 augroup END
 " }}}
 
 " coctree mappings {{{
 fun! s:CocTreeMappings()
-  if &ft != 'coctree' | return | endif
-  if exists('b:coc_tree_mappings') | return | endif
-  let b:coc_tree_mappings = 1
-  nnoremap <silent> <buffer> <C-c> :q<CR>
-  nunmap <buffer> <Space>
+  let l:bufid = bufnr()
+  fun! s:CocTreeMappingsCb(_) closure
+    " NOTE: This check is done here since &ft isn't initialized in s:_CocTreeMappings()
+    if getbufvar(l:bufid, '&ft') != 'coctree' | return | endif
+    if getbufvar(l:bufid, 'coc_tree_mappings', 0) | return | endif
+    call setbufvar(l:bufid, 'coc_tree_mappings', 1)
+
+    call nvim_buf_set_keymap(l:bufid, 'n', '<C-c>', ':q<CR>', {'silent': v:true})
+    call nvim_buf_del_keymap(l:bufid, 'n', '<Space>')
+  endfun
+  " BUG: this needs a delay otherwise our mappings get overridden when CocTree
+  " updates to a new document
+  call timer_start(100, function('<SID>CocTreeMappingsCb'))
 endfun
 
 augroup vimrc_CocTreeMappings
   autocmd!
-  " Our function needs to execute after coctree is done initializing
-  autocmd BufEnter * call timer_start(0, {-> <SID>CocTreeMappings()})
+  autocmd BufEnter * call <SID>CocTreeMappings()
 augroup END
 " }}}
 
@@ -837,37 +863,39 @@ augroup END
 " }}}
 
 " Hide status line for coc-explorer/coctree {{{
-" FIXME: this is buggy. Ideally airline should have a user event to hook
-fun! s:CocDisableStatusLine()
-  let l:filetypes = ['coc-explorer', 'coctree']
-  let l:wincount = winnr('$')
-  let l:windows = map(range(1, l:wincount), {_,v -> {
-    \   'id': v,
-    \   'ft': getbufvar(winbufnr(v), '&ft'),
-    \ } })
-  call filter(l:windows, {_,v -> index(l:filetypes, v.ft) >= 0 })
-  fun! s:CocDisableStatusLineCb(_) closure
-    if l:wincount != winnr('$') | return | endif
-    for w in l:windows
-      call setwinvar(l:w.id, '&stl', '%#Normal#')
-    endfor
-  endfun
-  call timer_start(0, function('<SID>CocDisableStatusLineCb'))
-endfun
+" FIXME: this is buggy. Ideally airline would have a user event to hook
+" fun! s:CocDisableStatusLine()
+"   let l:filetypes = ['coc-explorer', 'coctree']
+"   let l:wincount = winnr('$')
+"   let l:windows = map(range(1, l:wincount), {_,v -> {
+"     \   'id': v,
+"     \   'ft': getbufvar(winbufnr(v), '&ft'),
+"     \ } })
+"   call filter(l:windows, {_,v -> index(l:filetypes, v.ft) >= 0 })
+"   fun! s:CocDisableStatusLineCb(_) closure
+"     if l:wincount != winnr('$') | return | endif
+"     for w in l:windows
+"       call setwinvar(l:w.id, '&stl', '%#Normal#')
+"     endfor
+"   endfun
+"   call timer_start(0, function('<SID>CocDisableStatusLineCb'))
+" endfun
 
-augroup vimrc_CocDisableStatusLine
-  autocmd!
-  autocmd BufEnter,BufWinEnter,TabEnter * call <SID>CocDisableStatusLine()
-  autocmd FileType coc-explorer call <SID>CocDisableStatusLine()
-  autocmd FileType coctree call <SID>CocDisableStatusLine()
-augroup END
+" augroup vimrc_CocDisableStatusLine
+"   autocmd!
+"   autocmd BufEnter,BufWinEnter,TabEnter * call <SID>CocDisableStatusLine()
+"   autocmd FileType coc-explorer call <SID>CocDisableStatusLine()
+"   autocmd FileType coctree call <SID>CocDisableStatusLine()
+" augroup END
 " }}}
 
 " Scrolling in floating windows {{{
 nnoremap <expr> <C-e> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<C-e>"
 nnoremap <expr> <C-y> coc#float#has_scroll() ? coc#float#scroll(0, 1) : "\<C-y>"
 inoremap <silent> <expr> <C-e> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0, 1)\<CR>" : "\<End>"
-inoremap <silent> <expr> <C-y> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1, 1)\<CR>" : ""
+inoremap <silent> <expr> <C-y> coc#float#has_scroll()
+  \ ? "\<C-r>=coc#float#scroll(1, 1)\<CR>"
+  \ : "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>"
 vnoremap <expr> <C-e> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<C-e>"
 vnoremap <expr> <C-y> coc#float#has_scroll() ? coc#float#scroll(0, 1) : "\<C-y>"
 nnoremap <expr> <PageDown> coc#float#has_scroll() ? coc#float#scroll(1) : "\<PageDown>"
@@ -929,9 +957,6 @@ endfun
 
 " Refresh the completion suggestions
 inoremap <silent> <expr> <C-Space> coc#refresh()
-
-" Alternative snippet completion mapping
-inoremap <silent> <expr> <C-y> "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])"
 " }}}
 
 " Diagnostics {{{
@@ -961,7 +986,7 @@ nnoremap <silent> <Space>drf :CocCommand workspace.renameCurrentFile<CR>
 nnoremap <silent> <C-a> :call CocActionAsync('doHover')<CR>
 " }}}
 
-" Formatting selected code {{{
+" Formatting code {{{
 xmap <Space>dff <Plug>(coc-format-selected)
 nmap <Space>dff <Plug>(coc-format)
 " }}}
@@ -969,9 +994,14 @@ nmap <Space>dff <Plug>(coc-format)
 " Code actions {{{
 nmap <C-Space> <Plug>(coc-codeaction)
 xmap <C-Space> <Plug>(coc-codeaction-selected)
+
 " Apply AutoFix to problem on the current line.
 nmap <Space>dfx <Plug>(coc-fix-current)
 nmap <silent> <Space>dfu :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+" }}}
+
+" Comments {{{
+nnoremap <silent> <Space>dfc :CocCommand docthis.documentThis<CR>
 " }}}
 
 " Preview document (markdown) {{{
@@ -993,8 +1023,8 @@ nnoremap <silent> <C-t><C-t> :CocList tasks<CR>
 nnoremap <silent> <C-f> <nop>
 nnoremap <silent> <C-f><C-r> :FZFMru<CR>
 nnoremap <silent> <C-f>r :FZFMru<CR>
-nnoremap <silent> <C-f><C-f> :FZF<CR>
-nnoremap <silent> <C-f>f :FZF<CR>
+nnoremap <silent> <C-f><C-f> :Files<CR>
+nnoremap <silent> <C-f>f :Files<CR>
 nnoremap <silent> <C-f><C-g> :Rg<CR>
 nnoremap <silent> <C-f>g :Rg<CR>
 nnoremap <silent> <C-f><C-b> :Rg<CR>
@@ -1044,14 +1074,28 @@ fun! s:WilderInit()
     \ 'reject_key': '<Up>',
     \ })
 
-  let s:highlighters = [
+  let s:scale = [
+    \ '#f4468f', '#fd4a85', '#ff507a', '#ff566f', '#ff5e63',
+    \ '#ff6658', '#ff704e', '#ff7a45', '#ff843d', '#ff9036',
+    \ '#f89b31', '#efa72f', '#e6b32e', '#dcbe30', '#d2c934',
+    \ '#c8d43a', '#bfde43', '#b6e84e', '#aff05b',
+    \ ]
+
+  let s:gradient = map(s:scale, {i, fg -> wilder#make_hl(
+    \ 'WilderGradient' . i, 'Pmenu', [{}, {}, {'foreground': fg}]
+    \ )})
+
+  let s:highlighters = wilder#highlighter_with_gradient([
     \ wilder#pcre2_highlighter(),
     \ wilder#basic_highlighter(),
-    \ ]
+    \ ])
 
   let s:popupmenu_renderer = wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
     \ 'border': 'rounded',
     \ 'empty_message': wilder#popupmenu_empty_message_with_spinner(),
+    \ 'highlights': {
+    \   'gradient': s:gradient,
+    \ },
     \ 'highlighter': s:highlighters,
     \ 'left': [
     \   ' ',
@@ -1134,6 +1178,7 @@ let g:lightline = {
 \   'component_function': {
 \     'filetype': 'LightlineFiletype',
 \     'fileformat': 'LightlineFileformat',
+\     'fileencoding': 'Lightline',
 \   },
 \   'tab_component_function': {
 \     'fticon': 'LightlineTabIcon',
@@ -1160,11 +1205,11 @@ let g:lightline = {
 \   },
 \   'subseparator': { 'left': '|', 'right': '|' },
 \   'component_expand': {
-\     'linter_warnings': 'lightline#coc#warnings',
-\     'linter_errors': 'lightline#coc#errors',
-\     'linter_info': 'lightline#coc#info',
-\     'linter_hints': 'lightline#coc#hints',
-\    },
+\     'linter_warnings': expand('<SID>').'LightlineCocWarnings',
+\     'linter_errors': expand('<SID>').'LightlineCocErrors',
+\     'linter_info': expand('<SID>').'LightlineCocInfo',
+\     'linter_hints': expand('<SID>').'LightlineCocHints',
+\   },
 \   'component_type': {
 \     'linter_warnings': 'warning',
 \     'linter_errors': 'error',
@@ -1173,22 +1218,63 @@ let g:lightline = {
 \    }
 \ }
 
-" let g:lightline#ale#indicator_checking = "\uf110 "
-let g:lightline#coc#indicator_info = "\ufbc2 "
-let g:lightline#coc#indicator_hints = "\uf141 "
-let g:lightline#coc#indicator_warnings = "\uf071 "
-let g:lightline#coc#indicator_errors = "× "
-let g:lightline#coc#indicator_ok = "\uf00c "
+augroup vimrc_LightlineCoc
+  autocmd!
+  autocmd User CocDiagnosticChange call lightline#update()
+  autocmd User CocStatusChange call lightline#update()
+  " TODO: update on ModeChanged when this is resolved: https://github.com/neovim/neovim/issues/4399
+augroup END
+
+" let g:coc_diagnostic_indicator_checking = ' '
+let g:coc_diagnostic_indicator_info = '﯂ '
+let g:coc_diagnostic_indicator_hints = ' '
+let g:coc_diagnostic_indicator_warnings = ' '
+let g:coc_diagnostic_indicator_errors = '× '
+let g:coc_diagnostic_indicator_ok = ' '
+
+fun! s:LightlineCocWarnings()
+  if mode() =~# '^i' | return '' | endif
+  let l:stat = get(b:coc_diagnostic_info, 'warning', 0)
+  if !l:stat | return '' | endif
+  return g:coc_diagnostic_indicator_warnings . l:stat
+endfun
+
+fun! s:LightlineCocErrors()
+  if mode() =~# '^i' | return '' | endif
+  let l:stat = get(b:coc_diagnostic_info, 'error', 0)
+  if !l:stat | return '' | endif
+  return g:coc_diagnostic_indicator_errors . l:stat
+endfun
+
+fun! s:LightlineCocInfo()
+  if mode() =~# '^i' | return '' | endif
+  let l:stat = get(b:coc_diagnostic_info, 'information', 0)
+  if !l:stat | return '' | endif
+  return g:coc_diagnostic_indicator_info . l:stat
+endfun
+
+fun! s:LightlineCocHints()
+  if mode() =~# '^i' | return '' | endif
+  let l:stat = get(b:coc_diagnostic_info, 'hints', 0)
+  if !l:stat | return '' | endif
+  return g:coc_diagnostic_indicator_hints . l:stat
+endfun
 
 let g:taboo_tabline = 0
-let g:taboo_tab_format = " %f%m "
+let g:taboo_tab_format = ' %f%m '
 
 fun! LightlineFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+  if &columns <= 70 | return '' | endif
+  if &filetype == 'qf' | return '' | endif
+  return strlen(&filetype)
+    \ ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol()
+    \ : 'no ft'
 endfun
 
 fun! LightlineFileformat()
-  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+  if &columns <= 70 | return '' | endif
+  if &filetype == 'qf' | return '' | endif
+  return &fileformat . ' ' . WebDevIconsGetFileFormatSymbol()
 endfun
 
 fun! LightlineTabIcon(n)

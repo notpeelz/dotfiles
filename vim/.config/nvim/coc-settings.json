@@ -1,65 +1,53 @@
+// vim:ft=jsonc:foldmethod=marker
+
 {
+  // Prevent coc from creating a default.vim session {{{
+  "session.saveOnVimLeave": false,
+  // }}}
+
+  // Git highlight groups {{{
   "git.addedSign.hlGroup": "GitGutterAdd",
   "git.changedSign.hlGroup": "GitGutterChange",
   "git.removedSign.hlGroup": "GitGutterDelete",
   "git.topRemovedSign.hlGroup": "GitGutterDelete",
   "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
-  "prettier.requireConfig": true,
-  "prettier.disableSuccessMessage": true,
-  "session.saveOnVimLeave": false,
-  "pairs.disableLanguages": ["vim"],
-  "explorer.icon.enableNerdfont": true,
-  "explorer.keyMappings.global": {
-    "u": ["wait", "gotoParent"],
-    "r": "rename",
-    "<cr>": [
-      "expandable?",
-      ["expanded?", "collapse", "expand"],
-      ["open", "quit"]
-    ],
-    "o": ["wait", "expandable?", "cd", "open"],
-    "F": "search",
-    "f": "search:recursive"
-  },
-  "explorer.file.hiddenRules": {
-    "extensions": ["o", "a", "obj", "pyc"],
-    "filenames": ["node_modules", "lib"],
-    "patternMatches": ["^\\."]
-  },
-  "explorer.file.reveal.filter": {
-    "literals": ["node_modules"]
-  },
-  "list.source.files.command": "rg",
-  "list.source.files.args": ["--hidden", "--files"],
-  "list.source.mru.ignoreGitIgnore": true,
-  "list.normalMappings": {
-    "<C-c>": "do:exit"
-  },
-  "list.insertMappings": {
-    "<C-c>": "do:exit"
-  },
+  // }}}
+
+  // Signs {{{
   "diagnostic.warningSign": "",
   "diagnostic.infoSign": "",
   "diagnostic.errorSign": "",
   "diagnostic.hintSign": "",
   "diagnostic.signPriority": 9,
   "git.signPriority": 11,
-  "typescript.implementationsCodeLens.enable": false,
+  // }}}
+
+  // CodeLens {{{
   "codeLens.enable": false,
   "codeLens.separator": "‣",
   "codeLens.subseparator": " ",
+  // }}}
+
+  // Hover {{{
   "hover.floatConfig": {
     "border": false,
     "highlight": "CocFloating",
     "focusable": true
   },
+  // }}}
+
+  // Formatting {{{
   "coc.preferences.formatOnType": true,
   "coc.preferences.formatOnSaveFiletypes": [
     "javascript",
     "typescript",
+    "cs",
     "css",
     "markdown"
   ],
+  // }}}
+
+  // Suggest {{{
   "suggest.autoTrigger": "none",
   "suggest.enablePreselect": false,
   "suggest.noselect": true,
@@ -90,5 +78,60 @@
     "snippet": "\ue60b",
     "typeParameter": "\uf728",
     "default": "\uf29c"
-  }
+  },
+  // }}}
+
+  // coc-prettier {{{
+  "prettier.requireConfig": true,
+  "prettier.disableSuccessMessage": true,
+  // }}}
+
+  // coc-pairs {{{
+  "pairs.disableLanguages": ["vim"],
+  // }}}
+
+  // coc-explorer {{{
+  "explorer.icon.enableNerdfont": true,
+  "explorer.keyMappings.global": {
+    "u": ["wait", "gotoParent"],
+    "r": "rename",
+    "<cr>": [
+      "expandable?",
+      ["expanded?", "collapse", "expand"],
+      ["open", "quit"]
+    ],
+    "t": ["open:tab"],
+    "T": ["open:tab"],
+    "<C-t>": ["open:tab"],
+    "o": ["wait", "expandable?", "cd", "open"],
+    "F": "search",
+    "f": "search:recursive"
+  },
+  "explorer.file.hiddenRules": {
+    "extensions": ["o", "a", "obj", "pyc"],
+    "filenames": ["node_modules", "lib"],
+    "patternMatches": ["^\\."]
+  },
+  "explorer.file.reveal.filter": {
+    "literals": ["node_modules"]
+  },
+  // }}}
+
+  // coc-list {{{
+  "list.source.files.command": "rg",
+  "list.source.files.args": ["--hidden", "--files"],
+  "list.source.mru.ignoreGitIgnore": true,
+  "list.normalMappings": {
+    "<C-c>": "do:exit"
+  },
+  "list.insertMappings": {
+    "<C-c>": "do:exit"
+  },
+  // }}}
+
+  // coc-tsserver {{{
+  "tsserver.disableAutomaticTypeAcquisition": true,
+  "typescript.implementationsCodeLens.enable": false,
+  "javascript.suggestionActions.enabled": false
+  // }}}
 }
