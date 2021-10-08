@@ -77,9 +77,12 @@ Plug 'kwkarlwang/bufresize.nvim'
 " Automatically creates missing LSP diagnostics highlight groups
 Plug 'folke/lsp-colors.nvim'
 Plug 'kevinoid/vim-jsonc'
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
+Plug 'kkoomen/vim-doge', { 'do': {-> doge#install() } }
 Plug 'tpope/vim-commentary'
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'lambdalisue/suda.vim'
@@ -109,7 +112,7 @@ Plug 'puremourning/vimspector'
 Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
-Plug 'honza/vim-snippets'
+" Plug 'honza/vim-snippets'
 " This must be loaded last
 Plug 'ryanoasis/vim-devicons'
 call plug#end()
@@ -230,7 +233,14 @@ set cursorline nocursorcolumn
 " Unmap C-c to prevent the "Type :qa and press <Enter> to exit Nvim" message
 " from showing up
 " noremap <C-c> <nop>
-noremap <silent> <C-c> :confirm q<CR>
+fun! s:CtrlC()
+  if coc#float#has_float()
+    call coc#float#close_all()
+    return
+  endif
+  execute("confirm q")
+endfun
+nnoremap <silent> <C-c> :call <SID>CtrlC()<CR>
 "}}}
 
 " Search and substitution {{{
@@ -383,8 +393,10 @@ inoremap <silent> <S-Down> <nop>
 " }}}
 
 " Emacs-style navigation in insert mode {{{
-inoremap <C-a> <Home>
-inoremap <C-e> <End>
+" inoremap <C-a> <Home>
+" inoremap <C-e> <End>
+inoremap <C-a> <nop>
+inoremap <C-e> <nop>
 " }}}
 
 " Makes it so that ctrl-right doesn't skip over to the next line
@@ -667,8 +679,9 @@ let g:vimspector_install_gadgets = [
   \ ]
 
 nmap <F5> <Plug>VimspectorContinue
-" <F15> = shift-f5
+" <F15>/<S-F3> = shift-f5 (depends on the terminfo)
 nmap <F15> <Plug>VimspectorStop
+nmap <S-F3> <Plug>VimspectorStop
 " ctrl-shift-F5 doesn't work in the terminal
 nmap <F4> <Plug>VimspectorRestart
 nmap <F6> <Plug>VimspectorPause
@@ -751,13 +764,88 @@ let g:vimspector_sign_priority = {
 let $FZF_DEFAULT_COMMAND='rg --files --hidden -- '
 " }}}
 
+" Smoothie {{{
+let g:smoothie_no_default_mappings = 1
+
+" NOTE: this is remapped below in the CoC section
+" map <C-d> <Plug>(SmoothieDownwards)
+" map <C-u> <Plug>(SmoothieUpwards)
+" map <PageDown> <Plug>(SmoothieForwards)
+" map <PageUp> <Plug>(SmoothieBackwards)
+" }}}
+
+" DoGe {{{
+let g:doge_enable_mappings = 0
+let g:doge_buffer_mappings = 1
+let g:doge_comment_interactive = 1
+let g:doge_comment_jump_wrap = 1
+let g:doge_mapping_comment_jump_forward = '<Tab>'
+let g:doge_mapping_comment_jump_backward = '<S-Tab>'
+
+let g:doge_javascript_settings = {
+  \   'destructuring_props': 1,
+  \   'omit_redundant_param_types': 1,
+  \ }
+
+nmap <silent> <Space>c <Plug>(doge-generate)
+" }}}
+
+" Completion popup navigation {{{
+" This enables:
+"   - registers.nvim navigation
+"   - snippet jumping
+"   - suggestion navigation
+inoremap <silent> <expr> <Tab>
+  \ &ft == 'registers'
+  \   ? "\<Down>" :
+  \ pumvisible()
+  \   ? "\<C-n>" :
+  \ coc#jumpable()
+  \   ? "\<C-r>=coc#rpc#request('snippetNext', [])\<CR>" :
+  \ <SID>CanSuggest()
+  \   ? coc#refresh()
+  \   : "\<Tab>"
+snoremap <silent> <expr> <Tab>
+  \ coc#jumpable()
+  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetNext', [])\<CR>"
+  \   : "\<Tab>"
+inoremap <silent> <expr> <S-Tab>
+  \ &ft == 'registers'
+  \   ? "\<Up>" :
+  \ pumvisible()
+  \   ? "\<C-p>" :
+  \ coc#jumpable()
+  \   ? "\<C-r>=coc#rpc#request('snippetPrev', [])\<CR>"
+  \   : "\<C-h>"
+snoremap <silent> <expr> <S-Tab>
+  \ coc#jumpable()
+  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetPrev', [])\<CR>"
+  \   : "\<S-Tab>"
+inoremap <silent> <expr> <CR>
+  \ pumvisible()
+  \ ? "\<C-y>"
+  \ : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
+
+fun! s:CanSuggest() abort
+  let l:col = col('.') - 1
+  if !l:col | return v:false | endif
+  let l:c = getline('.')[col - 1]
+  " Suppress suggestions when pressing TAB on:
+  " - spaces (indentation)
+  if l:c =~# '\s' | return v:false | endif
+  " - backslash (shell/vim line continuation)
+  if l:c =~# '\\' | return v:false | endif
+  " Otherwise enable suggestions
+  return v:true
+endfun
+" }}}
+
 " CoC {{{
 " WARN: coc-sh is nice but the LSP symbol resolution is slow/buggy
 let g:coc_global_extensions = [
   \ 'coc-explorer',
   \ 'coc-git',
   \ 'coc-highlight',
-  \ 'coc-pairs',
   \ 'coc-tasks',
   \ 'coc-lists',
   \ 'coc-snippets',
@@ -766,7 +854,6 @@ let g:coc_global_extensions = [
   \ 'coc-json',
   \ 'coc-eslint',
   \ 'coc-tsserver',
-  \ 'coc-docthis',
   \ 'coc-prettier',
   \ 'coc-omnisharp',
   \ 'coc-pyright',
@@ -810,10 +897,9 @@ augroup END
 fun! s:CocExplorerMappings()
   let l:bufid = bufnr()
   fun! s:CocExplorerMappingsCb(_) closure
-    " NOTE: This check is done here since &ft isn't yet initialized in s:_CocExporerMappings()
     if getbufvar(l:bufid, '&ft') != 'coc-explorer' | return | endif
-    if getbufvar(l:bufid, 'coc_explorer_mappings', 0) | return | endif
-    call setbufvar(l:bufid, 'coc_explorer_mappings', 1)
+    " if getbufvar(l:bufid, 'coc_explorer_mappings', 0) | return | endif
+    " call setbufvar(l:bufid, 'coc_explorer_mappings', 1)
 
     " Prevent coc-explorer's mappings from conflicting with ours
     call nvim_buf_set_keymap(l:bufid,
@@ -836,13 +922,12 @@ augroup END
 fun! s:CocTreeMappings()
   let l:bufid = bufnr()
   fun! s:CocTreeMappingsCb(_) closure
-    " NOTE: This check is done here since &ft isn't initialized in s:_CocTreeMappings()
     if getbufvar(l:bufid, '&ft') != 'coctree' | return | endif
-    if getbufvar(l:bufid, 'coc_tree_mappings', 0) | return | endif
-    call setbufvar(l:bufid, 'coc_tree_mappings', 1)
+    " if getbufvar(l:bufid, 'coc_tree_mappings', 0) | return | endif
+    " call setbufvar(l:bufid, 'coc_tree_mappings', 1)
 
     call nvim_buf_set_keymap(l:bufid, 'n', '<C-c>', ':q<CR>', {'silent': v:true})
-    call nvim_buf_del_keymap(l:bufid, 'n', '<Space>')
+    silent! call nvim_buf_del_keymap(l:bufid, 'n', '<Space>')
   endfun
   " BUG: this needs a delay otherwise our mappings get overridden when CocTree
   " updates to a new document
@@ -890,73 +975,44 @@ augroup END
 " }}}
 
 " Scrolling in floating windows {{{
-nnoremap <expr> <C-e> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<C-e>"
-nnoremap <expr> <C-y> coc#float#has_scroll() ? coc#float#scroll(0, 1) : "\<C-y>"
-inoremap <silent> <expr> <C-e> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0, 1)\<CR>" : "\<End>"
-inoremap <silent> <expr> <C-y> coc#float#has_scroll()
-  \ ? "\<C-r>=coc#float#scroll(1, 1)\<CR>"
-  \ : "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>"
-vnoremap <expr> <C-e> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<C-e>"
-vnoremap <expr> <C-y> coc#float#has_scroll() ? coc#float#scroll(0, 1) : "\<C-y>"
-nnoremap <expr> <PageDown> coc#float#has_scroll() ? coc#float#scroll(1) : "\<PageDown>"
-nnoremap <expr> <PageUp> coc#float#has_scroll() ? coc#float#scroll(0) : "\<PageUp>"
-inoremap <silent> <expr> <PageDown> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1)\<CR>" : "\<PageDown>"
-inoremap <silent> <expr> <PageUp> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0)\<CR>" : "\<PageUp>"
-vnoremap <expr> <PageDown> coc#float#has_scroll() ? coc#float#scroll(1) : "\<PageDown>"
-vnoremap <expr> <PageUp> coc#float#has_scroll() ? coc#float#scroll(0) : "\<PageUp>"
-" }}}
-
-" Completion popup navigation {{{
-" This enables:
-"   - registers.nvim navigation
-"   - snippet jumping
-"   - suggestions
-inoremap <silent> <expr> <Tab>
-  \ &ft == 'registers'
-  \   ? "\<Down>" :
-  \ pumvisible()
-  \   ? "\<C-n>" :
-  \ coc#jumpable()
-  \   ? "\<C-r>=coc#rpc#request('snippetNext', [])\<CR>" :
-  \ <SID>CanSuggest()
-  \   ? coc#refresh()
-  \   : "\<Tab>"
-snoremap <silent> <expr> <Tab>
-  \ coc#jumpable()
-  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetNext', [])\<CR>"
-  \   : "\<Tab>"
-inoremap <silent> <expr> <S-Tab>
-  \ &ft == 'registers'
-  \   ? "\<Up>" :
-  \ pumvisible()
-  \   ? "\<C-p>" :
-  \ coc#jumpable()
-  \   ? "\<C-r>=coc#rpc#request('snippetPrev', [])\<CR>"
-  \   : "\<C-h>"
-snoremap <silent> <expr> <S-Tab>
-  \ coc#jumpable()
-  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetPrev', [])\<CR>"
-  \   : "\<S-Tab>"
-inoremap <silent> <expr> <CR>
-  \ pumvisible()
-  \ ? "\<C-y>"
-  \ : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
-
-fun! s:CanSuggest() abort
-  let l:col = col('.') - 1
-  if !l:col | return v:false | endif
-  let l:c = getline('.')[col - 1]
-  " Suppress suggestions when pressing TAB on:
-  " - spaces (indentation)
-  if l:c =~# '\s' | return v:false | endif
-  " - backslash (shell/vim line continuation)
-  if l:c =~# '\\' | return v:false | endif
-  " Otherwise enable suggestions
-  return v:true
+fun! s:CocScroll(cmd, ...)
+  if coc#float#has_scroll()
+    call call("coc#float#scroll", a:000)
+    return "\<Ignore>"
+  endif
+  return a:cmd
 endfun
 
-" Refresh the completion suggestions
+nnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
+nnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
+xnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
+xnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
+inoremap <expr> <C-e> <SID>CocScroll("<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>", 1, 1)
+" C-y can also used for snippet completion in insert mode
+inoremap <silent> <expr> <C-y> <SID>CocScroll(
+  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>", 0, 1)
+
+nmap <expr> <PageDown> <SID>CocScroll("\<Plug>(SmoothieForwards)", 1)
+nmap <expr> <PageUp> <SID>CocScroll("\<Plug>(SmoothieBackwards)", 0)
+xmap <expr> <PageDown> <SID>CocScroll("\<Plug>(SmoothieForwards)", 1)
+xmap <expr> <PageUp> <SID>CocScroll("\<Plug>(SmoothieBackwards)", 0)
+imap <expr> <PageDown> <SID>CocScroll("<C-o>\<Plug>(SmoothieForwards)", 1)
+imap <expr> <PageUp> <SID>CocScroll("<C-o>\<Plug>(SmoothieBackwards)", 0)
+
+nmap <expr> <C-d> <SID>CocScroll("\<Plug>(SmoothieDownwards)", 1)
+nmap <expr> <C-u> <SID>CocScroll("\<Plug>(SmoothieUpwards)", 0)
+xmap <expr> <C-d> <SID>CocScroll("\<Plug>(SmoothieDownwards)", 1)
+xmap <expr> <C-u> <SID>CocScroll("\<Plug>(SmoothieUpwards)", 0)
+imap <expr> <C-d> <SID>CocScroll("\<C-o>\<Plug>(SmoothieDownwards)", 1)
+imap <expr> <C-u> <SID>CocScroll("\<C-o>\<Plug>(SmoothieUpwards)", 0)
+" }}}
+
+" Refresh the completion suggestions {{{
 inoremap <silent> <expr> <C-Space> coc#refresh()
+" }}}
+
+" Snippet completion {{{
+inoremap <silent> <C-e> <C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>
 " }}}
 
 " Diagnostics {{{
@@ -998,10 +1054,6 @@ xmap <C-Space> <Plug>(coc-codeaction-selected)
 " Apply AutoFix to problem on the current line.
 nmap <Space>dfx <Plug>(coc-fix-current)
 nmap <silent> <Space>dfu :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
-" }}}
-
-" Comments {{{
-nnoremap <silent> <Space>dfc :CocCommand docthis.documentThis<CR>
 " }}}
 
 " Preview document (markdown) {{{

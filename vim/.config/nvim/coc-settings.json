@@ -86,8 +86,12 @@
   "prettier.disableSuccessMessage": true,
   // }}}
 
-  // coc-pairs {{{
-  "pairs.disableLanguages": ["vim"],
+  // Snippets {{{
+  "snippets.extends": {
+    "javascriptreact": ["javascript"],
+    "typescriptreact": ["javascript"],
+    "typescript": ["javascript"]
+  },
   // }}}
 
   // coc-explorer {{{

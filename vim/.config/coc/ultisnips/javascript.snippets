@@ -23,3 +23,29 @@
 #		endsnippet
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+
+snippet /* "JSDoc comment" b
+/**
+ * ${1:${VISUAL}}$0
+ */
+endsnippet
+snippet class "Class" b
+class ${1:Name} {
+	${0:${VISUAL}}
+}
+endsnippet
+snippet cla "Class" b
+class ${1:Name} {
+	${0:${VISUAL}}
+}
+endsnippet
+snippet clax "Derived class" b
+class ${1:Name} extends ${2:Base} {
+	${0:${VISUAL}}
+}
+endsnippet
+snippet ctor "Constructor" b
+constructor(${2}) {
+	${0:${VISUAL}}
+}
+endsnippet
