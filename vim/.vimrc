@@ -76,9 +76,20 @@ Plug 'numtostr/FTerm.nvim'
 Plug 'kwkarlwang/bufresize.nvim'
 " Automatically creates missing LSP diagnostics highlight groups
 Plug 'folke/lsp-colors.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'nvim-treesitter/playground'
+" Plug 'nvim-treesitter/nvim-tree-docs'
+Plug 'romgrk/nvim-treesitter-context'
+Plug 'RRethy/nvim-treesitter-textsubjects'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+Plug 'windwp/nvim-ts-autotag'
+Plug 'p00f/nvim-ts-rainbow'
+Plug 'SmiteshP/nvim-gps'
+Plug 'theHamsta/nvim-treesitter-pairs'
+Plug 'windwp/nvim-autopairs'
 Plug 'kevinoid/vim-jsonc'
-Plug 'yuezk/vim-js'
-Plug 'maxmellon/vim-jsx-pretty'
+" Plug 'yuezk/vim-js'
+" Plug 'maxmellon/vim-jsx-pretty'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
@@ -196,9 +207,9 @@ set breakat=" 	!@*-+;:,./?"
 set number norelativenumber
 set numberwidth=5
 
-" Always show at least one one line above/below the cursor
-set scrolloff=1
-set sidescrolloff=5
+" Show some context around the cursor
+set scrolloff=5
+set sidescrolloff=1
 
 " Set max command history
 set history=10000
@@ -321,19 +332,19 @@ augroup END
 " Filetypes {{{
 " TODO: get rid of vim-devicons and unify with coc-explorer icons
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {
-  \ '.ignore': "\ue615",
-  \ '.editorconfig': "\ue615",
+  \ '.ignore': "",
+  \ '.editorconfig': "",
   \ }
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {
-  \ 'fx': "\ue60b",
-  \ 'fxh': "\ue60b",
-  \ 'js': "\ue74e",
-  \ 'mjs': "\ue74e",
-  \ 'cjs': "\ue74e",
+  \ 'fx': "",
+  \ 'fxh': "",
+  \ 'js': "",
+  \ 'mjs': "",
+  \ 'cjs': "",
   \ }
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {
-  \ '^\.prettierrc.*': "\ue615",
-  \ '^\.eslintrc.*': "\ue615",
+  \ '^\.prettierrc.*': "",
+  \ '^\.eslintrc.*': "",
   \ }
 
 augroup vimrc_FileTypes
@@ -349,7 +360,7 @@ vnoremap < <gv
 vnoremap > >gv
 " }}}
 
-" Make navigation with nolinewrap less jarring {{{
+" Make navigation with linewrap less jarring {{{
 noremap <silent> j gj
 noremap <silent> k gk
 noremap <silent> <Down> gj
@@ -500,9 +511,15 @@ augroup END
 " indent-blankline {{{
 lua << EOF
 require("indent_blankline").setup {
-  char = "|",
+  use_treesitter = true,
   buftype_exclude = {"terminal"},
-  filetype_exclude = {"startify", "help", "coc-explorer", "coctree"},
+  filetype_exclude = {
+    "startify",
+    "help",
+    "coc-explorer",
+    "coctree",
+    "fzf",
+  },
 }
 EOF
 " }}}
@@ -567,11 +584,13 @@ set foldlevelstart=99
 
 fun! s:SetFoldSettings()
   set foldcolumn=0
-  set foldmethod=syntax
+  set foldmethod=expr
+  set foldexpr=nvim_treesitter#foldexpr()
   set foldignore=
-  if &ft == 'vim'
-    set foldmethod=marker
-  endif
+  " set foldmethod=syntax
+  " if &ft == 'vim'
+  "   set foldmethod=marker
+  " endif
 endfun
 
 augroup vimrc_VimFolds
@@ -582,8 +601,8 @@ augroup END
 
 " Interactive replace {{{
 nnoremap ;; :%s:::cg<Left><Left><Left><Left>
-vnoremap ;; :s:::cg<Left><Left><Left><Left>
-noremap ;: :s:::cg<Left><Left><Left><Left>
+" WARN: this conflicts with nvim-treesitter-textsubjects
+" xnoremap ;; :s:::cg<Left><Left><Left><Left>
 " }}}
 
 " Windowswap {{{
@@ -593,6 +612,130 @@ nnoremap <silent> <Space>ws :call WindowSwap#EasyWindowSwap()<CR>
 
 " asynctasks {{{
 let g:asyncrun_open = 6
+" }}}
+
+" treesitter {{{
+" Do nothing if we hit the inc. selection mapping in visual mode
+xnoremap gnn <nop>
+
+lua <<EOF
+require'nvim-gps'.setup({
+  icons = {
+    ["class-name"] = ' ',      -- Classes and class-like objects
+    ["function-name"] = ' ',   -- Functions
+    ["method-name"] = ' ',     -- Methods (functions inside class-like objects)
+    ["container-name"] = '⛶ ',  -- Containers (example: lua tables)
+    ["tag-name"] = '炙'         -- Tags (example: html tags)
+  },
+  separator = ' > ',
+})
+require'nvim-autopairs'.setup({
+  check_ts = true,
+  disable_filetype = {
+    "startify",
+    "help",
+    "coc-explorer",
+    "coctree",
+    "fzf",
+  },
+})
+require'treesitter-context'.setup{
+    -- Enable this plugin (Can be enabled/disabled later via commands)
+    enable = true,
+    -- Throttles plugin updates (may improve performance)
+    throttle = true,
+    -- How many lines the window should span. Values <= 0 mean no limit.
+    max_lines = 0,
+    -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+    patterns = {
+        -- For all filetypes
+        -- Note that setting an entry here replaces all other patterns for this entry.
+        -- By setting the 'default' entry below, you can control which nodes you want to
+        -- appear in the context window.
+        default = {
+            'class',
+            'function',
+            'method',
+            -- 'for', -- These won't appear in the context
+            -- 'while',
+            -- 'if',
+            -- 'switch',
+            -- 'case',
+        },
+        -- Example for a specific filetype.
+        -- If a pattern is missing, *open a PR* so everyone can benefit.
+        --   rust = {
+        --       'impl_item',
+        --   },
+    },
+}
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "all",
+  highlight = {
+    -- false will disable the whole extension
+    enable = true,
+    -- list of language that will be disabled
+    disable = {},
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  indent = {
+    enable = true
+  },
+  autotag = {
+    enable = true,
+    filetypes = { "html", "xml" },
+  },
+  context_commentstring = {
+    enable = true,
+  },
+  rainbow = {
+    enable = true,
+    -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+    extended_mode = true,
+    -- Do not enable for files with more than n lines, int
+    max_file_lines = nil,
+    -- table of hex strings
+    -- colors = {},
+    -- table of colour name strings
+    -- termcolors = {}
+  },
+  pairs = {
+    enable = true,
+    disable = {},
+    -- e.g. {"CursorMoved"}, -- when to highlight the pairs, use {} to deactivate highlighting
+    highlight_pair_events = {"CursorMoved"},
+    -- whether to highlight also the part of the pair under cursor (or only the partner)
+    highlight_self = false,
+    -- whether to go to the end of the right partner or the beginning
+    goto_right_end = false,
+    -- What command to issue when we can't find a pair (e.g. "normal! %")
+    fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')",
+    keymaps = {
+      goto_partner = "%",
+    },
+  },
+  textsubjects = {
+    enable = true,
+    keymaps = {
+      ['.'] = 'textsubjects-smart',
+      [';'] = 'textsubjects-container-outer',
+    },
+  },
+}
+EOF
 " }}}
 
 " fterm {{{
@@ -1020,10 +1163,10 @@ nnoremap <silent> <Space>dd :CocDiagnostics<CR>
 " }}}
 
 " Code navigation {{{
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gd :<C-U>call CocActionAsync('jumpDefinition', v:false)<CR>
+nmap <silent> gy :<C-U>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
+nmap <silent> gi :<C-U>call CocActionAsync('jumpImplementation', v:false)<CR>
+nmap <silent> gr :<C-U>call CocActionAsync('jumpReferences', v:false)<CR>
 
 nnoremap <silent> <Space>dci :call CocAction('showIncomingCalls')<CR>
 nnoremap <silent> <Space>dco :call CocAction('showOutgoingCalls')<CR>
@@ -1231,6 +1374,7 @@ let g:lightline = {
 \     'filetype': 'LightlineFiletype',
 \     'fileformat': 'LightlineFileformat',
 \     'fileencoding': 'Lightline',
+\     'gps': 'LightlineGps',
 \   },
 \   'tab_component_function': {
 \     'fticon': 'LightlineTabIcon',
@@ -1241,6 +1385,11 @@ let g:lightline = {
 \     'inactive': ['filename', 'fticon'],
 \   },
 \   'active': {
+\     'left': [
+\       ['mode', 'paste'],
+\       ['readonly', 'filename', 'modified'],
+\       ['gps'],
+\     ],
 \     'right': [
 \       ['lineinfo'],
 \       [
@@ -1327,6 +1476,13 @@ fun! LightlineFileformat()
   if &columns <= 70 | return '' | endif
   if &filetype == 'qf' | return '' | endif
   return &fileformat . ' ' . WebDevIconsGetFileFormatSymbol()
+endfun
+
+fun! LightlineGps()
+  if luaeval("require'nvim-gps'.is_available()")
+    return luaeval("require'nvim-gps'.get_location()")
+  endif
+  return ''
 endfun
 
 fun! LightlineTabIcon(n)
