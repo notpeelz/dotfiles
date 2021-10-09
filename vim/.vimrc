@@ -67,7 +67,6 @@ Plug 'tversteeg/registers.nvim', { 'branch': 'main' }
 Plug 'machakann/vim-highlightedyank'
 Plug 'psliwka/vim-smoothie'
 Plug 'nacro90/numb.nvim'
-Plug 'airblade/vim-rooter'
 Plug 'folke/todo-comments.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'ellisonleao/glow.nvim'
@@ -132,7 +131,7 @@ call plug#end()
 " mkdir -p on save {{{
 " https://stackoverflow.com/questions/4292733/vim-creating-parent-directories-on-save
 fun! s:MkNonExDir(file, buf)
-  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+  if empty(getbufvar(a:buf, '&buftype')) && a:file !~# '\v^\w+\:\/'
     let l:dir = fnamemodify(a:file, ':h')
     if !isdirectory(l:dir)
       call mkdir(l:dir, 'p')
@@ -251,7 +250,7 @@ fun! s:CtrlC()
   endif
   execute("confirm q")
 endfun
-nnoremap <silent> <C-c> :call <SID>CtrlC()<CR>
+nnoremap <silent> <C-c> <Cmd>call <SID>CtrlC()<CR>
 "}}}
 
 " Search and substitution {{{
@@ -266,7 +265,7 @@ set smartcase
 
 " Disable search highlight after pressing ENTER
 " https://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting
-nnoremap <silent> <CR> :noh<CR><CR>
+nnoremap <silent> <CR> <Cmd>noh<CR><CR>
 
 " Live substitutions
 if has('nvim')
@@ -388,8 +387,8 @@ nnoremap <silent> <Space><Right> <C-w>l
 " }}}
 
 " Buffer Navigation {{{
-" nnoremap <silent> <M-Up> :bnext<CR>
-" nnoremap <silent> <M-Down> :bprev<CR>
+" nnoremap <silent> <M-Up> <Cmd>bnext<CR>
+" nnoremap <silent> <M-Down> <Cmd>bprev<CR>
 nnoremap <silent> <M-Up> <nop>
 nnoremap <silent> <M-Down> <nop>
 
@@ -414,56 +413,53 @@ inoremap <C-e> <nop>
 inoremap <S-Right> <C-o>e
 
 " Tab navigation {{{
-nnoremap <silent> th :tabfirst<CR>
-nnoremap <silent> tl :tablast<CR>
+nnoremap <silent> th <Cmd>tabfirst<CR>
+nnoremap <silent> tl <Cmd>tablast<CR>
 nnoremap tt :tabedit<Space>
 nnoremap te :edit<Space>
 nnoremap tr :TabooRename<Space>
-nnoremap <silent> tn :tabnew<CR>
-" nnoremap <silent> <C-t> :tabnew<CR>
-nnoremap <silent> ts :tab split<CR>
-nnoremap <silent> <M-C-Right> :tabnext<CR>
-nnoremap <silent> <M-C-Left> :tabprev<CR>
-nnoremap <silent> <M-S-Right> :tabnext<CR>
-nnoremap <silent> <M-S-Left> :tabprev<CR>
-nnoremap <silent> <M-Right> :tabnext<CR>
-nnoremap <silent> <M-Left> :tabprev<CR>
-nnoremap <silent> td :windo :q<CR>
+nnoremap <silent> tn <Cmd>tabnew<CR>
+" nnoremap <silent> <C-t> <Cmd>tabnew<CR>
+nnoremap <silent> ts <Cmd>tab split<CR>
+nnoremap <silent> <M-C-Right> <Cmd>tabnext<CR>
+nnoremap <silent> <M-C-Left> <Cmd>tabprev<CR>
+nnoremap <silent> <M-S-Right> <Cmd>tabnext<CR>
+nnoremap <silent> <M-S-Left> <Cmd>tabprev<CR>
+nnoremap <silent> <M-Right> <Cmd>tabnext<CR>
+nnoremap <silent> <M-Left> <Cmd>tabprev<CR>
+nnoremap <silent> td <Cmd>windo :q<CR>
 
 " Reorder tabs (requires manual remapping of keys through terminal emulator)
-nnoremap <silent> <F24> :silent! tabmove +1<CR>
-nnoremap <silent> <F23> :silent! tabmove -1<CR>
+nnoremap <silent> <F24> <Cmd>silent! tabmove +1<CR>
+nnoremap <silent> <F23> <Cmd>silent! tabmove -1<CR>
 " }}}
 
 " Close window
-nnoremap <silent> <Space>q :confirm q<CR>
-nnoremap <silent> <Space>Q :confirm qa<CR>
-nnoremap <silent> <Space>bd :bdelete<CR>
+nnoremap <silent> <Space>q <Cmd>confirm q<CR>
+nnoremap <silent> <Space>Q <Cmd>confirm qa<CR>
+nnoremap <silent> <Space>bd <Cmd>bdelete<CR>
 
 " Unmap ex mode
 nnoremap Q <Nop>
 
 " Save
-nnoremap <silent> <Space>ww :w<CR>
+nnoremap <silent> <Space>ww <Cmd>w<CR>
 
 " Save (sudo)
-nnoremap <silent> <Space>wW :SudaWrite<CR>
+nnoremap <silent> <Space>wW <Cmd>SudaWrite<CR>
 
 " Split line (symmetrical to J)
 nnoremap K a<CR><Esc>
 
-" Toggle paste mode
-noremap <silent> <F2> :set paste!<CR>
-
 " Toggle line wrapping
-noremap <silent> <F1> :set wrap!<CR>
+noremap <silent> <F2> <Cmd>set wrap!<CR>
 
 " Git {{{
-nnoremap <silent> <Space>gg :G<CR>
-nnoremap <silent> <Space>gc :G commit<CR>
-nnoremap <silent> <Space>gb :G blame<CR>
-nnoremap <silent> <Space>gd :Gdiffsplit<CR>
-nnoremap <silent> <Space>gl :tabnew <bar> Gclog <bar> TabooRename git log<CR>
+nnoremap <silent> <Space>gg <Cmd>G<CR>
+nnoremap <silent> <Space>gc <Cmd>G commit<CR>
+nnoremap <silent> <Space>gb <Cmd>G blame<CR>
+nnoremap <silent> <Space>gd <Cmd>Gdiffsplit<CR>
+nnoremap <silent> <Space>gl <Cmd>tabnew <bar> Gclog <bar> TabooRename git log<CR>
 " }}}
 " }}}
 
@@ -492,28 +488,13 @@ let g:startify_custom_header =
   \ startify#fortune#cowsay('', '═','║','╔','╗','╝','╚')
 " }}}
 
-" rooter {{{
-let g:rooter_cd_cmd = 'tcd'
-
-fun! s:RootStartifiedWindow()
-  if !get(w:, 'startified', 0) | return | endif
-  let w:startified = 0
-  execute('Rooter')
-endfun
-
-augroup vimrc_StartifyRooterCompat
-  autocmd!
-  autocmd User Startified let w:startified = 1
-  autocmd BufEnter * call <SID>RootStartifiedWindow()
-augroup END
-" }}}
-
 " indent-blankline {{{
 lua << EOF
 require("indent_blankline").setup {
   use_treesitter = true,
   buftype_exclude = {"terminal"},
   filetype_exclude = {
+    "qf",
     "startify",
     "help",
     "coc-explorer",
@@ -558,7 +539,7 @@ fun! s:SetupTodoComments()
 EOF
 endfun
 
-nnoremap <silent> <Space>dt :TodoLocList<CR>
+nnoremap <silent> <Space>dt <Cmd>TodoLocList<CR>
 " }}}
 
 " Winresizer {{{
@@ -584,9 +565,10 @@ set foldlevelstart=99
 
 fun! s:SetFoldSettings()
   set foldcolumn=0
+  set foldignore=
   set foldmethod=expr
   set foldexpr=nvim_treesitter#foldexpr()
-  set foldignore=
+  " NOTE: syntax doesn't work with treesitter
   " set foldmethod=syntax
   " if &ft == 'vim'
   "   set foldmethod=marker
@@ -607,11 +589,12 @@ nnoremap ;; :%s:::cg<Left><Left><Left><Left>
 
 " Windowswap {{{
 let g:windowswap_map_keys = 0
-nnoremap <silent> <Space>ws :call WindowSwap#EasyWindowSwap()<CR>
+nnoremap <silent> <Space>ws <Cmd>call WindowSwap#EasyWindowSwap()<CR>
 " }}}
 
 " asynctasks {{{
 let g:asyncrun_open = 6
+let g:asynctasks_term_pos = 'bottom'
 " }}}
 
 " treesitter {{{
@@ -675,12 +658,12 @@ require'nvim-treesitter.configs'.setup {
     -- false will disable the whole extension
     enable = true,
     -- list of language that will be disabled
-    disable = {},
+    disable = {"json", "jsonc"},
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = {"vim"},
   },
   incremental_selection = {
     enable = true,
@@ -739,8 +722,9 @@ EOF
 " }}}
 
 " fterm {{{
-nnoremap <silent> <Space>t :lua require('FTerm').toggle()<CR>
-tnoremap <Esc> <C-\><C-n>
+nnoremap <silent> <Space>t <Cmd>lua require('FTerm').toggle()<CR>
+" The echo cmd is used to clear the cmdline message
+tnoremap <Esc> <C-\><C-n><Cmd>echo<CR>
 " }}}
 
 " registers {{{
@@ -835,7 +819,7 @@ nmap <F11> <Plug>VimspectorStepInto
 nmap <F12> <Plug>VimspectorStepOut
 nmap <C-x> <Plug>VimspectorToggleBreakpoint
 
-nmap <silent> <Space>dq :VimspectorReset<CR>
+nmap <silent> <Space>dq <Cmd>VimspectorReset<CR>
 nmap <silent> <Space>de <Plug>VimspectorBalloonEval
 vmap <silent> <Space>de <Plug>VimspectorBalloonEval
 
@@ -905,6 +889,12 @@ let g:vimspector_sign_priority = {
 
 " FZF {{{
 let $FZF_DEFAULT_COMMAND='rg --files --hidden -- '
+
+augroup vimrc_fzf
+  autocmd!
+  " Closes FZF when pressing escape instead of returning to normal mode
+  autocmd FileType fzf tnoremap <buffer> <Esc> <Cmd>q<CR>
+augroup END
 " }}}
 
 " Smoothie {{{
@@ -950,7 +940,7 @@ inoremap <silent> <expr> <Tab>
   \   : "\<Tab>"
 snoremap <silent> <expr> <Tab>
   \ coc#jumpable()
-  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetNext', [])\<CR>"
+  \   ? "\<C-g><Cmd>call coc#rpc#request('snippetNext', [])\<CR>"
   \   : "\<Tab>"
 inoremap <silent> <expr> <S-Tab>
   \ &ft == 'registers'
@@ -962,7 +952,7 @@ inoremap <silent> <expr> <S-Tab>
   \   : "\<C-h>"
 snoremap <silent> <expr> <S-Tab>
   \ coc#jumpable()
-  \   ? "\<C-g>:\<C-u>call coc#rpc#request('snippetPrev', [])\<CR>"
+  \   ? "\<C-g><Cmd>call coc#rpc#request('snippetPrev', [])\<CR>"
   \   : "\<S-Tab>"
 inoremap <silent> <expr> <CR>
   \ pumvisible()
@@ -991,6 +981,7 @@ let g:coc_global_extensions = [
   \ 'coc-highlight',
   \ 'coc-tasks',
   \ 'coc-lists',
+  \ 'coc-yank',
   \ 'coc-snippets',
   \ 'coc-css',
   \ 'coc-html',
@@ -1007,9 +998,9 @@ let g:coc_global_extensions = [
 " Prevents the cursor from disappearing when pressing ctrl-c in :CocList
 " let g:coc_disable_transparent_cursor = 1
 
-nnoremap <silent> <Bar> :CocCommand explorer --sources=buffer+<CR>
-nnoremap <silent> \ :CocCommand explorer --sources=file+<CR>
-nnoremap <silent> à :CocCommand explorer<CR>
+nnoremap <silent> <Bar> <Cmd>CocCommand explorer --sources=buffer+<CR>
+nnoremap <silent> \ <Cmd>CocCommand explorer --sources=file+<CR>
+nnoremap <silent> à <Cmd>CocCommand explorer --sources=file+<CR>
 
 " Close vim if coc-explorer/coc-tree is the last open window {{{
 fun! s:CocAutoClose()
@@ -1090,6 +1081,14 @@ augroup vimrc_CocTreeDisableWrap
 augroup END
 " }}}
 
+" Snippet completion {{{
+inoremap <silent> <C-e> <C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>
+" }}}
+
+" Refresh the completion suggestions {{{
+inoremap <silent> <expr> <C-Space> coc#refresh()
+" }}}
+
 " Hide status line for coc-explorer/coctree {{{
 " FIXME: this is buggy. Ideally airline would have a user event to hook
 " fun! s:CocDisableStatusLine()
@@ -1117,60 +1116,19 @@ augroup END
 " augroup END
 " }}}
 
-" Scrolling in floating windows {{{
-fun! s:CocScroll(cmd, ...)
-  if coc#float#has_scroll()
-    call call("coc#float#scroll", a:000)
-    return "\<Ignore>"
-  endif
-  return a:cmd
-endfun
-
-nnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
-nnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
-xnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
-xnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
-inoremap <expr> <C-e> <SID>CocScroll("<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>", 1, 1)
-" C-y can also used for snippet completion in insert mode
-inoremap <silent> <expr> <C-y> <SID>CocScroll(
-  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>", 0, 1)
-
-nmap <expr> <PageDown> <SID>CocScroll("\<Plug>(SmoothieForwards)", 1)
-nmap <expr> <PageUp> <SID>CocScroll("\<Plug>(SmoothieBackwards)", 0)
-xmap <expr> <PageDown> <SID>CocScroll("\<Plug>(SmoothieForwards)", 1)
-xmap <expr> <PageUp> <SID>CocScroll("\<Plug>(SmoothieBackwards)", 0)
-imap <expr> <PageDown> <SID>CocScroll("<C-o>\<Plug>(SmoothieForwards)", 1)
-imap <expr> <PageUp> <SID>CocScroll("<C-o>\<Plug>(SmoothieBackwards)", 0)
-
-nmap <expr> <C-d> <SID>CocScroll("\<Plug>(SmoothieDownwards)", 1)
-nmap <expr> <C-u> <SID>CocScroll("\<Plug>(SmoothieUpwards)", 0)
-xmap <expr> <C-d> <SID>CocScroll("\<Plug>(SmoothieDownwards)", 1)
-xmap <expr> <C-u> <SID>CocScroll("\<Plug>(SmoothieUpwards)", 0)
-imap <expr> <C-d> <SID>CocScroll("\<C-o>\<Plug>(SmoothieDownwards)", 1)
-imap <expr> <C-u> <SID>CocScroll("\<C-o>\<Plug>(SmoothieUpwards)", 0)
-" }}}
-
-" Refresh the completion suggestions {{{
-inoremap <silent> <expr> <C-Space> coc#refresh()
-" }}}
-
-" Snippet completion {{{
-inoremap <silent> <C-e> <C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>
-" }}}
-
 " Diagnostics {{{
-nnoremap <silent> <Space>dd :CocDiagnostics<CR>
+nnoremap <silent> <Space>dd <Cmd>CocDiagnostics<CR>
 " }}}
 
 " Code navigation {{{
-nmap <silent> gd :<C-U>call CocActionAsync('jumpDefinition', v:false)<CR>
-nmap <silent> gy :<C-U>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
-nmap <silent> gi :<C-U>call CocActionAsync('jumpImplementation', v:false)<CR>
-nmap <silent> gr :<C-U>call CocActionAsync('jumpReferences', v:false)<CR>
+nmap <silent> gd <Cmd>call CocActionAsync('jumpDefinition', v:false)<CR>
+nmap <silent> gy <Cmd>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
+nmap <silent> gi <Cmd>call CocActionAsync('jumpImplementation', v:false)<CR>
+nmap <silent> gr <Cmd>call CocActionAsync('jumpReferences', v:false)<CR>
 
-nnoremap <silent> <Space>dci :call CocAction('showIncomingCalls')<CR>
-nnoremap <silent> <Space>dco :call CocAction('showOutgoingCalls')<CR>
-nnoremap <silent> <Space>do :call CocAction('showOutline')<CR>
+nnoremap <silent> <Space>dci <Cmd>call CocAction('showIncomingCalls')<CR>
+nnoremap <silent> <Space>dco <Cmd>call CocAction('showOutgoingCalls')<CR>
+nnoremap <silent> <Space>do <Cmd>call CocAction('showOutline')<CR>
 " }}}
 
 " Refactoring {{{
@@ -1178,11 +1136,11 @@ nnoremap <silent> <Space>do :call CocAction('showOutline')<CR>
 nmap <Space>drr <Plug>(coc-rename)
 
 " Rename file
-nnoremap <silent> <Space>drf :CocCommand workspace.renameCurrentFile<CR>
+nnoremap <silent> <Space>drf <Cmd>CocCommand workspace.renameCurrentFile<CR>
 " }}}
 
 " Show documentation {{{
-nnoremap <silent> <C-a> :call CocActionAsync('doHover')<CR>
+nnoremap <silent> <C-a> <Cmd>call CocActionAsync('doHover')<CR>
 " }}}
 
 " Formatting code {{{
@@ -1196,7 +1154,40 @@ xmap <C-Space> <Plug>(coc-codeaction-selected)
 
 " Apply AutoFix to problem on the current line.
 nmap <Space>dfx <Plug>(coc-fix-current)
-nmap <silent> <Space>dfu :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+nmap <silent> <Space>dfu <Cmd>call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+" }}}
+
+" Scrolling in floating windows {{{
+fun! s:CocScroll(cmd, ...)
+  if coc#float#has_scroll()
+    call call("coc#float#scroll", a:000)
+    return "\<Ignore>"
+  endif
+  return a:cmd
+endfun
+
+nnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
+nnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
+vnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
+vnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
+inoremap <expr> <C-e> <SID>CocScroll("<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>", 1, 1)
+" C-y can also used for snippet completion in insert mode
+inoremap <silent> <expr> <C-y> <SID>CocScroll(
+  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>", 0, 1)
+
+nmap <expr> <PageDown> <SID>CocScroll("\<Plug>(SmoothieForwards)", 1)
+nmap <expr> <PageUp> <SID>CocScroll("\<Plug>(SmoothieBackwards)", 0)
+vmap <expr> <PageDown> <SID>CocScroll("\<Plug>(SmoothieForwards)", 1)
+vmap <expr> <PageUp> <SID>CocScroll("\<Plug>(SmoothieBackwards)", 0)
+imap <expr> <PageDown> <SID>CocScroll("<C-o>\<Plug>(SmoothieForwards)", 1)
+imap <expr> <PageUp> <SID>CocScroll("<C-o>\<Plug>(SmoothieBackwards)", 0)
+
+nmap <expr> <C-d> <SID>CocScroll("\<Plug>(SmoothieDownwards)", 1)
+nmap <expr> <C-u> <SID>CocScroll("\<Plug>(SmoothieUpwards)", 0)
+vmap <expr> <C-d> <SID>CocScroll("\<Plug>(SmoothieDownwards)", 1)
+vmap <expr> <C-u> <SID>CocScroll("\<Plug>(SmoothieUpwards)", 0)
+imap <expr> <C-d> <SID>CocScroll("\<C-o>\<Plug>(SmoothieDownwards)", 1)
+imap <expr> <C-u> <SID>CocScroll("\<C-o>\<Plug>(SmoothieUpwards)", 0)
 " }}}
 
 " Preview document (markdown) {{{
@@ -1207,27 +1198,29 @@ fun! s:PreviewDocument()
   call nvim_win_set_config(0, {'border': 'none'})
 endfun
 
-nnoremap <silent> <Space>dp :call <SID>PreviewDocument()<CR>
+nnoremap <silent> <Space>dp <Cmd>call <SID>PreviewDocument()<CR>
 " }}}
 
 " CocList {{{
 nnoremap <silent> <C-t> <nop>
-nnoremap <silent> <C-t>t :CocList tasks<CR>
-nnoremap <silent> <C-t><C-t> :CocList tasks<CR>
+nnoremap <silent> <C-t>t <Cmd>CocList tasks<CR>
+nnoremap <silent> <C-t><C-t> <Cmd>CocList tasks<CR>
 
 nnoremap <silent> <C-f> <nop>
-nnoremap <silent> <C-f><C-r> :FZFMru<CR>
-nnoremap <silent> <C-f>r :FZFMru<CR>
-nnoremap <silent> <C-f><C-f> :Files<CR>
-nnoremap <silent> <C-f>f :Files<CR>
-nnoremap <silent> <C-f><C-g> :Rg<CR>
-nnoremap <silent> <C-f>g :Rg<CR>
-nnoremap <silent> <C-f><C-b> :Rg<CR>
-nnoremap <silent> <C-f>b :Buffers<CR>
-nnoremap <silent> <C-h> :Buffers<CR>
-nnoremap <silent> <C-f>/ :Lines<CR>
-nnoremap <silent> <C-f><C-_> :Lines<CR>
-nnoremap <silent> <C-_> :BLines<CR>
+nnoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
+nnoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
+nnoremap <silent> <C-f><C-r> <Cmd>FZFMru<CR>
+nnoremap <silent> <C-f>r <Cmd>FZFMru<CR>
+nnoremap <silent> <C-f><C-f> <Cmd>Files<CR>
+nnoremap <silent> <C-f>f <Cmd>Files<CR>
+nnoremap <silent> <C-f><C-g> <Cmd>Rg<CR>
+nnoremap <silent> <C-f>g <Cmd>Rg<CR>
+nnoremap <silent> <C-f><C-b> <Cmd>Rg<CR>
+nnoremap <silent> <C-f>b <Cmd>Buffers<CR>
+nnoremap <silent> <C-h> <Cmd>Buffers<CR>
+nnoremap <silent> <C-f>/ <Cmd>Lines<CR>
+nnoremap <silent> <C-f><C-_> <Cmd>Lines<CR>
+nnoremap <silent> <C-_> <Cmd>BLines<CR>
 
 " Unmap ctrl-b because it's the tmux leader
 nnoremap <silent> <C-b> <nop>
@@ -1467,6 +1460,7 @@ let g:taboo_tab_format = ' %f%m '
 fun! LightlineFiletype()
   if &columns <= 70 | return '' | endif
   if &filetype == 'qf' | return '' | endif
+  if &buftype == 'terminal' | return '' | endif
   return strlen(&filetype)
     \ ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol()
     \ : 'no ft'
@@ -1475,6 +1469,7 @@ endfun
 fun! LightlineFileformat()
   if &columns <= 70 | return '' | endif
   if &filetype == 'qf' | return '' | endif
+  if &buftype == 'terminal' | return '' | endif
   return &fileformat . ' ' . WebDevIconsGetFileFormatSymbol()
 endfun
 
@@ -1539,5 +1534,5 @@ colorscheme gruvbox-material
 "   endif
 "   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 " endfunc
-" nnoremap <silent> q :call <SID>SynStack()<CR>
+" nnoremap <silent> q <Cmd>call <SID>SynStack()<CR>
 " }}}
