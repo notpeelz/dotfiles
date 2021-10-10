@@ -213,14 +213,20 @@ set history=10000
 
 " Always show the signcolumn, otherwise it would shift the text each time the
 " signcolumn is triggered
-set signcolumn=yes:1
-if has("nvim-0.5.0") || has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  " set signcolumn=number
-endif
+" set signcolumn=yes:1
+" if has("nvim-0.5.0") || has("patch-8.1.1564")
+"   " Recently vim can merge signcolumn and number column into one
+"   " set signcolumn=number
+" endif
+augroup vimrc_SignColumn
+  autocmd!
+  autocmd BufWinEnter * set signcolumn=yes:1
+  " Hide signcolumn for nofile buffers
+  autocmd BufWinEnter * if &buftype == 'nofile' | setl signcolumn=no | endif
+augroup END
 
-" Cursor position (displayed in the bar)
-set ruler
+" Cursor position (handled by lightline)
+set noruler
 
 " Make undesirable characters more apparent
 set list listchars=tab:→\ ,nbsp:␣,trail:·,extends:▶,precedes:◀
@@ -269,6 +275,13 @@ nnoremap <silent> <CR> <Cmd>noh<CR><CR>
 if has('nvim')
   set inccommand=split
 endif
+" }}}
+
+" Disable builtin plugins {{{
+let g:loaded_netrw = 1
+let g:loaded_netrwPlugin = 1
+let g:loaded_zipPlugin = 1
+let g:loaded_zip = 1
 " }}}
 
 " shortmess {{{
@@ -384,13 +397,7 @@ nnoremap <silent> <Space><Left> <C-w>h
 nnoremap <silent> <Space><Right> <C-w>l
 " }}}
 
-" Buffer Navigation {{{
-" nnoremap <silent> <M-Up> <Cmd>bnext<CR>
-" nnoremap <silent> <M-Down> <Cmd>bprev<CR>
-nnoremap <silent> <M-Up> <nop>
-nnoremap <silent> <M-Down> <nop>
-
-" Unmap (ctrl-)alt-up/down to prevent accidents in insert mode
+" Unmap (ctrl-)alt-up/down to prevent accidents in insert mode {{{
 inoremap <silent> <M-Up> <nop>
 inoremap <silent> <M-Down> <nop>
 inoremap <silent> <M-S-Up> <nop>
@@ -400,11 +407,25 @@ inoremap <silent> <S-Up> <nop>
 inoremap <silent> <S-Down> <nop>
 " }}}
 
-" Emacs-style navigation in insert mode {{{
+" Move lines {{{
+inoremap <M-Up> <Cmd>move -2<CR>
+inoremap <M-Down> <Cmd>move +1<CR>
+nnoremap <M-Up> <Cmd>move -2<CR>
+nnoremap <M-Down> <Cmd>move +1<CR>
+xnoremap <silent> <M-Up> :move '<-2<CR>gv-gv
+xnoremap <silent> <M-Down> :move '>+1<CR>gv-gv
+xnoremap K :move '<-2<CR>gv-gv
+xnoremap J :move '>+1<CR>gv-gv
+" }}}
+
+" Emacs-style navigation {{{
 " inoremap <C-a> <Home>
 " inoremap <C-e> <End>
 inoremap <C-a> <nop>
 inoremap <C-e> <nop>
+
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
 " }}}
 
 " Makes it so that ctrl-right doesn't skip over to the next line
@@ -605,6 +626,8 @@ let g:asynctasks_term_pos = 'bottom'
 " treesitter {{{
 " Do nothing if we hit the inc. selection mapping in visual mode
 xnoremap gnn <nop>
+
+command! -nargs=0 TSPlaygroundUpdate lua require "nvim-treesitter-playground.internal".update()
 
 lua <<EOF
 require'nvim-gps'.setup({
@@ -890,10 +913,20 @@ let g:vimspector_sign_priority = {
 \   'vimspectorBPDisabled': 12,
 \   'vimspectorPC':         999,
 \ }
+
+function! s:CustomiseUI()
+  call win_gotoid(g:vimspector_session_windows.output)
+  q
+endfunction
+
+augroup MyVimspectorUICustomistaion
+  autocmd!
+  autocmd User VimspectorUICreated call s:CustomiseUI()
+augroup END
 " }}}
 
 " FZF {{{
-let $FZF_DEFAULT_COMMAND='rg --files --hidden -- '
+let $FZF_DEFAULT_COMMAND='rg --files --hidden || true'
 
 augroup vimrc_fzf
   autocmd!
@@ -925,7 +958,7 @@ let g:doge_javascript_settings = {
   \   'omit_redundant_param_types': 1,
   \ }
 
-nmap <silent> <Space>c <Plug>(doge-generate)
+nmap <silent> <Space>dc <Plug>(doge-generate)
 " }}}
 
 " Completion popup navigation {{{
@@ -939,7 +972,7 @@ inoremap <silent> <expr> <Tab>
   \ pumvisible()
   \   ? "\<C-n>" :
   \ coc#jumpable()
-  \   ? "\<C-r>=coc#rpc#request('snippetNext', [])\<CR>" :
+  \   ? "\<Cmd>call coc#rpc#request('snippetNext', [])\<CR>" :
   \ <SID>CanSuggest()
   \   ? coc#refresh()
   \   : "\<Tab>"
@@ -953,7 +986,7 @@ inoremap <silent> <expr> <S-Tab>
   \ pumvisible()
   \   ? "\<C-p>" :
   \ coc#jumpable()
-  \   ? "\<C-r>=coc#rpc#request('snippetPrev', [])\<CR>"
+  \   ? "\<Cmd>call coc#rpc#request('snippetPrev', [])\<CR>"
   \   : "\<C-h>"
 snoremap <silent> <expr> <S-Tab>
   \ coc#jumpable()
@@ -962,7 +995,7 @@ snoremap <silent> <expr> <S-Tab>
 inoremap <silent> <expr> <CR>
   \ pumvisible()
   \ ? "\<C-y>"
-  \ : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
+  \ : "\<C-g>u\<CR>\<Cmd>call coc#on_enter()\<CR>"
 
 fun! s:CanSuggest() abort
   let l:col = col('.') - 1
@@ -1006,6 +1039,7 @@ let g:coc_global_extensions = [
 nnoremap <silent> <Bar> <Cmd>CocCommand explorer --sources=buffer+<CR>
 nnoremap <silent> \ <Cmd>CocCommand explorer --sources=file+<CR>
 nnoremap <silent> à <Cmd>CocCommand explorer --sources=file+<CR>
+nnoremap <silent> <Space>cd <Cmd>execute('tcd ' . expand("%:p:h"))<CR>
 
 " Close vim if coc-explorer/coc-tree is the last open window {{{
 fun! s:CocAutoClose()
@@ -1087,7 +1121,7 @@ augroup END
 " }}}
 
 " Snippet completion {{{
-inoremap <silent> <C-e> <C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>
+inoremap <silent> <C-e> <Cmd>call coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>
 " }}}
 
 " Refresh the completion suggestions {{{
@@ -1131,9 +1165,9 @@ nmap <silent> gy <Cmd>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
 nmap <silent> gi <Cmd>call CocActionAsync('jumpImplementation', v:false)<CR>
 nmap <silent> gr <Cmd>call CocActionAsync('jumpReferences', v:false)<CR>
 
-nnoremap <silent> <Space>dci <Cmd>call CocAction('showIncomingCalls')<CR>
-nnoremap <silent> <Space>dco <Cmd>call CocAction('showOutgoingCalls')<CR>
-nnoremap <silent> <Space>do <Cmd>call CocAction('showOutline')<CR>
+nnoremap <silent> <Space>doi <Cmd>call CocAction('showIncomingCalls')<CR>
+nnoremap <silent> <Space>doo <Cmd>call CocAction('showOutgoingCalls')<CR>
+nnoremap <silent> <Space>dot <Cmd>call CocAction('showOutline')<CR>
 " }}}
 
 " Refactoring {{{
@@ -1145,7 +1179,8 @@ nnoremap <silent> <Space>drf <Cmd>CocCommand workspace.renameCurrentFile<CR>
 " }}}
 
 " Show documentation {{{
-nnoremap <silent> <C-a> <Cmd>call CocActionAsync('doHover')<CR>
+nnoremap <silent> <C-a> <Cmd>call CocActionAsync('definitionHover')<CR>
+inoremap <silent> <C-a> <Cmd>call CocActionAsync('showSignatureHelp')<CR>
 " }}}
 
 " Formatting code {{{
@@ -1175,10 +1210,10 @@ nnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
 nnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
 vnoremap <expr> <C-e> <SID>CocScroll("\<C-e>", 1, 1)
 vnoremap <expr> <C-y> <SID>CocScroll("\<C-y>", 0, 1)
-inoremap <expr> <C-e> <SID>CocScroll("<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>", 1, 1)
+inoremap <silent> <expr> <C-e> <SID>CocScroll("\<Cmd>call coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>", 1, 1)
 " C-y can also used for snippet completion in insert mode
 inoremap <silent> <expr> <C-y> <SID>CocScroll(
-  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>", 0, 1)
+  \ "\<Cmd>call coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>", 0, 1)
 
 nmap <expr> <PageDown> <SID>CocScroll("\<Plug>(SmoothieForwards)", 1)
 nmap <expr> <PageUp> <SID>CocScroll("\<Plug>(SmoothieBackwards)", 0)
@@ -1212,6 +1247,8 @@ nnoremap <silent> <C-t>t <Cmd>CocList tasks<CR>
 nnoremap <silent> <C-t><C-t> <Cmd>CocList tasks<CR>
 
 nnoremap <silent> <C-f> <nop>
+inoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
+inoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
 nnoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
 nnoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
 nnoremap <silent> <C-f><C-r> <Cmd>FZFMru<CR>
