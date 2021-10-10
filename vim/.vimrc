@@ -54,9 +54,7 @@ endif
 " Plugins {{{
 call plug#begin('~/.vim/plugged')
 Plug 'tweekmonster/startuptime.vim'
-Plug 'morhetz/gruvbox'
 Plug 'sainnhe/gruvbox-material'
-Plug 'shinchu/lightline-gruvbox.vim'
 " Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'simeji/winresizer'
 Plug 'editorconfig/editorconfig-vim'
@@ -474,6 +472,9 @@ let g:VM_default_mappings = 0
 
 " Hide the "Exited Visual-Multi." message that won't go away after exiting VM
 let g:VM_silent_exit = 1
+
+" Hide mapping warnings
+let g:VM_show_warnings = 0
 " }}}
 
 " Startify {{{
@@ -486,6 +487,10 @@ let g:startify_lists = [
   \ ]
 let g:startify_custom_header =
   \ startify#fortune#cowsay('', '═','║','╔','╗','╝','╚')
+
+" NOTE: this prevents conflicts with coc/coc-explorer
+let g:startify_change_to_dir = 0
+let g:startify_change_cmd = 'tcd'
 " }}}
 
 " indent-blankline {{{
@@ -1523,7 +1528,10 @@ augroup vimrc_ColorschemePreferences
   autocmd ColorScheme * call <SID>SetColorschemePreferences()
 augroup END
 
-let g:gruvbox_italic = 1
+" let g:gruvbox_material_enable_bold = 1
+let g:gruvbox_material_enable_italic = 1
+let g:gruvbox_material_diagnostic_line_highlight = 0
+let g:gruvbox_material_better_performance = 1
 set termguicolors " Enable True Color (24-bit)
 set background=dark
 colorscheme gruvbox-material

@@ -144,6 +144,8 @@
   // coc-tsserver {{{
   "tsserver.disableAutomaticTypeAcquisition": true,
   "typescript.implementationsCodeLens.enable": false,
-  "javascript.suggestionActions.enabled": false
+  "javascript.suggestionActions.enabled": false,
+  // XXX: Unfortunately this disables snippets for all coc extensions
+  "snippets.loadFromExtensions": false
   // }}}
 }
