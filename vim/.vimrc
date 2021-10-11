@@ -7,6 +7,9 @@ set encoding=utf-8
 set timeoutlen=1000
 set ttimeoutlen=0
 
+" Enable True Color (24-bit)
+set termguicolors
+
 " Fix certain terminals not getting recognized as 256-color capable
 set t_Co=256
 
@@ -66,13 +69,16 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'psliwka/vim-smoothie'
 Plug 'nacro90/numb.nvim'
 Plug 'folke/todo-comments.nvim'
+Plug 'folke/trouble.nvim'
+Plug 'romainl/vim-qf'
+Plug 'kevinhwang91/nvim-bqf'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'ellisonleao/glow.nvim'
 Plug 'wesQ3/vim-windowswap'
 Plug 'numtostr/FTerm.nvim'
 Plug 'kwkarlwang/bufresize.nvim'
 " Automatically creates missing LSP diagnostics highlight groups
-Plug 'folke/lsp-colors.nvim'
+" Plug 'folke/lsp-colors.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'nvim-treesitter/playground'
 " Plug 'nvim-treesitter/nvim-tree-docs'
@@ -85,8 +91,6 @@ Plug 'SmiteshP/nvim-gps'
 Plug 'theHamsta/nvim-treesitter-pairs'
 Plug 'windwp/nvim-autopairs'
 Plug 'kevinoid/vim-jsonc'
-" Plug 'yuezk/vim-js'
-" Plug 'maxmellon/vim-jsx-pretty'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
@@ -105,6 +109,7 @@ Plug 'kana/vim-textobj-fold'
 Plug 'chaoren/vim-wordmotion'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
+" TODO: switch to Telescope for Trouble integration?
 Plug 'junegunn/fzf', { 'do': {-> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'pbogut/fzf-mru.vim'
@@ -122,7 +127,7 @@ Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
 " Plug 'honza/vim-snippets'
 " This must be loaded last
-Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 call plug#end()
 " }}}
 
@@ -211,6 +216,9 @@ set sidescrolloff=1
 " Set max command history
 set history=10000
 
+" Prevent screen from redrawing while executing commands
+set lazyredraw
+
 " Always show the signcolumn, otherwise it would shift the text each time the
 " signcolumn is triggered
 " set signcolumn=yes:1
@@ -222,14 +230,14 @@ augroup vimrc_SignColumn
   autocmd!
   autocmd BufWinEnter * set signcolumn=yes:1
   " Hide signcolumn for nofile buffers
-  autocmd BufWinEnter * if &buftype == 'nofile' | setl signcolumn=no | endif
+  autocmd BufWinEnter * if &buftype ==# 'nofile' | setl signcolumn=no | endif
 augroup END
 
 " Cursor position (handled by lightline)
 set noruler
 
 " Make undesirable characters more apparent
-set list listchars=tab:→\ ,nbsp:␣,trail:·,extends:▶,precedes:◀
+set list listchars=tab:\ →,nbsp:␣,trail:·,extends:▶,precedes:◀
 
 " Set the filling characters
 set fillchars=eob:\ ,stl:\ ,stlnc:\ ,vert:\|,fold:·,diff:-
@@ -295,7 +303,7 @@ set shortmess+=I
 set shortmess+=c
 
 " Hide file info when editing a file
-" set shortmess+=F
+set shortmess+=F
 " }}}
 
 " highlightedyank {{{
@@ -304,7 +312,7 @@ let g:highlightedyank_highlight_duration = 250
 " }}}
 
 " wordmotion {{{
-let g:wordmotion_uppercase_spaces = [',', '=', '(', ')', '[', ']', '{', '}', '<', '>']
+let g:wordmotion_uppercase_spaces = ["'", '"', ',', '=', '(', ')', '[', ']', '{', '}', '<', '>']
 " }}}
 
 " Sessions {{{
@@ -339,24 +347,57 @@ augroup vimrc_FormatOptions
 augroup END
 " }}}
 
-" Filetypes {{{
-" TODO: get rid of vim-devicons and unify with coc-explorer icons
-let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {
-  \ '.ignore': "",
-  \ '.editorconfig': "",
-  \ }
-let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {
-  \ 'fx': "",
-  \ 'fxh': "",
-  \ 'js': "",
-  \ 'mjs': "",
-  \ 'cjs': "",
-  \ }
-let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {
-  \ '^\.prettierrc.*': "",
-  \ '^\.eslintrc.*': "",
-  \ }
+" Icons {{{
+lua <<EOF
+require'nvim-web-devicons'.setup {
+  override = {
+    [".gitattributes"] = {
+      icon = "",
+      color = "#fc4c25",
+      name = "GitAttributes",
+    },
+    [".gitconfig"] = {
+      icon = "",
+      color = "#fc4c25",
+      name = "GitConfig",
+    },
+    [".gitignore"] = {
+      icon = "",
+      color = "#fc4c25",
+      name = "GitIgnore",
+    },
+    [".gitmodules"] = {
+      icon = "",
+      color = "#fc4c25",
+      name = "GitModules",
+    },
+    ["cjs"] = {
+      icon = "",
+      color = "#f1e05a",
+      name = "Cjs",
+    },
+    [".ignore"] = {
+      icon = "",
+      color = "#C2C8CA",
+      name = "Ignore",
+    },
+    [".editorconfig"] = {
+      icon = "",
+      color = "#C2C8CA",
+      name = "Editorconfig",
+    },
+    ["default_icon"] = {
+      icon = "",
+      color = "#6d8086",
+      name = "Default",
+    },
+  },
+  default = true,
+}
+EOF
+" }}}
 
+" Filetypes {{{
 augroup vimrc_FileTypes
   autocmd! BufNewFile,BufRead *.fx set filetype=glsl
   autocmd! BufNewFile,BufRead *.fxh set filetype=glsl
@@ -526,6 +567,7 @@ require("indent_blankline").setup {
     "coc-explorer",
     "coctree",
     "fzf",
+    "Trouble",
   },
 }
 EOF
@@ -533,7 +575,7 @@ EOF
 
 " numb {{{
 lua <<EOF
-require('numb').setup()
+require("numb").setup {}
 EOF
 " }}}
 
@@ -565,7 +607,62 @@ fun! s:SetupTodoComments()
 EOF
 endfun
 
-nnoremap <silent> <Space>dt <Cmd>TodoLocList<CR>
+fun! s:OpenTodoList(workspace)
+  let l:path = ''
+  if a:workspace
+    " HACK: coc echoes the workspace folder instead of returning it...
+    redir => l:path
+    silent! call coc#rpc#request('runCommand', ['workspace.workspaceFolders'])
+    redir END
+    " The captured output contains a NULL byte and a line feed
+    let l:path = substitute(l:path, '[\x0\n]', '', 'g')
+  endif
+
+  " If coc doesn't have a workspace folder, we use the current file instead
+  if !strlen(l:path)
+    let l:path = expand('%:p')
+  endif
+
+  call luaeval('require("trouble").open("todo", "cwd=".._A[1])', [l:path])
+  " call luaeval('require("todo-comments.search").setloclist(_A[1])', [l:path])
+endfun
+
+nnoremap <silent> <Space>dt <Cmd>call <SID>OpenTodoList(0)<CR>
+nnoremap <silent> <Space>dT <Cmd>call <SID>OpenTodoList(1)<CR>
+" }}}
+
+" quickfix {{{
+lua << EOF
+  require("trouble").setup {}
+EOF
+
+fun! s:QfCommand(direction)
+  if a:direction ==# 'down'
+    if line('.') ==# line('$')
+      call cursor(1, col('.'))
+    else
+      execute('normal! j')
+    endif
+  else
+    if line('.') == 1
+      call cursor(line('$'), col('.'))
+    else
+      execute('normal! k')
+    endif
+  endif
+endfun
+
+fun! s:QfMappings()
+  nnoremap <buffer> <Up> <Cmd>call <SID>QfCommand('up')<CR>
+  nnoremap <buffer> k <Cmd>call <SID>QfCommand('up')<CR>
+  nnoremap <buffer> <Down> <Cmd>call <SID>QfCommand('down')<CR>
+  nnoremap <buffer> j <Cmd>call <SID>QfCommand('down')<CR>
+endfun
+
+augroup vimrc_qf
+  autocmd!
+  autocmd FileType qf call <SID>QfMappings()
+augroup END
 " }}}
 
 " Winresizer {{{
@@ -581,7 +678,7 @@ let g:winresizer_keycode_down = "\<Down>"
 
 " bufresize {{{
 lua <<EOF
-require("bufresize").setup()
+require("bufresize").setup {}
 EOF
 " }}}
 
@@ -596,7 +693,7 @@ fun! s:SetFoldSettings()
   set foldexpr=nvim_treesitter#foldexpr()
   " NOTE: syntax doesn't work with treesitter
   " set foldmethod=syntax
-  " if &ft == 'vim'
+  " if &ft ==# 'vim'
   "   set foldmethod=marker
   " endif
 endfun
@@ -630,7 +727,7 @@ xnoremap gnn <nop>
 command! -nargs=0 TSPlaygroundUpdate lua require "nvim-treesitter-playground.internal".update()
 
 lua <<EOF
-require'nvim-gps'.setup({
+require'nvim-gps'.setup {
   icons = {
     ["class-name"] = ' ',      -- Classes and class-like objects
     ["function-name"] = ' ',   -- Functions
@@ -639,8 +736,8 @@ require'nvim-gps'.setup({
     ["tag-name"] = '炙'         -- Tags (example: html tags)
   },
   separator = ' > ',
-})
-require'nvim-autopairs'.setup({
+}
+require'nvim-autopairs'.setup {
   check_ts = true,
   disable_filetype = {
     "startify",
@@ -649,8 +746,8 @@ require'nvim-autopairs'.setup({
     "coctree",
     "fzf",
   },
-})
-require'treesitter-context'.setup{
+}
+require'treesitter-context'.setup {
     -- Enable this plugin (Can be enabled/disabled later via commands)
     enable = true,
     -- Throttles plugin updates (may improve performance)
@@ -691,7 +788,7 @@ require'nvim-treesitter.configs'.setup {
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = {"vim"},
+    additional_vim_regex_highlighting = false,
   },
   incremental_selection = {
     enable = true,
@@ -853,42 +950,52 @@ vmap <silent> <Space>de <Plug>VimspectorBalloonEval
 
 " Signs
 fun! s:SetVimspectorColorschemePreferences()
-  execute 'hi! vimspectorBP' .
-    \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-    \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-    \ ' ctermfg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'cterm')
-    \ ' guifg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'gui')
-  execute 'hi! vimspectorBPCond' .
-    \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-    \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-    \ ' ctermfg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'cterm')
-    \ ' guifg=' . synIDattr(synIDtrans(hlID('ErrorMsg')), 'fg', 'gui')
-  if get(g:, 'colors_name') == 'gruvbox'
-    execute 'hi! vimspectorBPLog' .
-      \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-      \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-      \ ' ctermfg=' . synIDattr(synIDtrans(hlID('Underlined')), 'fg', 'cterm')
-      \ ' guifg=' . synIDattr(synIDtrans(hlID('Underlined')), 'fg', 'gui')
-      " \ ' cterm=underline gui=underline'
-  elseif get(g:, 'colors_name') == 'gruvbox-material'
-    execute 'hi! vimspectorBPLog' .
-      \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-      \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-      " \ ' cterm=underline gui=underline'
-  endif
-  execute 'hi! vimspectorBPDisabled' .
-    \ ' ctermbg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'cterm')
-    \ ' guibg=' . synIDattr(synIDtrans(hlID('SignColumn')), 'bg', 'gui')
-    \ ' ctermfg=' . synIDattr(synIDtrans(hlID('LineNr')), 'fg', 'cterm')
-    \ ' guifg=' . synIDattr(synIDtrans(hlID('LineNr')), 'fg', 'gui')
+  call s:SetHl('vimspectorBP', {
+    \ 'props': {
+    \   'ctermbg': {'copy_from': 'SignColumn', 'mode': 'cterm', 'prop': 'bg'},
+    \   'guibg':   {'copy_from': 'SignColumn', 'mode': 'gui', 'prop': 'bg'},
+    \   'ctermfg': {'copy_from': 'ErrorMsg', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'ErrorMsg', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
+  call s:SetHl('vimspectorBPCond', {
+    \ 'props': {
+    \   'ctermbg': {'copy_from': 'SignColumn', 'mode': 'cterm', 'prop': 'bg'},
+    \   'guibg':   {'copy_from': 'SignColumn', 'mode': 'gui', 'prop': 'bg'},
+    \   'ctermfg': {'copy_from': 'ErrorMsg', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'ErrorMsg', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
+  call s:SetHl('vimspectorBPLog', {
+    \ 'props': {
+    \   'ctermbg': {'copy_from': 'SignColumn', 'mode': 'cterm', 'prop': 'bg'},
+    \   'guibg':   {'copy_from': 'SignColumn', 'mode': 'gui', 'prop': 'bg'},
+    \   'ctermfg': {'copy_from': 'Underlined', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'Underlined', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
+  call s:SetHl('vimspectorBPDisabled', {
+    \ 'props': {
+    \   'ctermbg': {'copy_from': 'SignColumn', 'mode': 'cterm', 'prop': 'bg'},
+    \   'guibg':   {'copy_from': 'SignColumn', 'mode': 'gui', 'prop': 'bg'},
+    \   'ctermfg': {'copy_from': 'LineNr', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'LineNr', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
 
-  " hi! vimspectorCursorLine ctermbg=236 guibg=#16162a
-  " hi! vimspectorCursorLine ctermbg=236 guibg=#151d29
-  " hi! vimspectorCursorLine ctermbg=236 guibg=#212429
-  hi! vimspectorCursorLine ctermbg=236 guibg=#181e29
-  execute 'hi! vimspectorCursorLineSpecial ctermbg=236 guibg=#181e29'
-    \ ' ctermfg='. synIDattr(synIDtrans(hlID('Special')), 'fg', 'cterm')
-    \ ' guifg='. synIDattr(synIDtrans(hlID('Special')), 'fg', 'gui')
+  " Other colors: #16162a #151d29 #212429
+  call s:SetHl('vimspectorCursorLine', {
+    \ 'props': {
+    \   'ctermbg': '236',
+    \   'guibg': '#181e29',
+    \ }
+    \ })
+  call s:SetHl('vimspectorCursorLineSpecial', {
+    \ 'props': {
+    \   'ctermfg': {'copy_from': 'Special', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'Special', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
 endfun
 
 augroup vimrc_VimspectorColorschemePreferences
@@ -958,7 +1065,7 @@ let g:doge_javascript_settings = {
   \   'omit_redundant_param_types': 1,
   \ }
 
-nmap <silent> <Space>dc <Plug>(doge-generate)
+nmap <silent> <Space>dd <Plug>(doge-generate)
 " }}}
 
 " Completion popup navigation {{{
@@ -967,7 +1074,7 @@ nmap <silent> <Space>dc <Plug>(doge-generate)
 "   - snippet jumping
 "   - suggestion navigation
 inoremap <silent> <expr> <Tab>
-  \ &ft == 'registers'
+  \ &ft ==# 'registers'
   \   ? "\<Down>" :
   \ pumvisible()
   \   ? "\<C-n>" :
@@ -981,7 +1088,7 @@ snoremap <silent> <expr> <Tab>
   \   ? "\<C-g><Cmd>call coc#rpc#request('snippetNext', [])\<CR>"
   \   : "\<Tab>"
 inoremap <silent> <expr> <S-Tab>
-  \ &ft == 'registers'
+  \ &ft ==# 'registers'
   \   ? "\<Up>" :
   \ pumvisible()
   \   ? "\<C-p>" :
@@ -1129,7 +1236,7 @@ inoremap <silent> <expr> <C-Space> coc#refresh()
 " }}}
 
 " Hide status line for coc-explorer/coctree {{{
-" FIXME: this is buggy. Ideally airline would have a user event to hook
+" FIXME: this is buggy. Ideally lightline would have a user event to hook
 " fun! s:CocDisableStatusLine()
 "   let l:filetypes = ['coc-explorer', 'coctree']
 "   let l:wincount = winnr('$')
@@ -1156,7 +1263,11 @@ inoremap <silent> <expr> <C-Space> coc#refresh()
 " }}}
 
 " Diagnostics {{{
-nnoremap <silent> <Space>dd <Cmd>CocDiagnostics<CR>
+fun! s:OpenDiagnostics()
+  call coc#rpc#request('fillDiagnostics', [bufnr('%')])
+  lua require'trouble'.open('loclist')
+endfun
+nnoremap <silent> <Space>dc <Cmd>call <SID>OpenDiagnostics()<CR>
 " }}}
 
 " Code navigation {{{
@@ -1329,10 +1440,13 @@ fun! s:WilderInit()
     \ 'highlighter': s:highlighters,
     \ 'left': [
     \   ' ',
-    \   wilder#popupmenu_devicons(),
+    \   wilder#popupmenu_devicons({
+    \     'get_icon': wilder#devicons_get_icon_from_nvim_web_devicons(),
+    \     'get_hl': wilder#devicons_get_hl_from_nvim_web_devicons(),
+    \   }),
     \   wilder#popupmenu_buffer_flags({
     \     'flags': ' a + ',
-    \     'icons': {'+': '', 'a': '', 'h': ''},
+    \     'icons': {'+': '', 'a': '', 'h': ''},
     \   }),
     \ ],
     \ 'right': [
@@ -1382,38 +1496,20 @@ augroup vimrc_WilderConfig
   autocmd!
   autocmd CmdlineEnter * ++once call <SID>WilderInit()
 augroup END
-
-" Workaround for a neovim bug (#14304)
-" https://github.com/gelguy/wilder.nvim/issues/41#issuecomment-860025867
-fun! s:SetShortmessF(on) abort
-  if a:on
-    set shortmess+=F
-  else
-    set shortmess-=F
-  endif
-  return ''
-endfun
-
-nnoremap <expr> : <SID>SetShortmessF(1) . ':'
-
-augroup vimrc_WilderShortmessFix
-  autocmd!
-  autocmd CmdlineLeave * call <SID>SetShortmessF(0)
-augroup END
 " }}}
 
 " Lightline {{{
 let g:lightline = {
 \   'colorscheme': 'jellybeans',
 \   'component_function': {
-\     'filetype': 'LightlineFiletype',
-\     'fileformat': 'LightlineFileformat',
-\     'fileencoding': 'Lightline',
-\     'gps': 'LightlineGps',
+\     'filetype': expand('<SID>').'LightlineFiletype',
+\     'fileformat': expand('<SID>').'LightlineFileformat',
+\     'fileencoding': expand('<SID>').'Lightline',
+\     'gps': expand('<SID>').'LightlineGps',
 \   },
 \   'tab_component_function': {
-\     'fticon': 'LightlineTabIcon',
-\     'filename': 'LightlineTabFilename',
+\     'fticon': expand('<SID>').'LightlineTabIcon',
+\     'filename': expand('<SID>').'LightlineTabFilename',
 \   },
 \   'tab': {
 \     'active': ['filename', 'fticon'],
@@ -1451,7 +1547,7 @@ let g:lightline = {
 \     'linter_errors': 'error',
 \     'linter_info': 'tabsel',
 \     'linter_hints': 'hints',
-\    }
+\    },
 \ }
 
 augroup vimrc_LightlineCoc
@@ -1499,43 +1595,78 @@ endfun
 let g:taboo_tabline = 0
 let g:taboo_tab_format = ' %f%m '
 
-fun! LightlineFiletype()
+fun! s:LightlineFiletype()
   if &columns <= 70 | return '' | endif
-  if &filetype == 'qf' | return '' | endif
-  if &buftype == 'terminal' | return '' | endif
+  if &filetype ==# 'qf' | return '' | endif
+  if &filetype ==# 'Trouble' | return '' | endif
+  if &buftype ==# 'terminal' | return '' | endif
+  let l:r = luaeval("{require'nvim-web-devicons'.get_icon(_A[1], _A[2])}", [expand('%:t'), v:null])
+  let l:icon = l:r[0]
+  let l:color = l:r[1]
+  " TODO: colors
   return strlen(&filetype)
-    \ ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol()
+    \ ? l:icon . ' ' . &filetype
     \ : 'no ft'
 endfun
 
-fun! LightlineFileformat()
+fun! s:LightlineFileformat()
   if &columns <= 70 | return '' | endif
-  if &filetype == 'qf' | return '' | endif
-  if &buftype == 'terminal' | return '' | endif
-  return &fileformat . ' ' . WebDevIconsGetFileFormatSymbol()
+  if &filetype ==# 'qf' | return '' | endif
+  if &filetype ==# 'Trouble' | return '' | endif
+  if &buftype ==# 'terminal' | return '' | endif
+  return &fileformat
 endfun
 
-fun! LightlineGps()
+fun! s:LightlineGps()
   if luaeval("require'nvim-gps'.is_available()")
     return luaeval("require'nvim-gps'.get_location()")
   endif
   return ''
 endfun
 
-fun! LightlineTabIcon(n)
+fun! s:LightlineTabIcon(n)
   let l:buflist = tabpagebuflist(a:n)
   let l:winnr = tabpagewinnr(a:n)
   let l:name = expand('#' . l:buflist[l:winnr - 1] . ':t')
-  let l:icon = WebDevIconsGetFileTypeSymbol(l:name)
-  return l:icon !=# '' ? l:icon : ''
+  let l:r = luaeval("{require'nvim-web-devicons'.get_icon(_A[1], _A[2])}", [l:name, v:null])
+  let l:icon = l:r[0]
+  let l:color = l:r[1]
+  " TODO: colors
+  return l:icon[0] !=# '' ? l:icon : ''
 endfun
 
-fun! LightlineTabFilename(n) abort
+fun! s:LightlineTabFilename(n) abort
   return TabooTabTitle(a:n)
 endfun
 " }}}
 
 " Appearance {{{
+fun! s:SetHl(id, opts)
+  let l:props = get(a:opts, 'props', {})
+  execute('hi! clear ' . a:id)
+  let l:cmd = 'hi! ' . a:id
+  for [l:key, l:settings] in items(l:props)
+    if type(l:settings) == v:t_string
+      let l:cmd .= ' ' . l:key . '=' . l:settings
+    elseif type(l:settings) == v:t_dict
+      let l:default = get(l:settings, 'default', 'NONE')
+      let l:value = s:GetHlProp(settings.copy_from, settings.prop, settings.mode, l:default)
+      let l:cmd .= ' ' . l:key . '=' . l:value
+    else
+      echoerr printf('Invalid property (%s) of type %s', l:key, type(l:settings))
+    endif
+  endfor
+  execute(l:cmd)
+endfun
+
+fun! s:GetHlProp(id, prop, mode, default = 'NONE')
+  let l:value = synIDattr(synIDtrans(hlID(a:id)), a:prop, a:mode)
+  if l:value ==# ''
+    return a:default
+  endif
+  return l:value
+endfun
+
 fun! s:SetColorschemePreferences()
   " These preferences clear some gruvbox background colours,
   " allowing transparency.
@@ -1545,17 +1676,48 @@ fun! s:SetColorschemePreferences()
   " This makes unused code gray
   hi! link CocFadeOut NonText
 
-  " The background is wrong
-  " https://github.com/morhetz/gruvbox/issues/260
-  hi! link vimUserFunc clear
-  hi! clear Operator
-  hi! htmlBold cterm=bold ctermfg=223 ctermbg=NONE gui=bold guifg=fg guibg=NONE
-  hi! htmlItalic cterm=italic ctermfg=223 ctermbg=NONE gui=italic guifg=fg guibg=NONE
-  hi! htmlBoldItalic cterm=bold,italic ctermfg=223 ctermbg=NONE gui=bold,italic guifg=fg guibg=NONE
-  hi! htmlUnderlineItalic cterm=underline,italic ctermfg=223 ctermbg=NONE gui=underline,italic guifg=fg guibg=NONE
-  hi! htmlBoldUnderline cterm=bold,underline ctermfg=223 ctermbg=NONE gui=bold,underline guifg=fg guibg=NONE
-  hi! htmlUnderline cterm=underline ctermfg=223 ctermbg=NONE gui=underline guifg=fg guibg=NONE
-  hi! htmlBoldUnderlineItalic cterm=bold,underline,italic ctermfg=223 ctermbg=NONE gui=bold,underline,italic guifg=fg guibg=NONE
+  " Fixes Trouble highlight groups
+  hi! link TroubleFoldIcon NonText
+  call s:SetHl('TroubleSignError', {
+    \ 'props': {
+    \   'ctermbg': 'NONE',
+    \   'guibg':   'NONE',
+    \   'ctermfg': {'copy_from': 'LspDiagnosticsSignError', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'LspDiagnosticsSignError', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
+  call s:SetHl('TroubleSignInformation', {
+    \ 'props': {
+    \   'ctermbg': 'NONE',
+    \   'guibg':   'NONE',
+    \   'ctermfg': {'copy_from': 'LspDiagnosticsSignInformation', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'LspDiagnosticsSignInformation', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
+  call s:SetHl('TroubleSignWarning', {
+    \ 'props': {
+    \   'ctermbg': 'NONE',
+    \   'guibg':   'NONE',
+    \   'ctermfg': {'copy_from': 'LspDiagnosticsSignWarning', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'LspDiagnosticsSignWarning', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
+  call s:SetHl('TroubleSignHint', {
+    \ 'props': {
+    \   'ctermbg': 'NONE',
+    \   'guibg':   'NONE',
+    \   'ctermfg': {'copy_from': 'LspDiagnosticsSignHint', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'LspDiagnosticsSignHint', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
+  call s:SetHl('TroubleSignOther', {
+    \ 'props': {
+    \   'ctermbg': 'NONE',
+    \   'guibg':   'NONE',
+    \   'ctermfg': {'copy_from': 'TroubleSignInformation', 'mode': 'cterm', 'prop': 'fg'},
+    \   'guifg':   {'copy_from': 'TroubleSignInformation', 'mode': 'gui', 'prop': 'fg'},
+    \ }
+    \ })
 
   doautocmd User vimrc_ColorSchemePost
 endfun
@@ -1569,7 +1731,6 @@ augroup END
 let g:gruvbox_material_enable_italic = 1
 let g:gruvbox_material_diagnostic_line_highlight = 0
 let g:gruvbox_material_better_performance = 1
-set termguicolors " Enable True Color (24-bit)
 set background=dark
 colorscheme gruvbox-material
 
