@@ -94,7 +94,7 @@ Plug 'kevinoid/vim-jsonc'
 Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
-Plug 'kkoomen/vim-doge', { 'do': {-> doge#install() } }
+Plug 'kkoomen/vim-doge', { 'do': {-> doge#install()} }
 Plug 'tpope/vim-commentary'
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'lambdalisue/suda.vim'
@@ -110,7 +110,7 @@ Plug 'chaoren/vim-wordmotion'
 Plug 'gcmt/taboo.vim'
 Plug 'mhinz/vim-startify'
 " TODO: switch to Telescope for Trouble integration?
-Plug 'junegunn/fzf', { 'do': {-> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': {-> fzf#install()} }
 Plug 'junegunn/fzf.vim'
 Plug 'pbogut/fzf-mru.vim'
 " This replaces the gd/gr/gy/gi mappings from CoC
@@ -256,10 +256,26 @@ set cursorline nocursorcolumn
 " from showing up
 " noremap <C-c> <nop>
 fun! s:CtrlC()
+  " Close CoC floating windows
   if coc#float#has_float()
     call coc#float#close_all()
     return
   endif
+
+  if &buftype == 'terminal'
+    execute("confirm q")
+    return
+  endif
+
+  " Close all floating windows before running :q
+  let l:wins = nvim_list_wins()
+  for l:winnr in l:wins
+    let l:config = nvim_win_get_config(l:winnr)
+    if l:config.relative != ''
+      call nvim_win_close(l:winnr, v:false)
+    endif
+  endfor
+
   execute("confirm q")
 endfun
 nnoremap <silent> <C-c> <Cmd>call <SID>CtrlC()<CR>
@@ -483,15 +499,17 @@ nnoremap <silent> tn <Cmd>tabnew<CR>
 nnoremap <silent> ts <Cmd>tab split<CR>
 nnoremap <silent> <M-C-Right> <Cmd>tabnext<CR>
 nnoremap <silent> <M-C-Left> <Cmd>tabprev<CR>
-nnoremap <silent> <M-S-Right> <Cmd>tabnext<CR>
-nnoremap <silent> <M-S-Left> <Cmd>tabprev<CR>
+" nnoremap <silent> <M-S-Right> <Cmd>tabnext<CR>
+" nnoremap <silent> <M-S-Left> <Cmd>tabprev<CR>
 nnoremap <silent> <M-Right> <Cmd>tabnext<CR>
 nnoremap <silent> <M-Left> <Cmd>tabprev<CR>
 nnoremap <silent> td <Cmd>windo :q<CR>
 
 " Reorder tabs (requires manual remapping of keys through terminal emulator)
-nnoremap <silent> <F24> <Cmd>silent! tabmove +1<CR>
-nnoremap <silent> <F23> <Cmd>silent! tabmove -1<CR>
+" nnoremap <silent> <F24> <Cmd>silent! tabmove +1<CR>
+" nnoremap <silent> <F23> <Cmd>silent! tabmove -1<CR>
+nnoremap <silent> <M-S-Right> <Cmd>silent! tabmove +1<CR>
+nnoremap <silent> <M-S-Left> <Cmd>silent! tabmove -1<CR>
 " }}}
 
 " Close window
@@ -556,6 +574,10 @@ let g:startify_change_cmd = 'tcd'
 " }}}
 
 " indent-blankline {{{
+
+" BUG: https://github.com/lukas-reineke/indent-blankline.nvim/issues/59#issuecomment-806374954
+set colorcolumn=99999
+
 lua << EOF
 require("indent_blankline").setup {
   use_treesitter = true,
@@ -633,7 +655,9 @@ nnoremap <silent> <Space>dT <Cmd>call <SID>OpenTodoList(1)<CR>
 
 " quickfix {{{
 lua << EOF
-  require("trouble").setup {}
+  require("trouble").setup {
+    auto_preview = true, -- set to false for debugging qf/loc list stuff
+  }
 EOF
 
 fun! s:QfCommand(direction)
@@ -712,7 +736,8 @@ nnoremap ;; :%s:::cg<Left><Left><Left><Left>
 
 " Windowswap {{{
 let g:windowswap_map_keys = 0
-nnoremap <silent> <Space>ws <Cmd>call WindowSwap#EasyWindowSwap()<CR>
+nnoremap <silent> <C-w>w <Cmd>call WindowSwap#EasyWindowSwap()<CR>
+nnoremap <C-w>W <nop>
 " }}}
 
 " asynctasks {{{
@@ -739,13 +764,6 @@ require'nvim-gps'.setup {
 }
 require'nvim-autopairs'.setup {
   check_ts = true,
-  disable_filetype = {
-    "startify",
-    "help",
-    "coc-explorer",
-    "coctree",
-    "fzf",
-  },
 }
 require'treesitter-context'.setup {
     -- Enable this plugin (Can be enabled/disabled later via commands)
@@ -947,6 +965,7 @@ nmap <C-x> <Plug>VimspectorToggleBreakpoint
 nmap <silent> <Space>dq <Cmd>VimspectorReset<CR>
 nmap <silent> <Space>de <Plug>VimspectorBalloonEval
 vmap <silent> <Space>de <Plug>VimspectorBalloonEval
+nmap <silent> <Space>dx <Cmd>call vimspector#ListBreakpoints()<CR>
 
 " Signs
 fun! s:SetVimspectorColorschemePreferences()
@@ -1263,10 +1282,66 @@ inoremap <silent> <expr> <C-Space> coc#refresh()
 " }}}
 
 " Diagnostics {{{
-fun! s:OpenDiagnostics()
-  call coc#rpc#request('fillDiagnostics', [bufnr('%')])
-  lua require'trouble'.open('loclist')
+fun! s:OpenDiagnostics(update = 0)
+  " For current buffer only: call coc#rpc#request('fillDiagnostics', [bufnr('%')])
+  if !coc#rpc#ready() | return | endif
+  let l:list = coc#rpc#request('diagnosticList', [])
+  if type(l:list) != v:t_list | return | endif
+  let l:UriToBufnr = luaeval('vim.uri_to_bufnr')
+  fun! s:FormatItem(_, item) closure
+    let l:severity = type(a:item.severity) == v:t_string && strlen(a:item.severity)
+      \ ? a:item.severity[0]
+      \ : '?'
+    let l:bufnr = 0
+    if has_key(a:item, 'location') && has_key(a:item.location, 'uri')
+      let l:bufnr = l:UriToBufnr(a:item.location.uri)
+      call bufload(l:bufnr)
+    endif
+
+    " text: o.message,
+    " code: o.code,
+    " lnum: range.start.line + 1,
+    " col: range.start.character + 1,
+    " end_lnum: range.end.line + 1,
+    " end_col: range.end.character,
+    " type: getSeverityType(o.severity)
+
+    let l:range = a:item.location.range
+
+    return {
+      \ 'lnum': l:range.start.line + 1,
+      \ 'col': l:range.start.character + 1,
+      \ 'end_lnum': l:range.end.line + 1,
+      \ 'end_col': l:range.end.character + 1,
+      \ 'bufnr': l:bufnr,
+      \ 'type': l:severity,
+      \ 'text': printf('[%s %d] %s',
+      \   a:item.source,
+      \   a:item.code,
+      \   a:item.message),
+      \ 'valid': 1,
+      \ }
+  endfun
+
+  " HACK: TypeScript is too dumb to ignore errors from excluded files
+  call filter(l:list, {idx,v -> !(v.source ==# "tsserver" && fnamemodify(v.file, ':.') =~ 'node_modules/')})
+
+  call map(l:list, function('<SID>FormatItem'))
+  call setqflist(l:list, 'r')
+
+  if a:update
+    lua require'trouble'.refresh('quickfix')
+  else
+    lua require'trouble'.open('quickfix')
+  endif
 endfun
+
+" FIXME: unfortunately this seems to cause instabilities in neovim's RPC
+" augroup vimrc_CocDiagnostics
+"   autocmd!
+"   autocmd User CocDiagnosticChange call <SID>OpenDiagnostics(1)
+" augroup END
+
 nnoremap <silent> <Space>dc <Cmd>call <SID>OpenDiagnostics()<CR>
 " }}}
 
@@ -1300,8 +1375,8 @@ nmap <Space>dff <Plug>(coc-format)
 " }}}
 
 " Code actions {{{
-nmap <C-Space> <Plug>(coc-codeaction)
-xmap <C-Space> <Plug>(coc-codeaction-selected)
+nmap <silent> <C-Space> <Plug>(coc-codeaction)
+xmap <silent> <C-Space> <Plug>(coc-codeaction-selected)
 
 " Apply AutoFix to problem on the current line.
 nmap <Space>dfx <Plug>(coc-fix-current)
@@ -1668,16 +1743,15 @@ fun! s:GetHlProp(id, prop, mode, default = 'NONE')
 endfun
 
 fun! s:SetColorschemePreferences()
-  " These preferences clear some gruvbox background colours,
-  " allowing transparency.
-  " hi SignColumn ctermbg=NONE guibg=NONE
-  hi! Todo ctermbg=NONE guibg=NONE
-
   " This makes unused code gray
-  hi! link CocFadeOut NonText
+  " hi! link CocFadeOut NonText
+
+  " This changes the highlight color for search results
+  hi Search ctermbg=100 guibg=#6f8352
 
   " Fixes Trouble highlight groups
   hi! link TroubleFoldIcon NonText
+  hi! link TroubleText Clear
   call s:SetHl('TroubleSignError', {
     \ 'props': {
     \   'ctermbg': 'NONE',
@@ -1730,7 +1804,8 @@ augroup END
 " let g:gruvbox_material_enable_bold = 1
 let g:gruvbox_material_enable_italic = 1
 let g:gruvbox_material_diagnostic_line_highlight = 0
-let g:gruvbox_material_better_performance = 1
+" BUG: unfortunately this doesn't work with CoC floating windows
+" let g:gruvbox_material_better_performance = 1
 set background=dark
 colorscheme gruvbox-material
 
