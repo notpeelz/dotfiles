@@ -1345,6 +1345,46 @@ endfun
 nnoremap <silent> <Space>dc <Cmd>call <SID>OpenDiagnostics()<CR>
 " }}}
 
+" git virtual text {{{
+fun! s:UpdateGitVirtualText()
+  if get(g:, 'show_git_blame_vt_ns', 0) <= 0
+    let g:show_git_blame_vt_ns = nvim_create_namespace('git_blame')
+  endif
+
+  call nvim_buf_clear_namespace(bufnr(), g:show_git_blame_vt_ns, 0, -1)
+  if !get(g:, 'show_git_blame_vt', 0)
+    return
+  endif
+  let l:blame = get(b:, 'coc_git_blame', '')
+  try
+    call nvim_buf_set_extmark(
+      \ bufnr(),
+      \ g:show_git_blame_vt_ns,
+      \ line('.') - 1,
+      \ 0,
+      \ {
+      \   'virt_text': [[l:blame, 'CocCodeLens']],
+      \   'virt_text_pos': 'overlay',
+      \   'virt_text_win_col': strdisplaywidth(getline('.')) + 1,
+      \   'hl_mode': 'combine',
+      \ })
+  catch /.*E5555.*/
+  endtry
+endfun
+
+augroup vimrc_gitVirtualText
+  autocmd!
+  autocmd CursorHold * call <SID>UpdateGitVirtualText()
+augroup END
+
+fun! s:ToggleGitVirtualText()
+  let g:show_git_blame_vt = !get(g:, 'show_git_blame_vt', 0)
+  call s:UpdateGitVirtualText()
+endfun
+
+nnoremap <Space>dg <Cmd>call <SID>ToggleGitVirtualText()<CR>
+" }}}
+
 " Code navigation {{{
 nmap <silent> gd <Cmd>call CocActionAsync('jumpDefinition', v:false)<CR>
 nmap <silent> gy <Cmd>call CocActionAsync('jumpTypeDefinition', v:false)<CR>

@@ -5,7 +5,11 @@
   "session.saveOnVimLeave": false,
   // }}}
 
-  // Git highlight groups {{{
+  // git {{{
+  "git.addGBlameToBufferVar": true,
+  // }}}
+
+  // git highlight groups {{{
   "git.addedSign.hlGroup": "GitGutterAdd",
   "git.changedSign.hlGroup": "GitGutterChange",
   "git.removedSign.hlGroup": "GitGutterDelete",
