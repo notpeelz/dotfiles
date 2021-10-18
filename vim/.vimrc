@@ -68,6 +68,7 @@ Plug 'tversteeg/registers.nvim', { 'branch': 'main' }
 Plug 'machakann/vim-highlightedyank'
 Plug 'psliwka/vim-smoothie'
 Plug 'nacro90/numb.nvim'
+Plug 'luukvbaal/stabilize.nvim'
 Plug 'folke/todo-comments.nvim'
 Plug 'folke/trouble.nvim'
 Plug 'romainl/vim-qf'
@@ -84,6 +85,7 @@ Plug 'nvim-treesitter/playground'
 " Plug 'nvim-treesitter/nvim-tree-docs'
 Plug 'romgrk/nvim-treesitter-context'
 Plug 'RRethy/nvim-treesitter-textsubjects'
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'windwp/nvim-ts-autotag'
 Plug 'p00f/nvim-ts-rainbow'
@@ -95,14 +97,15 @@ Plug 'LnL7/vim-nix'
 Plug 'xolox/vim-misc'
 Plug 'tikhomirov/vim-glsl'
 Plug 'kkoomen/vim-doge', { 'do': {-> doge#install()} }
-Plug 'tpope/vim-commentary'
+" Plug 'tpope/vim-commentary'
+Plug 'numToStr/Comment.nvim'
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'lambdalisue/suda.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'inkarkat/vim-ReplaceWithRegister'
-Plug 'PeterRincker/vim-argumentative'
+" Plug 'PeterRincker/vim-argumentative'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-fold'
@@ -284,12 +287,19 @@ nnoremap <silent> <C-c> <Cmd>call <SID>CtrlC()<CR>
 fun! s:Esc()
   if coc#float#has_float()
     call coc#float#close_all()
-    return ''
+    return
   endif
+
+  if &ft ==# 'FTerm'
+    lua require('FTerm').close()
+    return
+  endif
+
+  call feedkeys("\<Esc>", 'n')
 endfun
 
-nnoremap <expr> <Esc> "\<Cmd>call \<SID>Esc()\<CR>\<Esc>"
-inoremap <expr> <Esc> "\<Cmd>call \<SID>Esc()\<CR>\<Esc>"
+nnoremap <Esc> <Cmd>call <SID>Esc()<CR>
+inoremap <Esc> <Cmd>call <SID>Esc()<CR>
 "}}}
 
 " Search and substitution {{{
@@ -756,6 +766,10 @@ let g:asyncrun_open = 6
 let g:asynctasks_term_pos = 'bottom'
 " }}}
 
+" Comment.nvim {{{
+lua require('Comment').setup()
+"}}}
+
 " treesitter {{{
 " Do nothing if we hit the inc. selection mapping in visual mode
 xnoremap gnn <nop>
@@ -837,6 +851,12 @@ require'nvim-treesitter.configs'.setup {
   },
   context_commentstring = {
     enable = true,
+    config = {
+      vim = {
+        __default = "\" %s",
+        lua_statement = "-- %s",
+      }
+    }
   },
   rainbow = {
     enable = true,
@@ -871,6 +891,24 @@ require'nvim-treesitter.configs'.setup {
       [';'] = 'textsubjects-container-outer',
     },
   },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
+        ["ac"] = "@comment.outer",
+        ["ic"] = "@comment.outer",
+        ["as"] = "@statement.outer",
+        ["is"] = "@statement.outer",
+      },
+    },
+  },
 }
 EOF
 " }}}
@@ -896,27 +934,27 @@ nmap r^ <Plug>ReplaceWithRegisterLine
 
 " Custom textobjects {{{
 " Argumentative {{{
-let g:argumentative_no_mappings = 1
-nmap ,b <Plug>Argumentative_Prev
-nmap ,w <Plug>Argumentative_Next
-xmap ,b <Plug>Argumentative_XPrev
-xmap ,w <Plug>Argumentative_XNext
-nmap ,< <Plug>Argumentative_MoveLeft
-nmap ,> <Plug>Argumentative_MoveRight
-xmap ia <Plug>Argumentative_InnerTextObject
-xmap aa <Plug>Argumentative_OuterTextObject
-omap ia <Plug>Argumentative_OpPendingInnerTextObject
-omap aa <Plug>Argumentative_OpPendingOuterTextObject
+" let g:argumentative_no_mappings = 1
+" nmap ,b <Plug>Argumentative_Prev
+" nmap ,w <Plug>Argumentative_Next
+" xmap ,b <Plug>Argumentative_XPrev
+" xmap ,w <Plug>Argumentative_XNext
+" nmap ,< <Plug>Argumentative_MoveLeft
+" nmap ,> <Plug>Argumentative_MoveRight
+" xmap ia <Plug>Argumentative_InnerTextObject
+" xmap aa <Plug>Argumentative_OuterTextObject
+" omap ia <Plug>Argumentative_OpPendingInnerTextObject
+" omap aa <Plug>Argumentative_OpPendingOuterTextObject
 " }}}
 
 " Spaces {{{
 call textobj#user#plugin('space', {
-\   '-': {
-\     '*sfile*': expand('<sfile>:p'),
-\     'select-a': 'a<Space>', '*select-a-function*': 's:SelectSpaces_a',
-\     'select': '<Space>', '*select-function*': 's:SelectSpaces_i',
-\     'select-i': 'i<Space>', '*select-i-function*': 's:SelectSpaces_i',
-\   }
+\ '-': {
+\   '*sfile*': expand('<sfile>:p'),
+\   'select-a': 'a<Space>', '*select-a-function*': 's:SelectSpaces_a',
+\   'select': '<Space>', '*select-function*': 's:SelectSpaces_i',
+\   'select-i': 'i<Space>', '*select-i-function*': 's:SelectSpaces_i',
+\ }
 \ })
 
 omap aS <Plug>(textobj-space-a)
@@ -957,6 +995,7 @@ endfun
 let g:vimspector_install_gadgets = [
   \ 'netcoredbg',
   \ 'vscode-node-debug2',
+  \ 'CodeLLDB',
   \ ]
 
 nmap <F5> <Plug>VimspectorContinue
@@ -1023,7 +1062,7 @@ fun! s:SetVimspectorColorschemePreferences()
   call s:SetHl('vimspectorCursorLineSpecial', {
     \ 'props': {
     \   'ctermfg': {'copy_from': 'Special', 'mode': 'cterm', 'prop': 'fg'},
-    \   'guifg':   {'copy_from': 'Special', 'mode': 'gui', 'prop': 'fg'},
+    \   'guifg': {'copy_from': 'Special', 'mode': 'gui', 'prop': 'fg'},
     \ }
     \ })
 endfun
@@ -1091,8 +1130,8 @@ let g:doge_mapping_comment_jump_forward = '<Tab>'
 let g:doge_mapping_comment_jump_backward = '<S-Tab>'
 
 let g:doge_javascript_settings = {
-  \   'destructuring_props': 1,
-  \   'omit_redundant_param_types': 1,
+  \ 'destructuring_props': 1,
+  \ 'omit_redundant_param_types': 1,
   \ }
 
 nmap <silent> <Space>dd <Plug>(doge-generate)
@@ -1149,6 +1188,25 @@ endfun
 " }}}
 
 " CoC {{{
+" Helpers {{{
+let s:coc_config = {}
+
+fun! s:merge(defaults, override) abort
+  let l:new = copy(a:defaults)
+  for [l:k, l:v] in items(a:override)
+    let l:new[l:k] = (type(l:v) is v:t_dict && type(get(l:new, l:k)) is v:t_dict)
+      \ ? s:merge(l:new[l:k], l:v)
+      \ : l:v
+  endfor
+  return l:new
+endfun
+
+fun! s:CocConfig(section, value)
+  let s:coc_config[a:section] = s:merge(get(s:coc_config, a:section, {}), a:value)
+endfun
+"}}}
+
+" Extensions {{{
 " WARN: coc-sh is nice but the LSP symbol resolution is slow/buggy
 let g:coc_global_extensions = [
   \ 'coc-explorer',
@@ -1170,14 +1228,102 @@ let g:coc_global_extensions = [
   \ 'coc-vimlsp',
   \ 'coc-sh',
   \ ]
+"}}}
 
-" Prevents the cursor from disappearing when pressing ctrl-c in :CocList
+" Prevent coc from creating a default.vim session {{{
+call s:CocConfig('session', {
+  \ 'saveOnVimLeave': v:false,
+  \ })
+" }}}
+
+" coc-git {{{
+call s:CocConfig('git', {
+  \ 'addedSign': { 'hlGroup': 'GitGutterAdd' },
+  \ 'changedSign': { 'hlGroup': 'GitGutterChange' },
+  \ 'removedSign': { 'hlGroup': 'GitGutterDelete' },
+  \ 'topRemovedSign': { 'hlGroup': 'GitGutterDelete' },
+  \ 'changeRemovedSign': { 'hlGroup': 'GitGutterChangeDelete' },
+  \ 'signPriority': 11,
+  \ })
+
+" Blame virtual text {{{
+" This enables b:coc_git_blame
+call s:CocConfig('git', {
+  \ 'addGBlameToBufferVar': v:true,
+  \ })
+
+fun! s:UpdateGitVirtualText()
+  if get(g:, 'show_git_blame_vt_ns', 0) <= 0
+    let g:show_git_blame_vt_ns = nvim_create_namespace('git_blame')
+  endif
+
+  call nvim_buf_clear_namespace(bufnr(), g:show_git_blame_vt_ns, 0, -1)
+  if !get(g:, 'show_git_blame_vt', 0)
+    return
+  endif
+  let l:blame = get(b:, 'coc_git_blame', '')
+  try
+    call nvim_buf_set_extmark(
+      \ bufnr(),
+      \ g:show_git_blame_vt_ns,
+      \ line('.') - 1,
+      \ 0,
+      \ {
+      \   'virt_text': [[l:blame, 'CocCodeLens']],
+      \   'virt_text_pos': 'overlay',
+      \   'virt_text_win_col': strdisplaywidth(getline('.')) + 1,
+      \   'hl_mode': 'combine',
+      \ })
+  catch /.*E5555.*/
+  endtry
+endfun
+
+augroup vimrc_gitVirtualText
+  autocmd!
+  autocmd CursorHold * call <SID>UpdateGitVirtualText()
+augroup END
+
+fun! s:ToggleGitVirtualText()
+  let g:show_git_blame_vt = !get(g:, 'show_git_blame_vt', 0)
+  call s:UpdateGitVirtualText()
+endfun
+
+nnoremap <Space>dg <Cmd>call <SID>ToggleGitVirtualText()<CR>
+" }}}
+" }}}
+
+" coc-prettier {{{
+call s:CocConfig('prettier', {
+  \ 'requireConfig': v:true,
+  \ 'disableSuccessMessage': v:true,
+  \ })
+"}}}
+
+" coc-tsserver {{{
+call s:CocConfig('tsserver', {
+  \ 'disableAutomaticTypeAcquisition': v:false,
+  \ })
+
+call s:CocConfig('typescript', {
+  \ 'implementationsCodeLens': { 'enabled': v:false },
+  \ })
+
+call s:CocConfig('javascript', {
+  \ 'suggestionActions': { 'enabled': v:false },
+  \ })
+"}}}
+
+" coc-rust-analyzer {{{
+call s:CocConfig('rust-analyzer', {
+  \ 'lens': { 'enable': v:false, },
+  \ 'inlayHints': { 'enable': v:false, },
+  \ })
+" }}}
+
+" Prevents the cursor from disappearing when pressing ctrl-c in :CocList {{{
+" NOTE: this is not necessary when ctrl-c is remapped
 " let g:coc_disable_transparent_cursor = 1
-
-nnoremap <silent> <Bar> <Cmd>CocCommand explorer --sources=buffer+<CR>
-nnoremap <silent> \ <Cmd>CocCommand explorer --sources=file+<CR>
-nnoremap <silent> à <Cmd>CocCommand explorer --sources=file+<CR>
-nnoremap <silent> <Space>cd <Cmd>execute('tcd ' . expand("%:p:h"))<CR>
+" }}}
 
 " Close vim if coc-explorer/coc-tree is the last open window {{{
 fun! s:CocAutoClose()
@@ -1204,7 +1350,58 @@ augroup vimrc_CocAutoClose
 augroup END
 " }}}
 
-" coc-explorer mappings {{{
+" coc-explorer {{{
+call s:CocConfig('explorer', {
+  \ 'icon': {
+  \   'enableNerdfont': v:true,
+  \   'source': 'nvim-web-devicons',
+  \ },
+  \ 'root': {
+  \   'strategies': [
+  \     'keep',
+  \     'workspace',
+  \     'cwd',
+  \     'sourceBuffer',
+  \     'reveal',
+  \   ],
+  \ },
+  \ 'file': {
+  \   'cdCommand': 'tcd',
+  \   'hiddenRules': {
+  \     'extensions': ['o', 'a', 'obj', 'pyc'],
+  \     'filenames': ['node_modules'],
+  \     'patternMatches': ['^\\.'],
+  \   },
+  \   'reveal': {
+  \     'filter': {
+  \       'literals': ['node_modules'],
+  \     },
+  \   },
+  \ },
+  \ 'keyMappings': {
+  \   'global': {
+  \     'u': ['wait', 'gotoParent'],
+  \     'r': 'rename',
+  \     '<cr>': [
+  \       'expandable?',
+  \       ['expanded?', 'collapse', 'expand'],
+  \       ['open', 'quit']
+  \     ],
+  \     't': ['open:tab'],
+  \     'T': ['open:tab'],
+  \     '<C-t>': ['open:tab'],
+  \     'o': ['wait', 'expandable?', 'cd', 'open'],
+  \     'F': 'search',
+  \     'f': 'search:recursive',
+  \   },
+  \ },
+  \ })
+
+nnoremap <silent> <Bar> <Cmd>CocCommand explorer --sources=buffer+<CR>
+nnoremap <silent> \ <Cmd>CocCommand explorer --sources=file+<CR>
+nnoremap <silent> à <Cmd>CocCommand explorer --sources=file+<CR>
+nnoremap <silent> <Space>cd <Cmd>execute('tcd ' . expand("%:p:h"))<CR>
+
 fun! s:CocExplorerMappings()
   let l:bufid = bufnr()
   fun! s:CocExplorerMappingsCb(_) closure
@@ -1258,7 +1455,21 @@ augroup vimrc_CocTreeDisableWrap
 augroup END
 " }}}
 
-" Snippet completion {{{
+" Snippets {{{
+call s:CocConfig('snippets', {
+  \ 'extends': {
+  \   'javascriptreact': ['javascript'],
+  \   'typescriptreact': ['javascript'],
+  \   'typescript': ['javascript'],
+  \ },
+  \ })
+
+" NOTE: this prevents coc-tsserver from providing default snippets
+" XXX: unfortunately this disables snippets for all coc extensions
+call s:CocConfig('snippets', {
+  \ 'loadFromExtensions': v:false,
+  \ })
+
 inoremap <silent> <C-e> <Cmd>call coc#rpc#request('doKeymap', ['snippets-expand',''])<CR>
 " }}}
 
@@ -1293,7 +1504,88 @@ inoremap <silent> <expr> <C-Space> coc#refresh()
 " augroup END
 " }}}
 
+" Code lens {{{
+call s:CocConfig('codeLens', {
+  \ 'enable': v:false,
+  \ 'separator': '‣',
+  \ 'subseparator': ' ',
+  \ })
+" }}}
+
+" Hover {{{
+call s:CocConfig('hover', {
+  \ 'floatConfig': {
+  \   'border': v:false,
+  \   'highlight': 'CocFloating',
+  \   'focusable': v:true,
+  \ },
+  \ })
+" }}}
+
+" Formatting {{{
+call s:CocConfig('coc', {
+  \ 'preferences': {
+  \   'formatOnType': v:true,
+  \   'formatOnSaveFiletypes': [
+  \     'rust',
+  \     'javascript',
+  \     'typescript',
+  \     'cs',
+  \     'css',
+  \     'markdown'
+  \   ],
+  \ },
+  \ })
+" }}}
+
+" Suggest {{{
+" BUG: 'struct' should use icon '\ufb44'. Unfortunately nerd-fonts maps it to
+" a hebrew codepoint, which changes the text direction to right-to-left:
+" https://github.com/ryanoasis/nerd-fonts/issues/478
+call s:CocConfig('suggest', {
+  \ 'autoTrigger': 'none',
+  \ 'enablePreselect': v:false,
+  \ 'noselect': v:true,
+  \ 'completionItemKindLabels': {
+  \   'keyword': '',
+  \   'variable': '',
+  \   'value': '',
+  \   'operator': 'Ψ',
+  \   'constructor': '',
+  \   'function': 'ƒ',
+  \   'reference': '渚',
+  \   'constant': '',
+  \   'method': '',
+  \   'struct': '',
+  \   'class': '',
+  \   'interface': '',
+  \   'text': '',
+  \   'enum': '',
+  \   'enumMember': '',
+  \   'module': '',
+  \   'color': '',
+  \   'property': '',
+  \   'field': '料',
+  \   'unit': '',
+  \   'event': '鬒',
+  \   'file': '',
+  \   'folder': '',
+  \   'snippet': '',
+  \   'typeParameter': '',
+  \   'default': ''
+  \ },
+  \ })
+"}}}
+
 " Diagnostics {{{
+call s:CocConfig('diagnostic', {
+  \ 'warningSign': '',
+  \ 'diagnostic.infoSign': '',
+  \ 'diagnostic.errorSign': '',
+  \ 'diagnostic.hintSign': '',
+  \ 'diagnostic.signPriority': 9,
+  \ })
+
 fun! s:OpenDiagnostics(update = 0)
   " For current buffer only: call coc#rpc#request('fillDiagnostics', [bufnr('%')])
   if !coc#rpc#ready() | return | endif
@@ -1309,14 +1601,6 @@ fun! s:OpenDiagnostics(update = 0)
       let l:bufnr = l:UriToBufnr(a:item.location.uri)
       call bufload(l:bufnr)
     endif
-
-    " text: o.message,
-    " code: o.code,
-    " lnum: range.start.line + 1,
-    " col: range.start.character + 1,
-    " end_lnum: range.end.line + 1,
-    " end_col: range.end.character,
-    " type: getSeverityType(o.severity)
 
     let l:range = a:item.location.range
 
@@ -1355,46 +1639,6 @@ endfun
 " augroup END
 
 nnoremap <silent> <Space>dc <Cmd>call <SID>OpenDiagnostics()<CR>
-" }}}
-
-" git virtual text {{{
-fun! s:UpdateGitVirtualText()
-  if get(g:, 'show_git_blame_vt_ns', 0) <= 0
-    let g:show_git_blame_vt_ns = nvim_create_namespace('git_blame')
-  endif
-
-  call nvim_buf_clear_namespace(bufnr(), g:show_git_blame_vt_ns, 0, -1)
-  if !get(g:, 'show_git_blame_vt', 0)
-    return
-  endif
-  let l:blame = get(b:, 'coc_git_blame', '')
-  try
-    call nvim_buf_set_extmark(
-      \ bufnr(),
-      \ g:show_git_blame_vt_ns,
-      \ line('.') - 1,
-      \ 0,
-      \ {
-      \   'virt_text': [[l:blame, 'CocCodeLens']],
-      \   'virt_text_pos': 'overlay',
-      \   'virt_text_win_col': strdisplaywidth(getline('.')) + 1,
-      \   'hl_mode': 'combine',
-      \ })
-  catch /.*E5555.*/
-  endtry
-endfun
-
-augroup vimrc_gitVirtualText
-  autocmd!
-  autocmd CursorHold * call <SID>UpdateGitVirtualText()
-augroup END
-
-fun! s:ToggleGitVirtualText()
-  let g:show_git_blame_vt = !get(g:, 'show_git_blame_vt', 0)
-  call s:UpdateGitVirtualText()
-endfun
-
-nnoremap <Space>dg <Cmd>call <SID>ToggleGitVirtualText()<CR>
 " }}}
 
 " Code navigation {{{
@@ -1479,7 +1723,24 @@ endfun
 nnoremap <silent> <Space>dp <Cmd>call <SID>PreviewDocument()<CR>
 " }}}
 
-" CocList {{{
+" coc-list {{{
+call s:CocConfig('list', {
+  \ 'source': {
+  \   'files': {
+  \     'command': 'rg',
+  \     'args': ['--hidden', '--files'],
+  \   },
+  \   'mru': {
+  \     'ignoreGitIgnore': v:true,
+  \   },
+  \ },
+  \ 'normalMappings': {
+  \   '<C-c>': 'do:exit',
+  \ },
+  \ 'insertMappings': {
+  \   '<C-c>': 'do:exit',
+  \ },
+  \ })
 nnoremap <silent> <C-t> <nop>
 nnoremap <silent> <C-t>t <Cmd>CocList tasks<CR>
 nnoremap <silent> <C-t><C-t> <Cmd>CocList tasks<CR>
@@ -1508,16 +1769,17 @@ nnoremap <silent> <C-b> <nop>
 
 " Text objects {{{
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
+" xmap if <Plug>(coc-funcobj-i)
+" omap if <Plug>(coc-funcobj-i)
+" xmap af <Plug>(coc-funcobj-a)
+" omap af <Plug>(coc-funcobj-a)
+" xmap ic <Plug>(coc-classobj-i)
+" omap ic <Plug>(coc-classobj-i)
+" xmap ac <Plug>(coc-classobj-a)
+" omap ac <Plug>(coc-classobj-a)
 " }}}
 
+" Miscellaneous {{{
 augroup vimrc_CocActions
   autocmd!
 
@@ -1530,6 +1792,20 @@ augroup vimrc_CocActions
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup END
+
+" TODO: https://github.com/neoclide/coc.nvim/pull/3355
+call s:CocConfig('coc', {
+  \ 'preferences': {
+  \   'semanticTokensHighlights': v:false,
+  \ },
+  \ })
+" }}}
+
+" Apply config {{{
+for [section, value] in items(s:coc_config)
+  call coc#config(section, value)
+endfor
+"}}}
 " }}}
 
 " wilder {{{
