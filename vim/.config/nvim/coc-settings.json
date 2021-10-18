@@ -43,6 +43,7 @@
   // Formatting {{{
   "coc.preferences.formatOnType": true,
   "coc.preferences.formatOnSaveFiletypes": [
+    "rust",
     "javascript",
     "typescript",
     "cs",
@@ -152,6 +153,11 @@
   "javascript.suggestionActions.enabled": false,
   // XXX: Unfortunately this disables snippets for all coc extensions
   "snippets.loadFromExtensions": false,
+  // }}}
+
+  // coc-rust-analyzer {{{
+  "rust-analyzer.lens.enable": false,
+  "rust-analyzer.inlayHints.enable": false,
   // }}}
 
   // LSP {{{

@@ -279,6 +279,17 @@ fun! s:CtrlC()
   execute("confirm q")
 endfun
 nnoremap <silent> <C-c> <Cmd>call <SID>CtrlC()<CR>
+
+" Map esc to close CoC floating windw
+fun! s:Esc()
+  if coc#float#has_float()
+    call coc#float#close_all()
+    return ''
+  endif
+endfun
+
+nnoremap <expr> <Esc> "\<Cmd>call \<SID>Esc()\<CR>\<Esc>"
+inoremap <expr> <Esc> "\<Cmd>call \<SID>Esc()\<CR>\<Esc>"
 "}}}
 
 " Search and substitution {{{
@@ -1142,6 +1153,7 @@ endfun
 let g:coc_global_extensions = [
   \ 'coc-explorer',
   \ 'coc-git',
+  \ 'coc-rust-analyzer',
   \ 'coc-highlight',
   \ 'coc-tasks',
   \ 'coc-lists',
