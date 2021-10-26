@@ -22,13 +22,82 @@ if !has('nvim')
   " Disable termresponses on vim to prevent artifacts with kitty
   " https://github.com/vim/vim/issues/3197#issuecomment-549086639
   set t_RB= t_RF= t_RV= t_u7=
+
   " Fixes scrolling issues with st
   set ttymouse=sgr
-endif
 
-" Fix redrawing issues with kitty
-" https://github.com/kovidgoyal/kitty/issues/108#issuecomment-320492663
-let &t_ut = ''
+  " Fix redrawing issues with kitty
+  " https://github.com/kovidgoyal/kitty/issues/108#issuecomment-320492663
+  set t_ut=
+endif
+" }}}
+
+" Helpers {{{
+fun! s:SetHl(id, opts)
+  let l:props = get(a:opts, 'props', {})
+  execute('hi! clear ' . a:id)
+  let l:cmd = 'hi! ' . a:id
+  for [l:key, l:settings] in items(l:props)
+    if type(l:settings) == v:t_string
+      let l:cmd .= ' ' . l:key . '=' . l:settings
+    elseif type(l:settings) == v:t_dict
+      let l:default = get(l:settings, 'default', 'NONE')
+      let l:value = s:GetHlProp(settings.copy_from, settings.prop, settings.mode, l:default)
+      let l:cmd .= ' ' . l:key . '=' . l:value
+    else
+      echoerr printf('Invalid property (%s) of type %s', l:key, type(l:settings))
+    endif
+  endfor
+  execute(l:cmd)
+endfun
+
+fun! s:GetHlProp(id, prop, mode, default = 'NONE')
+  let l:value = synIDattr(synIDtrans(hlID(a:id)), a:prop, a:mode)
+  if l:value ==# ''
+    return a:default
+  endif
+  return l:value
+endfun
+
+fun! FormatTerm(str, opts)
+  return s:TermFormat(a:str, a:opts)
+endfun
+
+fun! s:TermFormat(str, opts)
+  fun! s:Format(val, formats)
+    let l:ret = a:val
+    if l:ret =~ '^\d\+$' && str2nr(l:ret) < 256
+      let l:ret = printf(a:formats['16'], l:ret)
+    elseif l:ret =~ '^#' && len(l:ret) == 7
+      let l:ret = printf(a:formats['256'],
+        \ str2nr(l:ret[1:2], 16),
+        \ str2nr(l:ret[3:4], 16),
+        \ str2nr(l:ret[5:6], 16),
+        \ )
+    elseif l:ret =~ '^#' && len(l:ret) == 4
+      let l:ret = printf(a:formats['256'],
+        \ str2nr(l:ret[1], 16),
+        \ str2nr(l:ret[2], 16),
+        \ str2nr(l:ret[3], 16),
+        \ )
+    else
+      let l:ret = ''
+    endif
+
+    return l:ret
+  endfun
+
+  let l:bg = s:Format(get(a:opts, 'bg', ''), {
+    \ '16': "\x1b[48;5;%sm",
+    \ '256': "\x1b[48;2;%d;%d;%dm",
+    \ })
+  let l:fg = s:Format(get(a:opts, 'fg', ''), {
+    \ '16': "\x1b[38;5;%sm",
+    \ '256': "\x1b[38;2;%d;%d;%dm",
+    \ })
+
+  return l:fg . l:bg . a:str
+endfun
 " }}}
 
 " Download vim-plug if not already installed {{{
@@ -137,7 +206,7 @@ call plug#end()
 " mkdir -p on save {{{
 " https://stackoverflow.com/questions/4292733/vim-creating-parent-directories-on-save
 fun! s:MkNonExDir(file, buf)
-  if empty(getbufvar(a:buf, '&buftype')) && a:file !~# '\v^\w+\:\/'
+  if empty(getbufvar(a:buf, '&bt')) && a:file !~# '\v^\w+\:\/'
     let l:dir = fnamemodify(a:file, ':h')
     if !isdirectory(l:dir)
       call mkdir(l:dir, 'p')
@@ -204,13 +273,8 @@ set noshowmode
 " Enable confirmation prompts when closing an unsaved buffer/file
 set confirm
 
-" Enable line wrapping
-set wrap linebreak nolist
+" Line wrapping
 set breakat=" 	!@*-+;:,./?"
-
-" Show line numbers
-set number norelativenumber
-set numberwidth=5
 
 " Show some context around the cursor
 set scrolloff=5
@@ -224,23 +288,40 @@ set lazyredraw
 
 " Always show the signcolumn, otherwise it would shift the text each time the
 " signcolumn is triggered
-" set signcolumn=yes:1
-" if has("nvim-0.5.0") || has("patch-8.1.1564")
-"   " Recently vim can merge signcolumn and number column into one
-"   " set signcolumn=number
-" endif
 augroup vimrc_SignColumn
   autocmd!
   autocmd BufWinEnter * set signcolumn=yes:1
   " Hide signcolumn for nofile buffers
-  autocmd BufWinEnter * if &buftype ==# 'nofile' | setl signcolumn=no | endif
+  autocmd BufWinEnter * if &bt ==# 'nofile' | setl signcolumn=no | endif
+augroup END
+
+" Window-local settings
+fun! s:SetWindowLocalSettings()
+  if &bt !=# '' && &bt !=# 'acwrite'
+    setlocal nonumber norelativenumber
+    return
+  endif
+
+  " Show line numbers
+  setlocal number norelativenumber
+  setlocal numberwidth=5
+  " Enable line wrapping
+  setlocal wrap linebreak
+  " Enable list mode
+  setlocal list
+endfun
+
+augroup vimrc_WindowLocalSettings
+  autocmd!
+  autocmd VimEnter,TabNewEntered,WinEnter,BufEnter * call s:SetWindowLocalSettings()
+  autocmd User StartifyBufferOpened call s:SetWindowLocalSettings()
 augroup END
 
 " Cursor position (handled by lightline)
 set noruler
 
 " Make undesirable characters more apparent
-set list listchars=tab:\ →,nbsp:␣,trail:·,extends:▶,precedes:◀
+set listchars=tab:\ →,nbsp:␣,trail:·,extends:▶,precedes:◀
 
 " Set the filling characters
 set fillchars=eob:\ ,stl:\ ,stlnc:\ ,vert:\|,fold:·,diff:-
@@ -254,65 +335,6 @@ set wildmode=full
 
 " Highlight current line
 set cursorline nocursorcolumn
-
-" Unmap C-c to prevent the "Type :qa and press <Enter> to exit Nvim" message
-" from showing up
-" noremap <C-c> <nop>
-fun! s:CtrlC()
-  " Close CoC floating windows
-  if coc#float#has_float()
-    call coc#float#close_all()
-    return
-  endif
-
-  if &buftype == 'terminal'
-    execute("bd")
-    return
-  endif
-
-  " Close all floating windows before running :q
-  let l:wins = nvim_list_wins()
-  for l:winnr in l:wins
-    let l:config = nvim_win_get_config(l:winnr)
-    if l:config.relative != ''
-      call nvim_win_close(l:winnr, v:false)
-    endif
-  endfor
-
-  execute("confirm q")
-endfun
-
-nnoremap <silent> <C-c> <Cmd>call <SID>CtrlC()<CR>
-
-fun! s:Esc()
-  " Close CoC floating windows
-  if coc#float#has_float()
-    call coc#float#close_all()
-    return
-  endif
-
-  if &ft ==# 'FTerm'
-    lua require'FTerm'.close()
-    return
-  endif
-
-  call feedkeys("\<Esc>", 'n')
-endfun
-
-nnoremap <Esc> <Cmd>call <SID>Esc()<CR>
-inoremap <Esc> <Cmd>call <SID>Esc()<CR>
-
-fun! s:TerminalSettings()
-  if &buftype !=# 'terminal' | return | endif
-  setlocal nonumber
-  setlocal signcolumn=
-  tnoremap <buffer> <C-Space> <C-\><C-n><Cmd>echo<CR>
-  nnoremap <buffer> <silent> <C-Space> a
-endfun
-
-augroup vimrc_Terminal
-  autocmd TermEnter,TermOpen * call <SID>TerminalSettings()
-augroup END
 " }}}
 
 " Search and substitution {{{
@@ -472,8 +494,94 @@ augroup END
 " }}}
 
 " General mappings {{{
+" Free C-f/C-b so we can use it for other mappings {{{
+nnoremap <C-f> <nop>
+" Unmap C-b because it's the tmux leader
+nnoremap <C-b> <nop>
+" }}}
+
+" Unmap C-c to prevent the "Type :qa and press <Enter> to exit Nvim" message from showing up {{{
+noremap <C-c> <nop>
+" }}}
+
+" Close windows with C-c {{{
+fun! s:CtrlC()
+  " Close CoC floating windows
+  if coc#float#has_float()
+    call coc#float#close_all()
+    return
+  endif
+
+  " Delete terminal buffers
+  if &bt == 'terminal'
+    execute("bd")
+    return
+  endif
+
+  " Close all floating windows before running :q
+  let l:wins = nvim_list_wins()
+  for l:winnr in l:wins
+    let l:config = nvim_win_get_config(l:winnr)
+    if l:config.relative != ''
+      call nvim_win_close(l:winnr, v:false)
+    endif
+  endfor
+
+  execute("confirm q")
+endfun
+
+nnoremap <C-c> <Cmd>call <SID>CtrlC()<CR>
+" }}}
+
+" Floating term (fterm) {{{
+" Toggle in normal mode
+nnoremap <C-t>t <Cmd>lua require'FTerm'.toggle()<CR>
+nnoremap <C-t><C-t> <Cmd>lua require'FTerm'.toggle()<CR>
+" Toggle in terminal mode
+tnoremap <C-t>t <Cmd>call <SID>Esc()<CR>
+tnoremap <C-t><C-t> <Cmd>call <SID>Esc()<CR>
+" }}}
+
+" Close floating windows with Esc key {{{
+fun! s:Esc()
+  if coc#float#has_float()
+    call coc#float#close_all()
+    return
+  endif
+
+  if &ft ==# 'FTerm'
+    lua require'FTerm'.close()
+    return
+  endif
+
+  call feedkeys("\<Esc>", 'n')
+endfun
+
+nnoremap <Esc> <Cmd>call <SID>Esc()<CR>
+inoremap <Esc> <Cmd>call <SID>Esc()<CR>
+" }}}
+
+" Terminal mappings {{{
+fun! s:TerminalSettings()
+  if &bt !=# 'terminal' | return | endif
+  setlocal nonumber
+  setlocal signcolumn=
+
+  tnoremap <buffer> <C-Space> <C-\><C-n><Cmd>echo<CR>
+  nnoremap <buffer> <silent> <C-Space> a
+
+  " Close with <Esc>
+  " NOTE: the echo is used to clear the cmdline message
+  tnoremap <buffer> <Esc> <C-\><C-n><Cmd>echo<CR>
+endfun
+
+augroup vimrc_Terminal
+  autocmd TermEnter,TermOpen * call <SID>TerminalSettings()
+augroup END
+" }}}
+
 " Stay in visual mode when indenting {{{
-vnoremap < <gv
+vnoremap <lt> <lt>gv
 vnoremap > >gv
 " }}}
 
@@ -514,6 +622,12 @@ inoremap <silent> <S-Up> <nop>
 inoremap <silent> <S-Down> <nop>
 " }}}
 
+" Interactive replace {{{
+nnoremap ;; :%s~~~cg<Left><Left><Left><Left>
+" WARN: this conflicts with nvim-treesitter-textsubjects
+" xnoremap ;; :s~~~cg<Left><Left><Left><Left>
+" }}}
+
 " Move lines {{{
 inoremap <M-Up> <Cmd>move -2<CR>
 inoremap <M-Down> <Cmd>move +1<CR>
@@ -534,9 +648,6 @@ inoremap <C-e> <nop>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 " }}}
-
-" Makes it so that ctrl-right doesn't skip over to the next line
-inoremap <S-Right> <C-o>e
 
 " Tab navigation {{{
 nnoremap <silent> th <Cmd>tabfirst<CR>
@@ -562,25 +673,18 @@ nnoremap <silent> <M-S-Right> <Cmd>silent! tabmove +1<CR>
 nnoremap <silent> <M-S-Left> <Cmd>silent! tabmove -1<CR>
 " }}}
 
-" Close window
+" Close window {{{
 nnoremap <silent> <Space>q <Cmd>confirm q<CR>
 nnoremap <silent> <Space>Q <Cmd>confirm qa<CR>
 nnoremap <silent> <Space>bd <Cmd>bdelete<CR>
+" }}}
 
-" Unmap ex mode
-nnoremap Q <Nop>
-
-" Save
+" Save {{{
 nnoremap <silent> <Space>ww <Cmd>w<CR>
 
 " Save (sudo)
 nnoremap <silent> <Space>wW <Cmd>SudaWrite<CR>
-
-" Split line (symmetrical to J)
-nnoremap K a<CR><Esc>
-
-" Toggle line wrapping
-noremap <silent> <F2> <Cmd>set wrap!<CR>
+" }}}
 
 " Git {{{
 nnoremap <silent> <Space>gg <Cmd>G<CR>
@@ -588,6 +692,20 @@ nnoremap <silent> <Space>gc <Cmd>G commit<CR>
 nnoremap <silent> <Space>gb <Cmd>G blame<CR>
 nnoremap <silent> <Space>gd <Cmd>Gdiffsplit<CR>
 nnoremap <silent> <Space>gl <Cmd>tabnew <bar> Gclog <bar> TabooRename git log<CR>
+" }}}
+
+" Miscellaneous {{{
+" Makes it so that ctrl-right doesn't skip over to the next line
+inoremap <S-Right> <C-o>e
+
+" Unmap ex mode
+nnoremap Q <Nop>
+
+" Split line (symmetrical to J)
+nnoremap K a<CR><Esc>
+
+" Toggle line wrapping
+noremap <silent> <F2> <Cmd>set wrap!<CR>
 " }}}
 " }}}
 
@@ -624,7 +742,6 @@ let g:startify_change_cmd = 'tcd'
 " }}}
 
 " indent-blankline {{{
-
 " BUG: https://github.com/lukas-reineke/indent-blankline.nvim/issues/59#issuecomment-806374954
 set colorcolumn=99999
 
@@ -640,6 +757,12 @@ require'indent_blankline'.setup {
     "coctree",
     "fzf",
     "Trouble",
+  },
+  bufname_exclude = {
+    'vimspector.Variables',
+    'vimspector.Watches',
+    'vimspector.StackTrace',
+    'vimspector.Console',
   },
 }
 EOF
@@ -706,7 +829,7 @@ nnoremap <silent> <Space>dT <Cmd>call <SID>OpenTodoList(1)<CR>
 " quickfix {{{
 lua <<EOF
   require'trouble'.setup {
-    auto_preview = true, -- set to false for debugging qf/loc list stuff
+    auto_preview = true, -- NOTE: set to false for debugging qf/loc list stuff
   }
 EOF
 
@@ -778,15 +901,10 @@ augroup vimrc_VimFolds
 augroup END
 " }}}
 
-" Interactive replace {{{
-nnoremap ;; :%s:::cg<Left><Left><Left><Left>
-" WARN: this conflicts with nvim-treesitter-textsubjects
-" xnoremap ;; :s:::cg<Left><Left><Left><Left>
-" }}}
-
 " Windowswap {{{
 let g:windowswap_map_keys = 0
 nnoremap <silent> <C-w>w <Cmd>call WindowSwap#EasyWindowSwap()<CR>
+nnoremap <silent> <C-w><C-w> <Cmd>call WindowSwap#EasyWindowSwap()<CR>
 nnoremap <C-w>W <nop>
 " }}}
 
@@ -849,7 +967,7 @@ require'nvim-gps'.setup {
   separator = ' > ',
 }
 EOF
-"}}}
+" }}}
 
 " treesitter {{{
 " Do nothing if we hit the inc. selection mapping in visual mode
@@ -994,12 +1112,6 @@ call s:TextobjectMapping('ic', '@comment.outer')
 call s:TextobjectMapping('as', '@statement.outer')
 call s:TextobjectMapping('is', '@statement.outer')
 " }}}
-" }}}
-
-" fterm {{{
-nnoremap <silent> <Space>t <Cmd>lua require'FTerm'.toggle()<CR>
-" The echo cmd is used to clear the cmdline message
-tnoremap <Esc> <C-\><C-n><Cmd>echo<CR>
 " }}}
 
 " registers {{{
@@ -1186,6 +1298,68 @@ augroup END
 
 " FZF {{{
 let $FZF_DEFAULT_COMMAND='rg --files --hidden || true'
+
+fun! s:FzfSink(what)
+  let p1 = stridx(a:what, '<')
+  if l:p1 >= 0
+    let name = strpart(a:what, 0, p1)
+    let name = substitute(l:name, '^\s*\(.\{-}\)\s*$', '\1', '')
+    if name != ''
+      exec "AsyncTask ". fnameescape(l:name)
+    endif
+  endif
+endfun
+
+fun! s:FzfTask()
+  let l:rows = asynctasks#source(&columns * 48 / 100)
+  let l:source = []
+  for l:row in l:rows
+    let l:source += [
+      \ s:TermFormat(l:row[0], {
+      \   'bg': s:GetHlProp('Constant', 'bg', 'cterm'),
+      \   'fg': s:GetHlProp('Constant', 'fg', 'cterm'),
+      \ }) . "\x1b[0m  " .
+      \ s:TermFormat(l:row[1], {
+      \   'bg': s:GetHlProp('Type', 'bg', 'cterm'),
+      \   'fg': s:GetHlProp('Type', 'fg', 'cterm'),
+      \ }) . "\x1b[0m  : " .
+      \ s:TermFormat(l:row[2], {
+      \   'bg': s:GetHlProp('Comment', 'bg', 'cterm'),
+      \   'fg': s:GetHlProp('Comment', 'fg', 'cterm'),
+      \ })
+      \ ]
+  endfor
+  let l:opts = {
+    \ 'source': l:source,
+    \ 'sink': function('s:FzfSink'),
+    \ 'options': '+m --ansi',
+    \ }
+  call fzf#run(fzf#wrap('tasks', l:opts))
+endfun
+
+command! -nargs=0 AsyncTaskFzf call s:FzfTask()
+
+nnoremap <silent> <C-t> <nop>
+nnoremap <silent> <C-t>g <Cmd>AsyncTaskFzf<CR>
+nnoremap <silent> <C-t><C-g> <Cmd>AsyncTaskFzf<CR>
+
+nnoremap <silent> <C-f> <nop>
+inoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
+inoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
+nnoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
+nnoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
+nnoremap <silent> <C-f><C-r> <Cmd>FZFMru<CR>
+nnoremap <silent> <C-f>r <Cmd>FZFMru<CR>
+nnoremap <silent> <C-f><C-f> <Cmd>Files<CR>
+nnoremap <silent> <C-f>f <Cmd>Files<CR>
+nnoremap <silent> <C-f><C-g> <Cmd>Rg<CR>
+nnoremap <silent> <C-f>g <Cmd>Rg<CR>
+nnoremap <silent> <C-f><C-b> <Cmd>Rg<CR>
+nnoremap <silent> <C-f>b <Cmd>Buffers<CR>
+nnoremap <silent> <C-h> <Cmd>Buffers<CR>
+nnoremap <silent> <C-f>/ <Cmd>Lines<CR>
+nnoremap <silent> <C-f><C-_> <Cmd>Lines<CR>
+nnoremap <silent> <C-_> <Cmd>BLines<CR>
 
 augroup vimrc_fzf
   autocmd!
@@ -1418,7 +1592,7 @@ call s:CocConfig('rust-analyzer', {
   \ },
   \ 'debug': {
   \   'runtime': 'vimspector',
-  \   'vimspector': {'configuration': {'name': 'launch'}},
+  \   'vimspector': {'configuration': {'name': '_launch_coc_ra'}},
   \ },
   \ })
 " }}}
@@ -1580,33 +1754,6 @@ inoremap <silent> <C-e> <Cmd>call coc#rpc#request('doKeymap', ['snippets-expand'
 inoremap <silent> <expr> <C-Space> coc#refresh()
 " }}}
 
-" Hide status line for coc-explorer/coctree {{{
-" FIXME: this is buggy. Ideally lightline would have a user event to hook
-" fun! s:CocDisableStatusLine()
-"   let l:filetypes = ['coc-explorer', 'coctree']
-"   let l:wincount = winnr('$')
-"   let l:windows = map(range(1, l:wincount), {_,v -> {
-"     \   'id': v,
-"     \   'ft': getbufvar(winbufnr(v), '&ft'),
-"     \ } })
-"   call filter(l:windows, {_,v -> index(l:filetypes, v.ft) >= 0 })
-"   fun! s:CocDisableStatusLineCb(_) closure
-"     if l:wincount != winnr('$') | return | endif
-"     for w in l:windows
-"       call setwinvar(l:w.id, '&stl', '%#Normal#')
-"     endfor
-"   endfun
-"   call timer_start(0, function('<SID>CocDisableStatusLineCb'))
-" endfun
-
-" augroup vimrc_CocDisableStatusLine
-"   autocmd!
-"   autocmd BufEnter,BufWinEnter,TabEnter * call <SID>CocDisableStatusLine()
-"   autocmd FileType coc-explorer call <SID>CocDisableStatusLine()
-"   autocmd FileType coctree call <SID>CocDisableStatusLine()
-" augroup END
-" }}}
-
 " Code lens {{{
 nnoremap <Space>c <Cmd>call CocActionAsync('codeLensAction')<CR>
 call s:CocConfig('codeLens', {
@@ -1682,6 +1829,19 @@ call s:CocConfig('suggest', {
   \ })
 " }}}
 
+" Completion {{{
+call s:CocConfig('coc', {
+  \ 'source': {
+  \   'around': {'priority': 50},
+  \   'buffer': {'priority': 51},
+  \ }
+  \ })
+
+call s:CocConfig('suggest', {
+  \ 'languageSourcePriority': 49,
+  \ })
+" }}}
+
 " Diagnostics {{{
 call s:CocConfig('diagnostic', {
   \ 'warningSign': '',
@@ -1750,7 +1910,7 @@ nnoremap <silent> <Space>dc <Cmd>call <SID>OpenDiagnostics()<CR>
 " Diagnostics navigation {{{
 nmap <silent> [g <Cmd>call CocActionAsync('diagnosticPrevious')<CR>
 nmap <silent> ]g <Cmd>call CocActionAsync('diagnosticNext')<CR>
-"}}}
+" }}}
 
 " Code navigation {{{
 nmap <silent> gd <Cmd>call CocActionAsync('jumpDefinition', v:false)<CR>
@@ -1852,30 +2012,6 @@ call s:CocConfig('list', {
   \   '<C-c>': 'do:exit',
   \ },
   \ })
-nnoremap <silent> <C-t> <nop>
-nnoremap <silent> <C-t>t <Cmd>CocList tasks<CR>
-nnoremap <silent> <C-t><C-t> <Cmd>CocList tasks<CR>
-
-nnoremap <silent> <C-f> <nop>
-inoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
-inoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
-nnoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
-nnoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
-nnoremap <silent> <C-f><C-r> <Cmd>FZFMru<CR>
-nnoremap <silent> <C-f>r <Cmd>FZFMru<CR>
-nnoremap <silent> <C-f><C-f> <Cmd>Files<CR>
-nnoremap <silent> <C-f>f <Cmd>Files<CR>
-nnoremap <silent> <C-f><C-g> <Cmd>Rg<CR>
-nnoremap <silent> <C-f>g <Cmd>Rg<CR>
-nnoremap <silent> <C-f><C-b> <Cmd>Rg<CR>
-nnoremap <silent> <C-f>b <Cmd>Buffers<CR>
-nnoremap <silent> <C-h> <Cmd>Buffers<CR>
-nnoremap <silent> <C-f>/ <Cmd>Lines<CR>
-nnoremap <silent> <C-f><C-_> <Cmd>Lines<CR>
-nnoremap <silent> <C-_> <Cmd>BLines<CR>
-
-" Unmap ctrl-b because it's the tmux leader
-nnoremap <silent> <C-b> <nop>
 " }}}
 
 " Text objects {{{
@@ -2008,60 +2144,66 @@ endfun
 
 augroup vimrc_WilderConfig
   autocmd!
-  autocmd CmdlineEnter * ++once call <SID>WilderInit()
+  autocmd CursorHold * ++once call s:WilderInit()
 augroup END
 " }}}
 
 " Lightline {{{
 let g:lightline = {
-\   'colorscheme': 'jellybeans',
-\   'component_function': {
-\     'filetype': expand('<SID>').'LightlineFiletype',
-\     'fileformat': expand('<SID>').'LightlineFileformat',
-\     'fileencoding': expand('<SID>').'Lightline',
-\     'gps': expand('<SID>').'LightlineGps',
-\   },
-\   'tab_component_function': {
-\     'fticon': expand('<SID>').'LightlineTabIcon',
-\     'filename': expand('<SID>').'LightlineTabFilename',
-\   },
-\   'tab': {
-\     'active': ['filename', 'fticon'],
-\     'inactive': ['filename', 'fticon'],
-\   },
-\   'active': {
-\     'left': [
-\       ['mode', 'paste'],
-\       ['readonly', 'filename', 'modified'],
-\       ['gps'],
-\     ],
-\     'right': [
-\       ['lineinfo'],
-\       [
-\         'linter_info',
-\         'linter_hints',
-\         'linter_errors',
-\         'linter_warnings',
-\       ],
-\       ['fileformat', 'fileencoding', 'filetype'],
-\     ],
-\   },
-\   'inactive': {
-\     'right': [],
-\   },
-\   'subseparator': { 'left': '|', 'right': '|' },
-\   'component_expand': {
-\     'linter_warnings': expand('<SID>').'LightlineCocWarnings',
-\     'linter_errors': expand('<SID>').'LightlineCocErrors',
-\     'linter_info': expand('<SID>').'LightlineCocInfo',
-\     'linter_hints': expand('<SID>').'LightlineCocHints',
-\   },
-\   'component_type': {
-\     'linter_warnings': 'warning',
-\     'linter_errors': 'error',
-\     'linter_info': 'tabsel',
-\     'linter_hints': 'hints',
-\    },
+\ 'colorscheme': 'jellybeans',
+\ 'component_function': {
+\   'readonly': expand('<SID>').'LightlineReadonly',
+\   'modified': expand('<SID>').'LightlineModified',
+\   'mode': expand('<SID>').'LightlineMode',
+\   'filename': expand('<SID>').'LightlineFilename',
+\   'filetype': expand('<SID>').'LightlineFiletype',
+\   'fileformat': expand('<SID>').'LightlineFileformat',
+\   'fileencoding': expand('<SID>').'LightlineFileencoding',
+\   'lineinfo': expand('<SID>').'LightlineLineinfo',
+\   'git': expand('<SID>').'LightlineGit',
+\   'gps': expand('<SID>').'LightlineGps',
+\ },
+\ 'tab_component_function': {
+\   'fticon': expand('<SID>').'LightlineTabIcon',
+\   'filename': expand('<SID>').'LightlineTabFilename',
+\ },
+\ 'tab': {
+\   'active': ['filename', 'fticon'],
+\   'inactive': ['filename', 'fticon'],
+\ },
+\ 'active': {
+\   'left': [
+\     ['mode', 'paste'],
+\     ['readonly', 'filename', 'modified'],
+\     ['gps'],
+\   ],
+\   'right': [
+\     ['lineinfo'],
+\     [
+\       'linter_info',
+\       'linter_hints',
+\       'linter_errors',
+\       'linter_warnings',
+\     ] ,
+\     ['fileformat', 'fileencoding', 'filetype', 'git'],
+\   ],
+\ },
+\ 'inactive': {
+\   'right': [],
+\ },
+\ 'subseparator': { 'left': '|', 'right': '|' },
+\ 'component_expand': {
+\   'linter_warnings': expand('<SID>').'LightlineCocWarnings',
+\   'linter_errors': expand('<SID>').'LightlineCocErrors',
+\   'linter_info': expand('<SID>').'LightlineCocInfo',
+\   'linter_hints': expand('<SID>').'LightlineCocHints',
+\ },
+\ 'component_type': {
+\   'linter_warnings': 'warning',
+\   'linter_errors': 'error',
+\   'linter_info': 'tabsel',
+\   'linter_hints': 'hints',
+\ },
 \ }
 
 augroup vimrc_LightlineCoc
@@ -2071,65 +2213,148 @@ augroup vimrc_LightlineCoc
   " TODO: update on ModeChanged when this is resolved: https://github.com/neovim/neovim/issues/4399
 augroup END
 
-" let g:coc_diagnostic_indicator_checking = ' '
-let g:coc_diagnostic_indicator_info = '﯂ '
-let g:coc_diagnostic_indicator_hints = ' '
-let g:coc_diagnostic_indicator_warnings = ' '
-let g:coc_diagnostic_indicator_errors = '× '
-let g:coc_diagnostic_indicator_ok = ' '
+fun! s:LightlineIsHidden()
+  if get(b:, 'lightline_hidden', v:false)
+    return v:true
+  endif
 
+  let l:filetypes = [
+    \ 'Trouble',
+    \ 'startify',
+    \ 'list',
+    \ 'help',
+    \ 'fugitive',
+    \ 'fugitiveblame',
+    \ 'qf',
+    \ 'coctree',
+    \ 'coc-explorer',
+    \ ]
+  let l:filenames = [
+    \ 'vimspector.Variables',
+    \ 'vimspector.Watches',
+    \ 'vimspector.StackTrace',
+    \ 'vimspector.Console'
+    \ ]
+
+  return &bt ==# 'terminal'
+    \ || index(l:filetypes, &ft) != -1
+    \ || index(l:filenames, expand('%:t')) != -1
+endfunction
+
+" Components {{{
+" TODO: other symbols
+" checking/loading: 
+" ok: 
 fun! s:LightlineCocWarnings()
   if mode() =~# '^i' | return '' | endif
   let l:stat = get(b:coc_diagnostic_info, 'warning', 0)
   if !l:stat | return '' | endif
-  return g:coc_diagnostic_indicator_warnings . l:stat
+  return ' ' . l:stat
 endfun
 
 fun! s:LightlineCocErrors()
   if mode() =~# '^i' | return '' | endif
   let l:stat = get(b:coc_diagnostic_info, 'error', 0)
   if !l:stat | return '' | endif
-  return g:coc_diagnostic_indicator_errors . l:stat
+  return '× ' . l:stat
 endfun
 
 fun! s:LightlineCocInfo()
   if mode() =~# '^i' | return '' | endif
   let l:stat = get(b:coc_diagnostic_info, 'information', 0)
   if !l:stat | return '' | endif
-  return g:coc_diagnostic_indicator_info . l:stat
+  return '﯂ ' . l:stat
 endfun
 
 fun! s:LightlineCocHints()
   if mode() =~# '^i' | return '' | endif
   let l:stat = get(b:coc_diagnostic_info, 'hints', 0)
   if !l:stat | return '' | endif
-  return g:coc_diagnostic_indicator_hints . l:stat
+  return ' ' . l:stat
 endfun
 
-let g:taboo_tabline = 0
-let g:taboo_tab_format = ' %f%m '
+fun! s:LightlineReadonly()
+  if s:LightlineIsHidden() | return '' | endif
+  if &readonly | return '﯎' | endif " RO
+  return ''
+endfun
+
+fun! s:LightlineModified()
+  if s:LightlineIsHidden() | return '' | endif
+  if &modified | return '' | endif " +
+  if ! &modifiable | return '' | endif " -
+  return ''
+endfun
+
+fun! s:LightlineMode()
+  if s:LightlineIsHidden() | return '' | endif
+  return lightline#mode()
+endfun
+
+fun! s:LightlineFilename()
+  " Filetypes
+  if &ft ==# 'Trouble' | return ' Trouble' | endif
+  if &ft ==# 'startify' | return ' Startify' | endif
+  if &ft ==# 'coc-explorer' | return ' Explorer' | endif
+
+  " Terminals
+  if &bt ==# 'terminal' | return ' Terminal' | endif
+
+  let l:fname = expand('%')
+  if match(l:fname, 'vimspector\.') == 0
+    return substitute(l:fname, '^vimspector\.', ' ', '')
+  end
+
+  if s:LightlineIsHidden() | return '' | endif
+  return expand('%:t')
+endfun
 
 fun! s:LightlineFiletype()
   if &columns <= 70 | return '' | endif
-  if &filetype ==# 'qf' | return '' | endif
-  if &filetype ==# 'Trouble' | return '' | endif
-  if &buftype ==# 'terminal' | return '' | endif
+  if s:LightlineIsHidden() | return '' | endif
   let l:r = luaeval("{require'nvim-web-devicons'.get_icon(_A[1], _A[2])}", [expand('%:t'), v:null])
   let l:icon = l:r[0]
   let l:color = l:r[1]
   " TODO: colors
-  return strlen(&filetype)
-    \ ? l:icon . ' ' . &filetype
+  return strlen(&ft)
+    \ ? l:icon . ' ' . &ft
     \ : 'no ft'
 endfun
 
 fun! s:LightlineFileformat()
-  if &columns <= 70 | return '' | endif
-  if &filetype ==# 'qf' | return '' | endif
-  if &filetype ==# 'Trouble' | return '' | endif
-  if &buftype ==# 'terminal' | return '' | endif
+  if &columns <= 90 | return '' | endif
+  if s:LightlineIsHidden() | return '' | endif
+  " Don't display unless it's not unix line endings
+  if &fileformat ==# 'unix' | return '' | endif
   return &fileformat
 endfun
+
+fun! s:LightlineFileencoding()
+  if &columns <= 70 | return '' | endif
+  if s:LightlineIsHidden() | return '' | endif
+  " Don't display unless it's some weird encoding
+  if &fileencoding ==# 'utf-8' | return '' | endif
+  return &fileencoding
+endfun
+
+fun! s:LightlineLineinfo()
+  if s:LightlineIsHidden() | return '' | endif
+  return printf('%3d:%-2d', line('.'), col('.'))
+endfun
+
+fun! s:LightlineGit()
+  if s:LightlineIsHidden() | return '' | endif
+
+  let l:info = fugitive#head()
+  if l:info ==# '' | return '' | endif
+
+  return ' '. l:info
+endfunction
+
+augroup vimrc_LightlineGit
+  autocmd!
+  autocmd User FugitiveChanged,FugitiveObject,FugitiveIndex call lightline#update()
+augroup END
 
 fun! s:LightlineGps()
   if luaeval("require'nvim-gps'.is_available()")
@@ -2137,6 +2362,11 @@ fun! s:LightlineGps()
   endif
   return ''
 endfun
+" }}}
+
+" Tab components {{{
+let g:taboo_tabline = 0
+let g:taboo_tab_format = ' %f%m '
 
 fun! s:LightlineTabIcon(n)
   let l:buflist = tabpagebuflist(a:n)
@@ -2153,34 +2383,9 @@ fun! s:LightlineTabFilename(n) abort
   return TabooTabTitle(a:n)
 endfun
 " }}}
+" }}}
 
 " Appearance {{{
-fun! s:SetHl(id, opts)
-  let l:props = get(a:opts, 'props', {})
-  execute('hi! clear ' . a:id)
-  let l:cmd = 'hi! ' . a:id
-  for [l:key, l:settings] in items(l:props)
-    if type(l:settings) == v:t_string
-      let l:cmd .= ' ' . l:key . '=' . l:settings
-    elseif type(l:settings) == v:t_dict
-      let l:default = get(l:settings, 'default', 'NONE')
-      let l:value = s:GetHlProp(settings.copy_from, settings.prop, settings.mode, l:default)
-      let l:cmd .= ' ' . l:key . '=' . l:value
-    else
-      echoerr printf('Invalid property (%s) of type %s', l:key, type(l:settings))
-    endif
-  endfor
-  execute(l:cmd)
-endfun
-
-fun! s:GetHlProp(id, prop, mode, default = 'NONE')
-  let l:value = synIDattr(synIDtrans(hlID(a:id)), a:prop, a:mode)
-  if l:value ==# ''
-    return a:default
-  endif
-  return l:value
-endfun
-
 fun! s:SetColorschemePreferences()
   " This makes unused code gray
   " hi! link CocFadeOut NonText
@@ -2237,7 +2442,7 @@ endfun
 
 augroup vimrc_ColorschemePreferences
   autocmd!
-  autocmd ColorScheme * call <SID>SetColorschemePreferences()
+  autocmd ColorScheme * call s:SetColorschemePreferences()
 augroup END
 
 set background=dark
