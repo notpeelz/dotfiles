@@ -576,6 +576,10 @@ fun! s:TerminalSettings()
   if &ft ==# 'fzf'
     tnoremap <buffer> <Esc> <Cmd>q<CR>
   endif
+
+  if &ft ==# 'FTerm'
+    tunmap <buffer> <Esc>
+  endif
 endfun
 
 augroup vimrc_Terminal
