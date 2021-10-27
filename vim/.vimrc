@@ -2298,6 +2298,9 @@ fun! s:LightlineFilename()
   if &ft ==# 'coc-explorer' | return ' Explorer' | endif
 
   " Terminals
+  if get(b:, 'asyncrun_name', '') !=# ''
+    return ' ' . b:asyncrun_name
+  endif
   if &bt ==# 'terminal' | return ' Terminal' | endif
 
   let l:fname = expand('%')
