@@ -572,6 +572,10 @@ fun! s:TerminalSettings()
   " Close with <Esc>
   " NOTE: the echo is used to clear the cmdline message
   tnoremap <buffer> <Esc> <C-\><C-n><Cmd>echo<CR>
+
+  if &ft ==# 'fzf'
+    tnoremap <buffer> <Esc> <Cmd>q<CR>
+  endif
 endfun
 
 augroup vimrc_Terminal
