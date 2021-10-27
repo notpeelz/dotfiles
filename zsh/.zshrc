@@ -1,5 +1,7 @@
 # vim:foldmethod=marker
 
+_SCRIPT_PATH="${$(print -P %N):A:h}"
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -129,14 +131,24 @@ fi
 # }}}
 
 # cargo {{{
-fpath+="$(rustc --print sysroot)/share/zsh/site-functions"
-#}}}
+if type rustc &>/dev/null; then
+  fpath+="$(rustc --print sysroot)/share/zsh/site-functions"
+fi
+# }}}
 
 # nvm (Node Version Manager) {{{
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 # }}}
 
+# npm {{{
+# FIXME: this completion is not ideal (no `npm install` completion)
+if type npm &>/dev/null; then
+  source <(npm completion)
+fi
+# }}}
+
 autoload -Uz compinit && compinit
+autoload -U bashcompinit && bashcompinit
 # }}}
 
 # Fuzzy up/down completion {{{
@@ -230,13 +242,13 @@ function detect-clipboard() {
   elif (( ${+commands[win32yank]} )); then
     function clipcopy() { win32yank -i < "${1:-/dev/stdin}"; }
     function clippaste() { win32yank -o; }
-  elif [[ $OSTYPE == linux-android* ]] && (( $+commands[termux-clipboard-set] )); then
+  elif [[ "$OSTYPE" == linux-android* ]] && (( $+commands[termux-clipboard-set] )); then
     function clipcopy() { termux-clipboard-set "${1:-/dev/stdin}"; }
     function clippaste() { termux-clipboard-get; }
   elif [ -n "${TMUX:-}" ] && (( ${+commands[tmux]} )); then
     function clipcopy() { tmux load-buffer "${1:--}"; }
     function clippaste() { tmux save-buffer -; }
-  elif [[ $(uname -r) = *icrosoft* ]]; then
+  elif [[ "$(uname -r)" = *icrosoft* ]]; then
     function clipcopy() { clip.exe < "${1:-/dev/stdin}"; }
     function clippaste() { powershell.exe -noprofile -command Get-Clipboard; }
   else
@@ -256,6 +268,11 @@ function detect-clipboard() {
 }
 
 detect-clipboard || true
+# }}}
+
+# Plugins {{{
+# FIXME: `yarn add` completion is slow
+source "$_SCRIPT_PATH/plugins/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
 # }}}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
