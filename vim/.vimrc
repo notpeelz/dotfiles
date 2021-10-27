@@ -928,6 +928,7 @@ EOF
 lua <<EOF
 local Rule = require'nvim-autopairs.rule'
 local cond = require'nvim-autopairs.conds'
+local tsCond = require'nvim-autopairs.ts-conds'
 local npairs = require'nvim-autopairs'
 
 npairs.setup {
@@ -940,17 +941,43 @@ npairs.setup {
   -- enable_afterquote = true,
 }
 
--- Vim
-do
-  local before_non_space = cond.before_regex_check("%S", 1)
-  npairs.get_rule'"'
-    -- Don't pair unless it's after a space or at the beginning of the line
-    :with_pair(function(opts)
-      if vim.bo.filetype == "vim" then
-        return before_non_space(opts)
-      end
-    end)
+-- Helpers {{{
+function get_rules(start_pair)
+  local tbl = {}
+  for _, r in pairs(npairs.config.rules) do
+    if r.start_pair == start_pair then
+      table.insert(tbl, r)
+    end
+  end
+  return tbl
 end
+
+function add_pair(rule, cond)
+  if rule.pair_cond == nil then rule.pair_cond = {} end
+  table.insert(rule.pair_cond, 1, cond)
+end
+--- }}}
+
+-- Vim {{{
+local before_non_space = cond.before_regex_check("%S", 1)
+  vim.tbl_map(function(v)
+  -- Don't pair unless it's after a space or at the beginning of the line
+  add_pair(v, function(opts)
+    if vim.bo.filetype == "vim" then
+      return before_non_space(opts)
+    end
+  end)
+end, get_rules'"')
+--- }}}
+
+-- Don't pair unless a word char is next {{{
+local not_before_word_char = cond.not_after_regex_check("%w", 1)
+for _, c  in pairs({'(', '{', '[', '"', "'"}) do
+  vim.tbl_map(function(r)
+    add_pair(r, not_before_word_char)
+  end, get_rules(c))
+end
+--- }}}
 EOF
 " }}}
 
