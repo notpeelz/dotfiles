@@ -338,8 +338,7 @@ set cursorline nocursorcolumn
 " }}}
 
 " Search and substitution {{{
-" Search highlighting
-set hlsearch
+" Incremental search
 set incsearch
 
 " Case-insensitive search
