@@ -2229,6 +2229,7 @@ let g:lightline = {
 \   ],
 \ },
 \ 'inactive': {
+\   'left': [['readonly', 'filename', 'modified']],
 \   'right': [],
 \ },
 \ 'subseparator': { 'left': '|', 'right': '|' },
@@ -2356,10 +2357,14 @@ fun! s:LightlineFilename()
   let l:fname = expand('%')
   if match(l:fname, 'vimspector\.') == 0
     return substitute(l:fname, '^vimspector\.', ' ', '')
-  end
+  endif
 
   if s:LightlineIsHidden() | return '' | endif
-  return expand('%:t')
+
+  let l:name = expand('%:t')
+  if l:name ==# '' | return '[untitled]' | endif
+
+  return l:name
 endfun
 
 fun! s:LightlineFiletype()
