@@ -2253,6 +2253,9 @@ fun! s:LightlineIsHidden()
     \ 'startify',
     \ 'list',
     \ 'help',
+    \ 'git',
+    \ 'gitrebase',
+    \ 'gitcommit',
     \ 'fugitive',
     \ 'fugitiveblame',
     \ 'qf',
@@ -2323,9 +2326,16 @@ endfun
 
 fun! s:LightlineFilename()
   " Filetypes
+  " NOTE: other icons;  
+  if &ft ==# 'help' | return ' Help' | endif
   if &ft ==# 'Trouble' | return ' Trouble' | endif
   if &ft ==# 'startify' | return ' Startify' | endif
-  if &ft ==# 'coc-explorer' | return ' Explorer' | endif
+  if &ft ==# 'coc-explorer' | return ' Explorer' | endif
+  if &ft =~# '^\(git\|fugitive\)$' | return ' Git' | endif
+  if &ft ==# 'fugitiveblame' | return ' Blame' | endif
+  if &ft ==# 'gitrebase' | return ' Rebase' | endif
+  if &ft ==# 'gitcommit' | return ' Commit' | endif
+  if &ft ==# 'qf' | return ' List' | endif
 
   " Terminals
   if get(b:, 'asyncrun_name', '') !=# ''
