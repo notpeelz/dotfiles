@@ -929,9 +929,9 @@ EOF
 
 " autopairs {{{
 lua <<EOF
+local ts_utils = require'nvim-treesitter.ts_utils'
 local Rule = require'nvim-autopairs.rule'
 local cond = require'nvim-autopairs.conds'
-local tsCond = require'nvim-autopairs.ts-conds'
 local npairs = require'nvim-autopairs'
 
 npairs.setup {
@@ -959,25 +959,35 @@ function add_pair(rule, cond)
   if rule.pair_cond == nil then rule.pair_cond = {} end
   table.insert(rule.pair_cond, 1, cond)
 end
+
+function get_ts_lang()
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local _, _, lang_root = ts_utils.get_root_for_position(row, col)
+  if lang_root == nil then
+    return nil
+  end
+  -- vim.api.nvim_echo({{lang_root:lang(), 'None'}}, true, {})
+  return lang_root:lang()
+end
+
+local not_word_char_next = cond.not_after_regex_check("%w", 1)
 --- }}}
 
 -- Vim {{{
-local before_non_space = cond.before_regex_check("%S", 1)
-  vim.tbl_map(function(v)
-  -- Don't pair unless it's after a space or at the beginning of the line
+vim.tbl_map(function(v)
+  -- Never pair " because they're also used for comments
   add_pair(v, function(opts)
-    if vim.bo.filetype == "vim" then
-      return before_non_space(opts)
+    if get_ts_lang() == "vim" then
+      return false
     end
   end)
 end, get_rules'"')
 --- }}}
 
--- Don't pair unless a word char is next {{{
-local not_before_word_char = cond.not_after_regex_check("%w", 1)
+-- Don't pair if a word char is next {{{
 for _, c  in pairs({'(', '{', '[', '"', "'"}) do
   vim.tbl_map(function(r)
-    add_pair(r, not_before_word_char)
+    add_pair(r, not_word_char_next)
   end, get_rules(c))
 end
 --- }}}
