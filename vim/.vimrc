@@ -2058,6 +2058,12 @@ call s:CocConfig('list', {
   \ })
 " }}}
 
+" Yank {{{
+call s:CocConfig('yank', {
+  \ 'enableCompletion': v:false,
+  \ })
+" }}}
+
 " Text objects {{{
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
 " xmap if <Plug>(coc-funcobj-i)
