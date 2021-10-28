@@ -583,7 +583,7 @@ fun! s:TerminalSettings()
 endfun
 
 augroup vimrc_Terminal
-  autocmd TermEnter,TermOpen * call <SID>TerminalSettings()
+  autocmd TermEnter,TermOpen * call s:TerminalSettings()
 augroup END
 " }}}
 
@@ -784,7 +784,7 @@ EOF
 " todo-comments {{{
 augroup vimrc_TodoComments
   autocmd!
-  autocmd User vimrc_ColorSchemePost call <SID>SetupTodoComments()
+  autocmd User vimrc_ColorSchemePost call s:SetupTodoComments()
 augroup END
 
 fun! s:SetupTodoComments()
@@ -904,7 +904,7 @@ endfun
 
 augroup vimrc_VimFolds
   autocmd!
-  autocmd FileType * call <SID>SetFoldSettings()
+  autocmd FileType * call s:SetFoldSettings()
 augroup END
 " }}}
 
@@ -1257,7 +1257,7 @@ vmap <silent> <Space>de <Plug>VimspectorBalloonEval
 nmap <silent> <Space>dx <Cmd>call vimspector#ListBreakpoints()<CR>
 
 " Signs
-fun! s:SetVimspectorColorschemePreferences()
+fun! s:SetVimspectorColors()
   call s:SetHl('vimspectorBP', {
     \ 'props': {
     \   'ctermbg': {'copy_from': 'SignColumn', 'mode': 'cterm', 'prop': 'bg'},
@@ -1306,9 +1306,9 @@ fun! s:SetVimspectorColorschemePreferences()
     \ })
 endfun
 
-augroup vimrc_VimspectorColorschemePreferences
+augroup vimrc_VimspectorColors
   autocmd!
-  autocmd ColorScheme * call <SID>SetVimspectorColorschemePreferences()
+  autocmd ColorScheme * call s:SetVimspectorColors()
 augroup END
 
 sign define vimspectorBP            text=\ ● texthl=vimspectorBP
@@ -1583,7 +1583,7 @@ endfun
 
 augroup vimrc_gitVirtualText
   autocmd!
-  autocmd CursorHold * call <SID>UpdateGitVirtualText()
+  autocmd CursorHold * call s:UpdateGitVirtualText()
 augroup END
 
 fun! s:ToggleGitVirtualText()
@@ -1591,7 +1591,7 @@ fun! s:ToggleGitVirtualText()
   call s:UpdateGitVirtualText()
 endfun
 
-nnoremap <Space>gv <Cmd>call <SID>ToggleGitVirtualText()<CR>
+nnoremap <Space>gv <Cmd>call s:ToggleGitVirtualText()<CR>
 " }}}
 " }}}
 
@@ -1743,7 +1743,7 @@ endfun
 
 augroup vimrc_CocExplorerMappings
   autocmd!
-  autocmd BufEnter,WinEnter * call <SID>CocExplorerMappings()
+  autocmd BufEnter,WinEnter * call s:CocExplorerMappings()
 augroup END
 " }}}
 
@@ -1765,7 +1765,7 @@ endfun
 
 augroup vimrc_CocTreeMappings
   autocmd!
-  autocmd BufEnter * call <SID>CocTreeMappings()
+  autocmd BufEnter * call s:CocTreeMappings()
 augroup END
 " }}}
 
@@ -1945,7 +1945,7 @@ endfun
 " FIXME: unfortunately this seems to cause instabilities in neovim's RPC
 " augroup vimrc_CocDiagnostics
 "   autocmd!
-"   autocmd User CocDiagnosticChange call <SID>OpenDiagnostics(1)
+"   autocmd User CocDiagnosticChange call s:OpenDiagnostics(1)
 " augroup END
 
 nnoremap <silent> <Space>dc <Cmd>call <SID>OpenDiagnostics()<CR>
@@ -2448,7 +2448,7 @@ endfun
 " }}}
 
 " Appearance {{{
-fun! s:SetColorschemePreferences()
+fun! s:SetColorScheme()
   " This makes unused code gray
   " hi! link CocFadeOut NonText
 
@@ -2504,7 +2504,7 @@ endfun
 
 augroup vimrc_ColorschemePreferences
   autocmd!
-  autocmd ColorScheme * call s:SetColorschemePreferences()
+  autocmd ColorScheme * call s:SetColorScheme()
 augroup END
 
 set background=dark
