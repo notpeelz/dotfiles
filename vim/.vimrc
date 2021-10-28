@@ -2444,12 +2444,18 @@ fun! s:LightlineFileencoding()
 endfun
 
 fun! s:LightlineLineinfo()
-  if s:LightlineIsHidden() | return '' | endif
+  " NOTE: line info is useful for writing commit messsages
+  if &ft !=# 'gitcommit'
+    \ && s:LightlineIsHidden() | return '' | endif
   return printf('%3d:%-2d', line('.'), col('.'))
 endfun
 
 fun! s:LightlineGit()
-  if s:LightlineIsHidden() | return '' | endif
+  if &ft != 'git'
+    \ && &ft != 'fugitive'
+    \ && &ft != 'gitrebase'
+    \ && &ft != 'gitcommit'
+    \ && s:LightlineIsHidden() | return '' | endif
 
   let l:info = fugitive#head()
   if l:info ==# '' | return '' | endif
