@@ -2457,6 +2457,14 @@ fun! s:LightlineGit()
     \ && &ft != 'gitcommit'
     \ && s:LightlineIsHidden() | return '' | endif
 
+  let [l:obj, l:path] = FugitiveParse()
+  if l:path !=# ''
+    if l:obj =~# '^:0'
+      return ' ' . '0000000'
+    endif
+    return ' ' . l:obj[:6]
+  endif
+
   let l:info = fugitive#head()
   if l:info ==# '' | return '' | endif
 
