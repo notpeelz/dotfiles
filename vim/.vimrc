@@ -1699,6 +1699,34 @@ call s:CocConfig('explorer', {
   \     },
   \   },
   \ },
+  \ 'presets': {
+  \   'floatingLeft': {
+  \     'position': 'floating',
+  \     'floating-position': 'left-center',
+  \     'floating-width': 40,
+  \     'floating-height': 0,
+  \     'open-action-strategy': 'sourceWindow',
+  \     'file-child-template': '[git | 2] [selection | clip | 1] [indent][icon | 1] [diagnosticError & 1][filename omitCenter 1][modified][readonly] [linkIcon & 1][link growRight 1 omitCenter 5]',
+  \     'toggle': v:true,
+  \     'focus': v:true,
+  \   }
+  \ },
+  \ 'floating': {
+  \   'border': {
+  \     'enable': v:true,
+  \     'title': ' Explorer',
+  \     'chars': [
+  \       ' ',
+  \       '│',
+  \       ' ',
+  \       ' ',
+  \       '',
+  \       ' |',
+  \       ' |',
+  \       '',
+  \     ],
+  \   }
+  \ },
   \ 'keyMappings': {
   \   'global': {
   \     'u': ['wait', 'gotoParent'],
@@ -1718,9 +1746,9 @@ call s:CocConfig('explorer', {
   \ },
   \ })
 
-nnoremap <silent> <Bar> <Cmd>CocCommand explorer --sources=buffer+<CR>
-nnoremap <silent> \ <Cmd>CocCommand explorer --sources=file+<CR>
-nnoremap <silent> à <Cmd>CocCommand explorer --sources=file+<CR>
+nnoremap <silent> <Bar> <Cmd>CocCommand explorer --sources=buffer+ --preset floatingLeft<CR>
+nnoremap <silent> \ <Cmd>CocCommand explorer --sources=file+ --preset floatingLeft<CR>
+nnoremap <silent> à <Cmd>CocCommand explorer --sources=file+ --preset floatingLeft<CR>
 nnoremap <silent> <Space>ecd <Cmd>execute('tcd ' . expand("%:p:h"))<CR>
 
 fun! s:CocExplorerMappings()
@@ -1744,6 +1772,16 @@ endfun
 augroup vimrc_CocExplorerMappings
   autocmd!
   autocmd BufEnter,WinEnter * call s:CocExplorerMappings()
+augroup END
+
+fun! s:SetupCocExplorerColors()
+  hi link CocExplorerNormalFloat Clear
+  hi link CocExplorerNormalFloatBorder Clear
+endfun
+
+augroup vimrc_CocExplorerColors
+  autocmd!
+  autocmd User vimrc_ColorScheme call s:SetupCocExplorerColors()
 augroup END
 " }}}
 
@@ -2505,6 +2543,7 @@ fun! s:SetColorScheme()
     \ }
     \ })
 
+  doautocmd User vimrc_ColorScheme
   doautocmd User vimrc_ColorSchemePost
 endfun
 
