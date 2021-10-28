@@ -2026,7 +2026,7 @@ nmap <Space>dff <Plug>(coc-format)
 " }}}
 
 " Code actions {{{
-nmap <silent> <C-Space> <Plug>(coc-codeaction)
+nmap <silent> <C-Space> <Plug>(coc-codeaction-cursor)
 xmap <silent> <C-Space> <Plug>(coc-codeaction-selected)
 
 " Apply AutoFix to problem on the current line.
