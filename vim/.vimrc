@@ -297,7 +297,9 @@ augroup END
 
 " Window-local settings
 fun! s:SetWindowLocalSettings()
-  if &bt !=# '' && &bt !=# 'acwrite'
+  if &bt !=# ''
+    \ && &bt !=# 'acwrite'
+    \ && &ft !=# 'qf'
     setlocal nonumber norelativenumber
     return
   endif
