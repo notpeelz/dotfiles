@@ -1388,8 +1388,8 @@ nnoremap <silent> <C-t>g <Cmd>AsyncTaskFzf<CR>
 nnoremap <silent> <C-t><C-g> <Cmd>AsyncTaskFzf<CR>
 
 nnoremap <silent> <C-f> <nop>
-inoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
-inoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
+" inoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
+" inoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
 nnoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
 nnoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
 nnoremap <silent> <C-f><C-r> <Cmd>FZFMru<CR>
