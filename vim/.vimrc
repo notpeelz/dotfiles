@@ -2255,7 +2255,7 @@ augroup END
 
 " Lightline {{{
 let g:lightline = {
-\ 'colorscheme': 'jellybeans',
+\ 'colorscheme': 'jellybeans_custom',
 \ 'component_function': {
 \   'readonly': expand('<SID>').'LightlineReadonly',
 \   'modified': expand('<SID>').'LightlineModified',
