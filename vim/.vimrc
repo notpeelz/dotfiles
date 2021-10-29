@@ -33,6 +33,21 @@ endif
 " }}}
 
 " Helpers {{{
+fun! s:LeftPad(s, l, ...)
+  let [l:s, l:w, l:c] = [a:s, abs(a:l) - strdisplaywidth(a:s), get(a:000, 0, ' ')]
+  if l:w > 0
+    let l:cw = strdisplaywidth(l:c)
+    let l:cl = l:w / l:cw
+    let l:sw = l:w - l:cw * l:cl
+    if a:l < 0
+      let l:s = l:s . repeat(l:c, l:cl) . repeat(' ', l:sw)
+    else
+      let l:s = repeat(l:c, l:cl) . repeat(' ', l:sw) . l:s
+    endif
+  endif
+  return l:s
+endfun
+
 fun! s:SetHl(id, opts)
   let l:props = get(a:opts, 'props', {})
   execute('hi! clear ' . a:id)
@@ -2270,11 +2285,12 @@ let g:lightline = {
 \   'right': [
 \     ['lineinfo'],
 \     [
-\       'linter_info',
-\       'linter_hints',
-\       'linter_errors',
-\       'linter_warnings',
-\     ] ,
+\       'lsp_status',
+\       'diag_info',
+\       'diag_hints',
+\       'diag_errors',
+\       'diag_warnings',
+\     ],
 \     ['fileformat', 'fileencoding', 'filetype', 'git'],
 \   ],
 \ },
@@ -2284,26 +2300,19 @@ let g:lightline = {
 \ },
 \ 'subseparator': { 'left': '|', 'right': '|' },
 \ 'component_expand': {
-\   'linter_warnings': expand('<SID>').'LightlineCocWarnings',
-\   'linter_errors': expand('<SID>').'LightlineCocErrors',
-\   'linter_info': expand('<SID>').'LightlineCocInfo',
-\   'linter_hints': expand('<SID>').'LightlineCocHints',
+\   'lsp_status': expand('<SID>').'LightlineLspStatus',
+\   'diag_warnings': expand('<SID>').'LightlineDiagWarnings',
+\   'diag_errors': expand('<SID>').'LightlineDiagErrors',
+\   'diag_info': expand('<SID>').'LightlineDiagInfo',
+\   'diag_hints': expand('<SID>').'LightlineDiagHints',
 \ },
 \ 'component_type': {
-\   'linter_warnings': 'warning',
-\   'linter_errors': 'error',
-\   'linter_info': 'tabsel',
-\   'linter_hints': 'hints',
+\   'diag_warnings': 'warning',
+\   'diag_errors': 'error',
 \ },
 \ }
 
-augroup vimrc_LightlineCoc
-  autocmd!
-  autocmd User CocDiagnosticChange call lightline#update()
-  autocmd User CocStatusChange call lightline#update()
-  " TODO: update on ModeChanged when this is resolved: https://github.com/neovim/neovim/issues/4399
-augroup END
-
+" Helpers {{{
 fun! s:LightlineIsHidden()
   if get(b:, 'lightline_hidden', v:false)
     return v:true
@@ -2335,34 +2344,40 @@ fun! s:LightlineIsHidden()
     \ || index(l:filenames, expand('%:t')) != -1
 endfunction
 
+fun! s:LightlineShouldHideDiagnostics()
+  if mode() =~# '^i' | return v:false | endif
+  if get(g:, 'hide_diagnostics', v:false) | return v:true | endif
+  return v:false
+endfun
+" }}}
+
 " Components {{{
 " TODO: other symbols
-" checking/loading: 
 " ok: 
-fun! s:LightlineCocWarnings()
-  if mode() =~# '^i' | return '' | endif
-  let l:stat = get(b:coc_diagnostic_info, 'warning', 0)
+fun! s:LightlineDiagWarnings()
+  if s:LightlineShouldHideDiagnostics() | return '' | endif
+  let l:stat = get(get(b:, 'coc_diagnostic_info', {}), 'warning', 0)
   if !l:stat | return '' | endif
   return ' ' . l:stat
 endfun
 
-fun! s:LightlineCocErrors()
-  if mode() =~# '^i' | return '' | endif
-  let l:stat = get(b:coc_diagnostic_info, 'error', 0)
+fun! s:LightlineDiagErrors()
+  if s:LightlineShouldHideDiagnostics() | return '' | endif
+  let l:stat = get(get(b:, 'coc_diagnostic_info', {}), 'error', 0)
   if !l:stat | return '' | endif
-  return '× ' . l:stat
+  return ' ' . l:stat
 endfun
 
-fun! s:LightlineCocInfo()
-  if mode() =~# '^i' | return '' | endif
-  let l:stat = get(b:coc_diagnostic_info, 'information', 0)
+fun! s:LightlineDiagInfo()
+  if s:LightlineShouldHideDiagnostics() | return '' | endif
+  let l:stat = get(get(b:, 'coc_diagnostic_info', {}), 'information', 0)
   if !l:stat | return '' | endif
   return '﯂ ' . l:stat
 endfun
 
-fun! s:LightlineCocHints()
-  if mode() =~# '^i' | return '' | endif
-  let l:stat = get(b:coc_diagnostic_info, 'hints', 0)
+fun! s:LightlineDiagHints()
+  if s:LightlineShouldHideDiagnostics() | return '' | endif
+  let l:stat = get(get(b:, 'coc_diagnostic_info', {}), 'hints', 0)
   if !l:stat | return '' | endif
   return ' ' . l:stat
 endfun
@@ -2484,6 +2499,49 @@ fun! s:LightlineGps()
   endif
   return ''
 endfun
+
+fun! s:LightlineLspStatus()
+  " let l:status = trim(get(g:, 'coc_status', ''))
+  " echom l:status
+  " return l:status
+
+  let l:status = get(g:, 'coc_status', '')
+
+  " Disable diagnostic icons to prevent flickering
+  let g:hide_diagnostics = 1
+  if l:status =~# '^\s*$'
+    " An empty coc_status will re-enable diagnostic icons
+    let g:hide_diagnostics = 0
+    let l:status = v:null
+  elseif l:status =~? 'indexing \d\+%'
+    let [_, l:progress; _] = matchlist(l:status, 'indexing \(\d\+\)%')
+
+    " Keep the progress width constant
+    let l:progress = strdisplaywidth(l:progress) > 2 ? '99' : s:LeftPad(l:progress, 2)
+
+    " NOTE: the percent sign is escaped because of statusline expansion
+    let l:status = ' Indexing ' . l:progress . '%%'
+  elseif l:status =~? ' loading snippets'
+    let l:status = ' Snippets'
+  elseif l:status =~? 'fetching '
+    let l:status = ' Fetching'
+  elseif l:status =~? ' finished'
+    let l:status = ''
+  else
+    " Unknown status events will only show the spinner
+    let l:status = ''
+  endif
+
+  if l:status != v:null
+    return '' . l:status
+  endif
+  return ''
+endfun
+
+augroup vimrc_LightlineLsp
+  autocmd!
+  autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+augroup END
 " }}}
 
 " Tab components {{{
