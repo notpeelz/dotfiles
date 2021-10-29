@@ -705,7 +705,7 @@ nnoremap <silent> <Space>gl <Cmd>tabnew <bar> Gclog <bar> TabooRename git log<CR
 
 " Miscellaneous {{{
 " Makes it so that ctrl-right doesn't skip over to the next line
-inoremap <S-Right> <C-o>e
+inoremap <C-Right> <C-o>e
 
 " Unmap ex mode
 nnoremap Q <Nop>
