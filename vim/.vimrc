@@ -2257,8 +2257,6 @@ augroup END
 let g:lightline = {
 \ 'colorscheme': 'jellybeans_custom',
 \ 'component_function': {
-\   'readonly': expand('<SID>').'LightlineReadonly',
-\   'modified': expand('<SID>').'LightlineModified',
 \   'mode': expand('<SID>').'LightlineMode',
 \   'filename': expand('<SID>').'LightlineFilename',
 \   'filetype': expand('<SID>').'LightlineFiletype',
@@ -2279,7 +2277,7 @@ let g:lightline = {
 \ 'active': {
 \   'left': [
 \     ['mode', 'paste'],
-\     ['readonly', 'filename', 'modified'],
+\     ['filename'],
 \     ['gps'],
 \   ],
 \   'right': [
@@ -2295,7 +2293,7 @@ let g:lightline = {
 \   ],
 \ },
 \ 'inactive': {
-\   'left': [['readonly', 'filename', 'modified']],
+\   'left': [['filename']],
 \   'right': [],
 \ },
 \ 'subseparator': { 'left': '|', 'right': '|' },
@@ -2382,19 +2380,6 @@ fun! s:LightlineDiagHints()
   return ' ' . l:stat
 endfun
 
-fun! s:LightlineReadonly()
-  if s:LightlineIsHidden() | return '' | endif
-  if &readonly | return '﯎' | endif " RO
-  return ''
-endfun
-
-fun! s:LightlineModified()
-  if s:LightlineIsHidden() | return '' | endif
-  if &modified | return '' | endif " +
-  if ! &modifiable | return '' | endif " -
-  return ''
-endfun
-
 fun! s:LightlineMode()
   if s:LightlineIsHidden() | return '' | endif
   return lightline#mode()
@@ -2427,7 +2412,11 @@ fun! s:LightlineFilename()
   if s:LightlineIsHidden() | return '' | endif
 
   let l:name = expand('%:t')
-  if l:name ==# '' | return '[untitled]' | endif
+  if l:name ==# '' | let l:name = '[untitled]' | endif
+
+  if &readonly | let l:name .= ' ﯎' | endif " RO
+  if &modified | let l:name .= ' ' | endif " +
+  if !&modifiable | let l:name .= ' ' | endif " -
 
   return l:name
 endfun
