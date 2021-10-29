@@ -1916,13 +1916,13 @@ call s:CocConfig('suggest', {
 " Completion {{{
 call s:CocConfig('coc', {
   \ 'source': {
-  \   'around': {'priority': 50},
-  \   'buffer': {'priority': 51},
+  \   'around': {'priority': 51},
+  \   'buffer': {'priority': 50},
   \ }
   \ })
 
 call s:CocConfig('suggest', {
-  \ 'languageSourcePriority': 49,
+  \ 'languageSourcePriority': 99,
   \ })
 " }}}
 
