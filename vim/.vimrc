@@ -2491,10 +2491,8 @@ endfun
 
 fun! s:LightlineLspStatus()
   " let l:status = trim(get(g:, 'coc_status', ''))
-  " echom l:status
-  " return l:status
-
   let l:status = get(g:, 'coc_status', '')
+  " echom l:status
 
   " Disable diagnostic icons to prevent flickering
   let g:hide_diagnostics = 1
@@ -2512,6 +2510,8 @@ fun! s:LightlineLspStatus()
     let l:status = ' Indexing ' . l:progress . '%%'
   elseif l:status =~? ' loading snippets'
     let l:status = ' Snippets'
+  elseif l:status =~? ' loading metadata'
+    let l:status = ' Metadata'
   elseif l:status =~? 'fetching '
     let l:status = ' Fetching'
   elseif l:status =~? ' finished'
