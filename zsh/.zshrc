@@ -11,6 +11,12 @@ fi
 
 source "$HOME/.powerlevel10k/powerlevel10k.zsh-theme"
 
+# Add ~/.local/bin to PATH {{{
+if [[ -d "$HOME/.local/bin" ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+# }}}
+
 # GNU colors {{{
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
