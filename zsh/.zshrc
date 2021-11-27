@@ -28,6 +28,11 @@ if [[ -x /usr/bin/dircolors ]]; then
 fi
 # }}}
 
+# Aliases {{{
+alias vim='nvim'
+alias vi='nvim'
+# }}}
+
 # History settings {{{
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000
