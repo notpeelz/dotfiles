@@ -1,6 +1,7 @@
 # vim:foldmethod=marker
 
-_SCRIPT_PATH="${$(print -P %N):A:h}"
+_DOTFILES_ZSH_DIR="${$(print -P %N):A:h}"
+_DOTFILES_DIR="$_DOTFILES_ZSH_DIR/.."
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -31,6 +32,16 @@ fi
 # Aliases {{{
 alias vim='nvim'
 alias vi='nvim'
+
+dotfiles() {
+  cd "$_DOTFILES_DIR"
+  nvim
+}
+
+vimrc() {
+  cd "$_DOTFILES_DIR"
+  nvim "$_DOTFILES_DIR/vim/.config/nvim/init.vim"
+}
 # }}}
 
 # History settings {{{
@@ -286,7 +297,7 @@ detect-clipboard || true
 
 # Plugins {{{
 # FIXME: `yarn add` completion is slow
-source "$_SCRIPT_PATH/plugins/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
 # }}}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
