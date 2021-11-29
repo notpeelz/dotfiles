@@ -1547,7 +1547,6 @@ let g:coc_global_extensions = [
   \ 'coc-omnisharp',
   \ 'coc-pyright',
   \ 'coc-vimlsp',
-  \ 'coc-sh',
   \ ]
 " }}}
 
