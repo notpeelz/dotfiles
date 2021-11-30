@@ -3,3 +3,5 @@
 	email = peelz.dev@gmail.com
 [init]
 	defaultBranch = master
+[core]
+	editor = nvim
