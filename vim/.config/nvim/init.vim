@@ -456,6 +456,13 @@ augroup vimrc_FormatOptions
 augroup END
 " }}}
 
+" YAML {{{
+augroup vimrc_YAML
+  autocmd!
+  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
+augroup END
+" }}}
+
 " Icons {{{
 lua <<EOF
 require'nvim-web-devicons'.setup {
