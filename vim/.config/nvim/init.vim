@@ -961,9 +961,8 @@ npairs.setup {
   enable_check_bracket_line = true,
   -- Don't pair if the next char is alphanumeric.
   ignored_next_char = "[w]",
-  -- Pair after quotes: (|"abc" => (|"abc")
-  -- FIXME: doesn't seem to work?
-  -- enable_afterquote = true,
+  -- Disable pair after quotes; doesn't work correctly.
+  enable_afterquote = false,
 }
 
 -- Helpers {{{
@@ -992,7 +991,7 @@ function get_ts_lang()
   return lang_root:lang()
 end
 
-local not_word_char_next = cond.not_after_regex_check("%w", 1)
+local not_nonspace_char_next = cond.not_after_regex_check("%S", 1)
 --- }}}
 
 -- Vim {{{
@@ -1009,7 +1008,7 @@ end, get_rules'"')
 -- Don't pair if a word char is next {{{
 for _, c  in pairs({'(', '{', '[', '"', "'"}) do
   vim.tbl_map(function(r)
-    add_pair(r, not_word_char_next)
+    add_pair(r, not_nonspace_char_next)
   end, get_rules(c))
 end
 --- }}}
