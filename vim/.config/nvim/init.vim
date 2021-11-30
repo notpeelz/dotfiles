@@ -311,6 +311,15 @@ augroup vimrc_SignColumn
 augroup END
 
 " Window-local settings
+fun! s:UpdateWrap()
+  if get(b:, 'wrap', 1)
+    setlocal nowrap
+  else
+    setlocal wrap
+  endif
+  setlocal linebreak
+endfun
+
 fun! s:SetWindowLocalSettings()
   if &bt !=# ''
     \ && &bt !=# 'acwrite'
@@ -322,8 +331,8 @@ fun! s:SetWindowLocalSettings()
   " Show line numbers
   setlocal number norelativenumber
   setlocal numberwidth=5
-  " Enable line wrapping
-  setlocal wrap linebreak
+  " Update line wrapping settings
+  call s:UpdateWrap()
   " Enable list mode
   setlocal list
 endfun
@@ -730,7 +739,7 @@ nnoremap Q <Nop>
 nnoremap K a<CR><Esc>
 
 " Toggle line wrapping
-noremap <silent> <F2> <Cmd>set wrap!<CR>
+noremap <silent> <F2> <Cmd>let b:wrap=!get(b:, 'wrap', 0)<Bar>call <SID>UpdateWrap()<CR>
 " }}}
 " }}}
 
