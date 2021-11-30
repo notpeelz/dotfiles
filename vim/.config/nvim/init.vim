@@ -603,16 +603,9 @@ fun! s:TerminalSettings()
   tnoremap <buffer> <C-Space> <C-\><C-n><Cmd>echo<CR>
   nnoremap <buffer> <silent> <C-Space> a
 
-  " Close with <Esc>
-  " NOTE: the echo is used to clear the cmdline message
-  tnoremap <buffer> <Esc> <C-\><C-n><Cmd>echo<CR>
 
   if &ft ==# 'fzf'
     tnoremap <buffer> <Esc> <Cmd>q<CR>
-  endif
-
-  if &ft ==# 'FTerm'
-    tunmap <buffer> <Esc>
   endif
 endfun
 
