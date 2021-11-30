@@ -603,6 +603,8 @@ fun! s:TerminalSettings()
   tnoremap <buffer> <C-Space> <C-\><C-n><Cmd>echo<CR>
   nnoremap <buffer> <silent> <C-Space> a
 
+  " This is just so I stop accidentally recording macros in terminal windows
+  nnoremap <buffer> q <nop>
 
   if &ft ==# 'fzf'
     tnoremap <buffer> <Esc> <Cmd>q<CR>
