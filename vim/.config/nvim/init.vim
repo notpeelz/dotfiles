@@ -1723,6 +1723,11 @@ call s:CocConfig('explorer', {
   \     },
   \   },
   \ },
+  \ 'buffer': {
+  \   'child': {
+  \     'template': '[git | 2] [selection | 1] [bufnr] [name][modified][readonly] [fullpath]',
+  \   },
+  \ },
   \ 'presets': {
   \   'floatingLeft': {
   \     'position': 'floating',
