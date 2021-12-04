@@ -2270,6 +2270,7 @@ let g:lightline = {
 \ 'colorscheme': 'jellybeans_custom',
 \ 'component_function': {
 \   'mode': expand('<SID>').'LightlineMode',
+\   'paste': expand('<SID>').'LightlinePaste',
 \   'filename': expand('<SID>').'LightlineFilename',
 \   'filetype': expand('<SID>').'LightlineFiletype',
 \   'fileformat': expand('<SID>').'LightlineFileformat',
@@ -2395,6 +2396,11 @@ endfun
 fun! s:LightlineMode()
   if s:LightlineIsHidden() | return '' | endif
   return lightline#mode()
+endfun
+
+fun! s:LightlinePaste()
+  if s:LightlineIsHidden() | return '' | endif
+  return &paste ? 'PASTE' : ''
 endfun
 
 fun! s:LightlineFilename()
