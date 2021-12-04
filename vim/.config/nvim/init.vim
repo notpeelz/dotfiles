@@ -365,7 +365,8 @@ set smartcase
 
 " Disable search highlight after pressing ENTER
 " https://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting
-nnoremap <silent> <CR> <Cmd>noh<CR><CR>
+nnoremap <C-l> <Cmd>nohlsearch<Bar>diffupdate<CR><C-l>
+inoremap <C-l> <Cmd>nohlsearch<Bar>diffupdate<CR>
 
 " Live substitutions
 if has('nvim')
