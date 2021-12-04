@@ -951,9 +951,27 @@ let g:asynctasks_term_pos = 'bottom'
 " Comment.nvim {{{
 lua <<EOF
 require'Comment'.setup {
+  basic = true,
+  extended = true,
+  extra = true,
   pre_hook = function(ctx)
-    -- Integrate with ts-context-commentstring
-    return require'ts_context_commentstring.internal'.calculate_commentstring()
+    local U = require('Comment.utils')
+
+    -- Detemine whether to use linewise or blockwise commentstring
+    local type = ctx.ctype == U.ctype.line and '__default' or '__multiline'
+
+    -- Determine the location where to calculate commentstring from
+    local location = nil
+    if ctx.ctype == U.ctype.block then
+      location = require('ts_context_commentstring.utils').get_cursor_location()
+    elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+      location = require('ts_context_commentstring.utils').get_visual_start_location()
+    end
+
+    return require('ts_context_commentstring.internal').calculate_commentstring({
+      key = type,
+      location = location,
+    })
   end
 }
 EOF
