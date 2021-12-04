@@ -420,7 +420,6 @@ let g:tagalong_filetypes = [
   \ 'typescriptreact',
   \ 'javascriptreact',
   \ 'typescriptcommon',
-  \ 'javascriptcommon',
   \ ]
 " }}}
 
@@ -1898,13 +1897,23 @@ call s:CocConfig('coc', {
   \ 'preferences': {
   \   'formatOnType': v:true,
   \   'bracketEnterImprove': v:false,
+  \   'formatOnTypeFiletypes': [
+  \     'javascript',
+  \     'typescript',
+  \     'javascriptreact',
+  \     'typescriptreact',
+  \     'typescriptcommon',
+  \   ],
   \   'formatOnSaveFiletypes': [
   \     'rust',
   \     'javascript',
   \     'typescript',
+  \     'javascriptreact',
+  \     'typescriptreact',
+  \     'typescriptcommon',
   \     'cs',
   \     'css',
-  \     'markdown'
+  \     'markdown',
   \   ],
   \ },
   \ })
