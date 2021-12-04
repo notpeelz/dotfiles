@@ -2514,11 +2514,8 @@ fun! s:LightlineLspStatus()
 
   " Disable diagnostic icons to prevent flickering
   let g:hide_diagnostics = 1
-  if l:status =~# '^\s*$'
-    " An empty coc_status will re-enable diagnostic icons
-    let g:hide_diagnostics = 0
-    let l:status = v:null
-  elseif l:status =~? 'indexing \d\+%'
+
+  if l:status =~? 'indexing \d\+%'
     let [_, l:progress; _] = matchlist(l:status, 'indexing \(\d\+\)%')
 
     " Keep the progress width constant
@@ -2528,12 +2525,18 @@ fun! s:LightlineLspStatus()
     let l:status = ' Indexing ' . l:progress . '%%'
   elseif l:status =~? ' loading snippets'
     let l:status = ' Snippets'
+  elseif l:status =~? ' Initializing'
+    let l:status = ' Initializing'
   elseif l:status =~? ' loading metadata'
     let l:status = ' Metadata'
   elseif l:status =~? 'fetching '
     let l:status = ' Fetching'
   elseif l:status =~? ' finished'
     let l:status = ''
+  elseif l:status =~# '^\s*$' || l:status =~# '^\s*\(Prettier\|TSC\)'
+    " An empty coc_status will re-enable diagnostic icons
+    let g:hide_diagnostics = 0
+    let l:status = v:null
   else
     " Unknown status events will only show the spinner
     let l:status = ''
