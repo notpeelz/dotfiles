@@ -1004,7 +1004,7 @@ function get_rules(start_pair)
   return tbl
 end
 
-function add_pair(rule, cond)
+function add_pair_rule(rule, cond)
   if rule.pair_cond == nil then rule.pair_cond = {} end
   table.insert(rule.pair_cond, 1, cond)
 end
@@ -1018,14 +1018,12 @@ function get_ts_lang()
   -- vim.api.nvim_echo({{lang_root:lang(), 'None'}}, true, {})
   return lang_root:lang()
 end
-
-local not_nonspace_char_next = cond.not_after_regex_check("%S", 1)
 --- }}}
 
 -- Vim {{{
 vim.tbl_map(function(v)
   -- Never pair " because they're also used for comments
-  add_pair(v, function(opts)
+  add_pair_rule(v, function(opts)
     if get_ts_lang() == "vim" then
       return false
     end
@@ -1034,9 +1032,10 @@ end, get_rules'"')
 --- }}}
 
 -- Don't pair if a word char is next {{{
+local next_char = cond.not_after_regex_check("[^ \t\n\v\f\r}%])>]", 1)
 for _, c  in pairs({'(', '{', '[', '"', "'"}) do
   vim.tbl_map(function(r)
-    add_pair(r, not_nonspace_char_next)
+    add_pair_rule(r, next_char)
   end, get_rules(c))
 end
 --- }}}
