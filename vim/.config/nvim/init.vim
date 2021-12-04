@@ -1652,6 +1652,12 @@ call s:CocConfig('rust-analyzer', {
   \   'typeHintsSeparator': '‣',
   \   'chainingHintsSeparator': '‣',
   \ },
+  \ 'updates': {
+  \   'channel': 'stable',
+  \ },
+  \ 'experimental': {
+  \   'procAttrMacros': v:false,
+  \ },
   \ 'debug': {
   \   'runtime': 'vimspector',
   \   'vimspector': {'configuration': {'name': '_launch_coc_ra'}},
