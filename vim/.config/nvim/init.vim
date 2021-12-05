@@ -421,6 +421,7 @@ let g:tagalong_filetypes = [
   \ 'typescriptreact',
   \ 'javascriptreact',
   \ 'typescriptcommon',
+  \ 'vue',
   \ ]
 " }}}
 
@@ -1581,6 +1582,7 @@ let g:coc_global_extensions = [
   \ 'coc-json',
   \ 'coc-eslint',
   \ 'coc-tsserver',
+  \ 'coc-vetur',
   \ 'coc-prettier',
   \ 'coc-omnisharp',
   \ 'coc-pyright',
@@ -1655,6 +1657,14 @@ call s:CocConfig('prettier', {
   \ 'onlyUseLocalVersion': v:true,
   \ 'requireConfig': v:true,
   \ 'disableSuccessMessage': v:true,
+  \ })
+" }}}
+
+" coc-vetur {{{
+call s:CocConfig('vetur', {
+  \ 'format': {
+  \   'enable': v:false,
+  \ },
   \ })
 " }}}
 
@@ -1885,7 +1895,9 @@ call s:CocConfig('snippets', {
   \ 'extends': {
   \   'javascriptreact': ['javascript'],
   \   'typescriptreact': ['javascript'],
+  \   'typescriptcommon': ['javascript'],
   \   'typescript': ['javascript'],
+  \   'vue': ['javascript'],
   \ },
   \ })
 
@@ -1932,6 +1944,7 @@ call s:CocConfig('coc', {
   \     'javascriptreact',
   \     'typescriptreact',
   \     'typescriptcommon',
+  \     'vue',
   \   ],
   \   'formatOnSaveFiletypes': [
   \     'rust',
@@ -1940,6 +1953,7 @@ call s:CocConfig('coc', {
   \     'javascriptreact',
   \     'typescriptreact',
   \     'typescriptcommon',
+  \     'vue',
   \     'cs',
   \     'css',
   \     'markdown',
