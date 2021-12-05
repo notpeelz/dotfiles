@@ -506,6 +506,11 @@ require'nvim-web-devicons'.setup {
       color = "#cc6933",
       name = "Rs"
     },
+    ["svg"] = {
+      icon = "",
+      color = "#ffb13b",
+      name = "SVG",
+    },
     ["default_icon"] = {
       icon = "",
       color = "#6d8086",
