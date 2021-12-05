@@ -321,7 +321,7 @@ fun! s:UpdateWrap()
 endfun
 
 fun! s:SetWindowLocalSettings()
-  if &bt !=# ''
+  if &bt !=# '' || &ft ==# 'startify'
     \ && &bt !=# 'acwrite'
     \ && &ft !=# 'qf'
     setlocal nonumber norelativenumber
