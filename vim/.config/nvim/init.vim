@@ -321,9 +321,10 @@ fun! s:UpdateWrap()
 endfun
 
 fun! s:SetWindowLocalSettings()
-  if &bt !=# '' || &ft ==# 'startify'
+  if (&bt !=# ''
     \ && &bt !=# 'acwrite'
-    \ && &ft !=# 'qf'
+    \ && &ft !=# 'qf')
+    \  || &ft ==# 'startify'
     setlocal nonumber norelativenumber
     return
   endif
@@ -779,6 +780,12 @@ let g:startify_custom_header =
 " NOTE: this prevents conflicts with coc/coc-explorer
 let g:startify_change_to_dir = 0
 let g:startify_change_cmd = 'tcd'
+
+augroup vimrc_Startify
+  autocmd!
+  " Fixes status line rendering issues when manually invoking :Startify
+  autocmd User StartifyReady call lightline#update()
+augroup END
 " }}}
 
 " indent-blankline {{{
