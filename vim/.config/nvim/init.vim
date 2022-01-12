@@ -522,6 +522,18 @@ require'nvim-web-devicons'.setup {
       cterm_color = "215",
       name = "SVG",
     },
+    [".babelrc"] = {
+      icon = "",
+      color = "#cbcb41",
+      cterm_color = "185",
+      name = "Babelrc",
+    },
+    [".eslintrc"] = {
+      icon = "",
+      color = "#cbcb41",
+      cterm_color = "185",
+      name = "Eslintrc",
+    },
     ["default_icon"] = {
       icon = "",
       color = "#6d8086",
