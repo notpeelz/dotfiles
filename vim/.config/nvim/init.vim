@@ -1972,6 +1972,7 @@ call s:CocConfig('hover', {
 " Formatting {{{
 call s:CocConfig('coc', {
   \ 'preferences': {
+  \   'willSaveHandlerTimeout': 1000,
   \   'formatOnType': v:true,
   \   'bracketEnterImprove': v:false,
   \   'formatOnTypeFiletypes': [
