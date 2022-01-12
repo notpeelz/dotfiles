@@ -471,51 +471,61 @@ require'nvim-web-devicons'.setup {
     [".gitattributes"] = {
       icon = "",
       color = "#fc4c25",
+      cterm_color = "59",
       name = "GitAttributes",
     },
     [".gitconfig"] = {
       icon = "",
       color = "#fc4c25",
+      cterm_color = "59",
       name = "GitConfig",
     },
     [".gitignore"] = {
       icon = "",
       color = "#fc4c25",
+      cterm_color = "59",
       name = "GitIgnore",
     },
     [".gitmodules"] = {
       icon = "",
       color = "#fc4c25",
+      cterm_color = "59",
       name = "GitModules",
     },
     [".ignore"] = {
       icon = "",
       color = "#C2C8CA",
+      cterm_color = "188",
       name = "Ignore",
     },
     [".editorconfig"] = {
       icon = "",
       color = "#C2C8CA",
+      cterm_color = "188",
       name = "Editorconfig",
     },
     ["cjs"] = {
       icon = "",
       color = "#f1e05a",
+      cterm_color = "185",
       name = "Cjs",
     },
     ["rs"] = {
       icon = "",
       color = "#cc6933",
+      cterm_color = "167",
       name = "Rs"
     },
     ["svg"] = {
       icon = "",
       color = "#ffb13b",
+      cterm_color = "215",
       name = "SVG",
     },
     ["default_icon"] = {
       icon = "",
       color = "#6d8086",
+      cterm_color = "66",
       name = "Default",
     },
   },
