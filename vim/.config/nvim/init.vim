@@ -1422,10 +1422,20 @@ augroup END
 " FZF {{{
 let $FZF_DEFAULT_COMMAND='rg --files --hidden || true'
 
-fun! s:FzfSink(what)
-  let p1 = stridx(a:what, '<')
+fun! s:FzfSink(lines)
+  if len(a:lines) < 2 | return | endif
+
+  " TODO: handle fzf actions
+  " let cmd = get({
+  "   \ 'ctrl-x': 'split',
+  "   \ 'ctrl-v': 'vsplit',
+  "   \ 'ctrl-t': 'tabe',
+  "   \ }, a:lines[1], 'e')
+  let selected = a:lines[2]
+
+  let p1 = stridx(l:selected, '<')
   if l:p1 >= 0
-    let name = strpart(a:what, 0, p1)
+    let name = strpart(l:selected, 0, l:p1)
     let name = substitute(l:name, '^\s*\(.\{-}\)\s*$', '\1', '')
     if name != ''
       exec "AsyncTask ". fnameescape(l:name)
@@ -1454,8 +1464,8 @@ fun! s:FzfTask()
   endfor
   let l:opts = {
     \ 'source': l:source,
-    \ 'sink': function('s:FzfSink'),
-    \ 'options': '+m --ansi',
+    \ 'sink*': function('s:FzfSink'),
+    \ 'options': '+m --ansi --print-query --expect=ctrl-t,ctrl-x,ctrl-v',
     \ }
   call fzf#run(fzf#wrap('tasks', l:opts))
 endfun
@@ -1488,6 +1498,9 @@ augroup vimrc_fzf
   autocmd!
   " Closes FZF when pressing escape instead of returning to normal mode
   autocmd FileType fzf tnoremap <buffer> <Esc> <Cmd>q<CR>
+  " HACK: passthrough CTRL-T to fzf
+  autocmd FileType fzf tnoremap <buffer> <nowait> <C-t>
+    \ <Cmd>call chansend(b:terminal_job_id, "\x14")<CR>
 augroup END
 " }}}
 
