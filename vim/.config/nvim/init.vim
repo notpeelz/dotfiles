@@ -1473,26 +1473,28 @@ endfun
 command! -nargs=0 AsyncTaskFzf call s:FzfTask()
 
 nnoremap <silent> <C-t> <nop>
-nnoremap <silent> <C-t>g <Cmd>AsyncTaskFzf<CR>
-nnoremap <silent> <C-t><C-g> <Cmd>AsyncTaskFzf<CR>
+nnoremap <silent> <C-t>g <Cmd>AsyncTaskFzf<CR><C-p>
+nnoremap <silent> <C-t><C-g> <Cmd>AsyncTaskFzf<CR><C-p>
 
 nnoremap <silent> <C-f> <nop>
-" inoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
-" inoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
-nnoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR>
-nnoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR>
-nnoremap <silent> <C-f><C-r> <Cmd>FZFMru<CR>
-nnoremap <silent> <C-f>r <Cmd>FZFMru<CR>
-nnoremap <silent> <C-f><C-f> <Cmd>Files<CR>
-nnoremap <silent> <C-f>f <Cmd>Files<CR>
-nnoremap <silent> <C-f><C-g> <Cmd>Rg<CR>
-nnoremap <silent> <C-f>g <Cmd>Rg<CR>
-nnoremap <silent> <C-f><C-b> <Cmd>Rg<CR>
-nnoremap <silent> <C-f>b <Cmd>Buffers<CR>
-nnoremap <silent> <C-h> <Cmd>Buffers<CR>
-nnoremap <silent> <C-f>/ <Cmd>Lines<CR>
-nnoremap <silent> <C-f><C-_> <Cmd>Lines<CR>
-nnoremap <silent> <C-_> <Cmd>BLines<CR>
+" inoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR><C-p>
+" inoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR><C-p>
+nnoremap <silent> <C-f><C-y> <Cmd>CocFzfList yank<CR><C-p>
+nnoremap <silent> <C-f>y <Cmd>CocFzfList yank<CR><C-p>
+nnoremap <silent> <C-f><C-r> <Cmd>FZFMru<CR><C-p>
+nnoremap <silent> <C-f>r <Cmd>FZFMru<CR><C-p>
+nnoremap <silent> <C-f><C-f> <Cmd>Files<CR><C-p>
+nnoremap <silent> <C-f>f <Cmd>Files<CR><C-p>
+nnoremap <silent> <C-f><C-g> <Cmd>Rg<CR><C-p>
+nnoremap <silent> <C-f>g <Cmd>Rg<CR><C-p>
+nnoremap <silent> <C-f><C-b> <Cmd>Rg<CR><C-p>
+nnoremap <silent> <C-f>b <Cmd>Buffers<CR><C-p>
+nnoremap <silent> <C-h> <Cmd>Buffers<CR><C-p>
+nnoremap <silent> <C-f>/ <Cmd>Lines<CR><C-p>
+nnoremap <silent> <C-f><C-_> <Cmd>Lines<CR><C-p>
+nnoremap <silent> <C-_> <Cmd>BLines<CR><C-p>
+
+let g:fzf_history_dir = '~/.fzf-history'
 
 augroup vimrc_fzf
   autocmd!
