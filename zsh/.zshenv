@@ -6,3 +6,7 @@ if [[ -d "$HOME/.dotnet" ]]; then
   export DOTNET_ROOT="$HOME/.dotnet"
   export PATH="$PATH:$DOTNET_ROOT"
 fi
+
+if [[ -d "$HOME/.local/bin" ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
