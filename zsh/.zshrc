@@ -296,5 +296,12 @@ detect-clipboard || true
 source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
 # }}}
 
+# Change terminal title to hostname {{{
+function _auto_terminal_title() {
+  "$_DOTFILES_DIR/scripts/title.sh" "$HOST"
+}
+add-zsh-hook precmd _auto_terminal_title
+# }}}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
