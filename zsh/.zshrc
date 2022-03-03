@@ -210,7 +210,9 @@ export BLOCK_SIZE="'1"
 export BAT_THEME="Monokai Extended Bright"
 
 # Set by the ssh-agent user service
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+if [[ -v XDG_RUNTIME_DIR ]]; then
+  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+fi
 # }}}
 
 # Mappings {{{
