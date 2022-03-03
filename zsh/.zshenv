@@ -1,6 +1,9 @@
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"
+[[ -s "$HOME/.cargo/env" ]] && \. "$HOME/.cargo/env"
+
+if [[ -d "$HOME/.nvm" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
+fi
 
 if [[ -d "$HOME/.dotnet" ]]; then
   export DOTNET_ROOT="$HOME/.dotnet"
