@@ -17,7 +17,7 @@ done
 git submodule init
 git submodule update
 
-apps=(systemd zsh git vim tmux)
+apps=(systemd ssh zsh git vim tmux)
 
 function stowit() {
   local target="$1"
