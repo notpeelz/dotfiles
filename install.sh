@@ -35,7 +35,7 @@ function exit_with_help() {
   exit 1
 }
 
-options="$(getopt -o='' --long=adopt -- "$@")" || exit_with_help
+options="$(getopt -n "$scriptfile" -o='' --long=adopt -- "$@")" || exit_with_help
 
 eval set -- "$options"
 while true; do
