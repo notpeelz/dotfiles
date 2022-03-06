@@ -194,6 +194,13 @@ vim.api.nvim_set_keymap(
   { noremap = true, expr = true, silent = true })
 -- }}}
 
+-- Tab navigation {{{
+vim.api.nvim_set_keymap('n', '<M-Left>', '<Cmd>tabprev<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<M-Right>', '<Cmd>tabnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<M-C-Left>', '<Cmd>tabprev<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<M-C-Right>', '<Cmd>tabnext<CR>', { noremap = true, silent = true })
+-- }}}
+
 -- Enable emacs-style navigation in command mode {{{
 vim.api.nvim_set_keymap('c', '<C-a>', '<Home>', { noremap = true })
 vim.api.nvim_set_keymap('c', '<C-e>', '<End>', { noremap = true })
