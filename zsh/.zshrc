@@ -298,7 +298,9 @@ source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plu
 
 # Change terminal title to hostname {{{
 function _auto_terminal_title() {
-  "$_DOTFILES_DIR/scripts/title.sh" "$HOST"
+  if [[ -z "$SSH_CLIENT" && -z "$SSH_TTY" && -z "$SSH_CONNECTION" ]]; then
+    "$_DOTFILES_DIR/scripts/title.sh" "$HOST"
+  fi
 }
 add-zsh-hook precmd _auto_terminal_title
 # }}}
