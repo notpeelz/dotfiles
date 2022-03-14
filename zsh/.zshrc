@@ -228,8 +228,8 @@ fi
 # Use emacs key bindings
 bindkey -e
 # Skips over words using ctrl-left/right
-bindkey '[1;5D' backward-word
-bindkey '[1;5C' forward-word
+bindkey '\e[1;5D' backward-word
+bindkey '\e[1;5C' forward-word
 # History search
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
