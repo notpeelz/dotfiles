@@ -297,12 +297,16 @@ source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plu
 # }}}
 
 # Change terminal title to hostname {{{
+autoload -Uz add-zsh-hook
+
 function _auto_terminal_title() {
-  if [[ -z "$SSH_CLIENT" && -z "$SSH_TTY" && -z "$SSH_CONNECTION" ]]; then
-    "$_DOTFILES_DIR/scripts/title.sh" "$HOST"
-  fi
+  "$_DOTFILES_DIR/scripts/title.sh" "$HOST" 0
 }
 add-zsh-hook precmd _auto_terminal_title
+
+# XXX: force set the title on shell init because zsh's stdin is set to
+# /dev/null when the hook first runs (causing the TTY detection to break)
+"$_DOTFILES_DIR/scripts/title.sh" "$HOST" 1
 # }}}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
