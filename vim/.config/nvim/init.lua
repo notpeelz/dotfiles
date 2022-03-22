@@ -40,13 +40,7 @@ require('packer').startup(function(use)
       })
     end,
   }
-  use {
-    'ful1e5/onedark.nvim',
-    config = function()
-      -- Color scheme
-      require('onedark').setup()
-    end,
-  }
+  use 'navarasu/onedark.nvim'
   use {
     'lukas-reineke/indent-blankline.nvim',
     config = function()
@@ -262,4 +256,8 @@ vim.api.nvim_set_keymap(
   'n',
   ';;',
   ':.,$s~~~cg<Left><Left><Left><Left>', { noremap = true })
+-- }}}
+
+-- Color scheme {{{
+require('onedark').load()
 -- }}}
