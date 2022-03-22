@@ -295,11 +295,6 @@ function detect-clipboard() {
 detect-clipboard || true
 # }}}
 
-# Plugins {{{
-# FIXME: `yarn add` completion is slow
-source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
-# }}}
-
 # Change terminal title to hostname {{{
 autoload -Uz add-zsh-hook
 
@@ -311,6 +306,15 @@ add-zsh-hook precmd _auto_terminal_title
 # XXX: force set the title on shell init because zsh's stdin is set to
 # /dev/null when the hook first runs (causing the TTY detection to break)
 "$_DOTFILES_DIR/scripts/title.sh" "$HOST" 1
+# }}}
+
+# Plugins {{{
+# FIXME: `yarn add` completion is slow
+source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+
+# XXX: the README states that this should be "at the end of" my zshrc.
+# Hopefully this is fine...
+source "$_DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 # }}}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

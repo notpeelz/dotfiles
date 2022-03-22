@@ -1,3 +1,6 @@
 [submodule "zsh/plugins/zsh-yarn-completions"]
 	path = zsh/plugins/zsh-yarn-completions
 	url = https://github.com/chrisands/zsh-yarn-completions.git
+[submodule "zsh/plugins/zsh-syntax-highlighting"]
+	path = zsh/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
