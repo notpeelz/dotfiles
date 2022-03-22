@@ -12,6 +12,14 @@ fi
 
 source "$HOME/.powerlevel10k/powerlevel10k.zsh-theme"
 
+# Make $terminfo available
+zmodload -i zsh/terminfo
+
+# The default zsh keymap is $EDITOR dependent. This forces it to emacs.
+# NOTE: this has to be done as early as possible because `bindkey` defaults
+# to the current keymap.
+bindkey -e
+
 # GNU colors {{{
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
@@ -210,8 +218,6 @@ fi
 # }}}
 
 # Mappings {{{
-# Make $terminfo available
-zmodload -i zsh/terminfo
 # Make sure that the terminal is in application mode when zle is active, since
 # only then values from $terminfo are valid
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
@@ -225,8 +231,6 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
   zle -N zle-line-finish
 fi
 
-# Use emacs key bindings
-bindkey -e
 # Skips over words using ctrl-left/right
 bindkey '\e[1;5D' backward-word
 bindkey '\e[1;5C' forward-word
