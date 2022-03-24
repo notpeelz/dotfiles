@@ -141,6 +141,17 @@ au.group('AutoSignColumn', function(grp)
 end)
 -- }}}
 
+-- Git commit column hint {{{
+au.group('GitMessageLength', function(grp)
+  grp.FileType = {
+    'gitcommit',
+    function()
+      vim.o.colorcolumn = "80"
+    end,
+  }
+end)
+-- }}}
+
 -- Disable automatic line continuation of comments {{{
 au.group('DisableCommentContinuation', function(grp)
   local cmd = {
