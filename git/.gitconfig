@@ -5,3 +5,5 @@
 	defaultBranch = master
 [core]
 	editor = nvim
+[pull]
+	ff = only
