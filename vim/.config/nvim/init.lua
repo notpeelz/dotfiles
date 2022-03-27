@@ -58,6 +58,9 @@ require('packer').startup(function(use)
         },
       })
     end,
+    cond = function()
+      return vim.g.vscode == nil
+    end,
   }
   use 'editorconfig/editorconfig-vim'
   use 'psliwka/vim-smoothie'
