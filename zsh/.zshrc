@@ -28,6 +28,27 @@ if [[ -x /usr/bin/dircolors ]]; then
   test -r ~/.dircolors \
     && eval "$(dircolors -b ~/.dircolors)" \
     || eval "$(dircolors -b)"
+
+  # Fix ls color for folders with 777 permissions
+  export LS_COLORS="$LS_COLORS:ow=30;44:"
+
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+  alias diff='diff --color=auto'
+  alias ip='ip --color=auto'
+
+  export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
+  export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
+  export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
+  export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
+  export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
+  export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
+  export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
+
+  # Files and process completion colors
+  zstyle ':completion:*' list-colors "$LS_COLORS"
+  zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 fi
 # }}}
 
@@ -102,11 +123,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|
 # Complete . and .. special directories
 zstyle ':completion:*' special-dirs true
 
-# Colors
-zstyle ':completion:*' list-colors "$LS_COLORS"
-
 # Process completion
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USERNAME -o pid,user,comm -w -w"
 
 # Disable named-directories autocompletion
