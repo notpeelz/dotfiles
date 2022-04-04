@@ -63,7 +63,6 @@ require('packer').startup(function(use)
     end,
   }
   use 'editorconfig/editorconfig-vim'
-  use 'psliwka/vim-smoothie'
   use 'tpope/vim-surround'
   use 'tpope/vim-repeat'
   use 'lambdalisue/suda.vim'
