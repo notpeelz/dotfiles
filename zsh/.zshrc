@@ -107,6 +107,15 @@ setopt share_history
 zmodload -i zsh/complist
 zstyle ':completion:*' menu select
 
+# Enable completion for commands prefixed with `sudo`
+zstyle ':completion:*:sudo:*' command-path \
+  /usr/local/sbin \
+  /usr/local/bin \
+  /usr/sbin \
+  /usr/bin \
+  /sbin \
+  /bin
+
 # Don't autoselect the first completion entry
 unsetopt menu_complete
 
