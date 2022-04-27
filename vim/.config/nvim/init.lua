@@ -20,6 +20,11 @@ require('packer').startup(function(use)
   }
   use {
     'numToStr/Comment.nvim',
+    tag = (function()
+      if vim.fn.has('nvim-0.7') == 0 then
+        return 'v0.6'
+      end
+    end)(),
     config = function()
       require('Comment').setup({
         basic = true,
