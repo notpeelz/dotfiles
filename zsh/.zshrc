@@ -67,6 +67,11 @@ vimrc() {
   cd "$_DOTFILES_DIR"
   nvim "$_DOTFILES_DIR/vim/.config/nvim/init.lua"
 }
+
+zshrc() {
+  cd "$_DOTFILES_DIR"
+  nvim "$_DOTFILES_DIR/zsh/.zshrc"
+}
 # }}}
 
 # History settings {{{
