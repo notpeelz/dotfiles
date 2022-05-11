@@ -136,6 +136,28 @@ au.group('HighlightOnYank', function(grp)
 end)
 -- }}}
 
+-- Clipboard {{{
+do
+  local uname = vim.loop.os_uname()
+  if uname ~= nil
+    and uname.sysname == "Linux"
+    and uname.release:find("microsoft") then
+    vim.g.clipboard = {
+      name = "win32yank-wsl",
+      copy = {
+        ["+"] = "win32yank.exe -i --crlf",
+        ["*"] = "win32yank.exe -i --crlf",
+      },
+      paste = {
+        ["+"] = "win32yank.exe -o --lf",
+        ["*"] = "win32yank.exe -o --lf",
+      },
+      cache_enabled = 0,
+    }
+  end
+end
+-- }}}
+
 -- Signcolumn {{{
 au.group('AutoSignColumn', function(grp)
   grp.BufWinEnter = {
