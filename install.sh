@@ -19,7 +19,7 @@ git submodule update
 
 apps=(systemd ssh zsh git vim tmux)
 
-function stowit() {
+stowit() {
   local target="$1"
   local app="$2"
   stow -v ${opt_adopt:+--adopt} -t "$target" "$app"
@@ -30,8 +30,8 @@ function stowit() {
 
 scriptfile="$(basename ${BASH_SOURCE[0]})"
 
-function exit_with_help() {
-  echo "Syntax: $scriptfile [--adopt]"
+exit_with_help() {
+  echo "Usage: $scriptfile [--adopt]"
   exit 1
 }
 
@@ -47,6 +47,7 @@ while true; do
 
   case "$1" in
     --adopt) opt_adopt=1 ;;
+    *) exit_with_help ;;
   esac
   shift
 done
