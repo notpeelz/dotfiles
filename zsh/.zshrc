@@ -62,20 +62,20 @@ fi
 alias vim='nvim'
 alias vi='nvim'
 
-dotfiles() {
+dotfiles() (
   cd "$_DOTFILES_DIR"
   nvim
-}
+)
 
-vimrc() {
-  cd "$_DOTFILES_DIR"
-  nvim "$_DOTFILES_DIR/vim/.config/nvim/init.lua"
-}
+vimrc() (
+  (cd "$_DOTFILES_DIR"
+  nvim "$_DOTFILES_DIR/vim/.config/nvim/init.lua")
+)
 
-zshrc() {
+zshrc() (
   cd "$_DOTFILES_DIR"
   nvim "$_DOTFILES_DIR/zsh/.zshrc"
-}
+)
 # }}}
 
 # History settings {{{
