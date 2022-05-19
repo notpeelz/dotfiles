@@ -33,7 +33,15 @@ require("packer").startup(function(use)
     end,
   })
   use({
+    "navarasu/onedark.nvim",
+    event = "VimEnter",
+    config = function()
+      require("onedark").load()
+    end,
+  })
+  use({
     "nvim-lualine/lualine.nvim",
+    after = "onedark.nvim",
     config = function()
       require("lualine").setup({
         options = {
@@ -65,7 +73,6 @@ require("packer").startup(function(use)
       })
     end,
   })
-  use("navarasu/onedark.nvim")
   use({
     "lukas-reineke/indent-blankline.nvim",
     config = function()
@@ -316,8 +323,4 @@ vim.api.nvim_set_keymap(
   "n",
   ";;",
   ":.,$s~~~cg<Left><Left><Left><Left>", { noremap = true })
--- }}}
-
--- Color scheme {{{
-require("onedark").load()
 -- }}}
