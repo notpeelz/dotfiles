@@ -1,75 +1,75 @@
 -- vim:foldmethod=marker
 -- Install packer
-local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+  vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
 end
 
-local au = require('au')
+local au = require("au")
 
-require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
-  use 'nvim-lua/plenary.nvim'
-  use 'tpope/vim-fugitive'
-  use {
-    'lewis6991/gitsigns.nvim',
+require("packer").startup(function(use)
+  use("wbthomason/packer.nvim")
+  use("nvim-lua/plenary.nvim")
+  use("tpope/vim-fugitive")
+  use({
+    "lewis6991/gitsigns.nvim",
     config = function()
-      require('gitsigns').setup()
+      require("gitsigns").setup()
     end,
-  }
-  use {
-    'numToStr/Comment.nvim',
+  })
+  use({
+    "numToStr/Comment.nvim",
     tag = (function()
-      if vim.fn.has('nvim-0.7') == 0 then
-        return 'v0.6'
+      if vim.fn.has("nvim-0.7") == 0 then
+        return "v0.6"
       end
     end)(),
     config = function()
-      require('Comment').setup({
+      require("Comment").setup({
         basic = true,
         extended = true,
       })
     end,
-  }
-  use {
-    'nvim-lualine/lualine.nvim',
+  })
+  use({
+    "nvim-lualine/lualine.nvim",
     config = function()
-      require('lualine').setup({
+      require("lualine").setup({
         options = {
           icons_enabled = false,
-          theme = 'onedark',
-          component_separators = '\u{2502}',
-          section_separators = '',
+          theme = "onedark",
+          component_separators = "\u{2502}",
+          section_separators = "",
         },
         sections = {
-          lualine_a = {'mode'},
+          lualine_a = {"mode"},
           lualine_b = {
-            {'branch', icons_enabled = true},
-            'diff',
-            'diagnostics'
+            {"branch", icons_enabled = true},
+            "diff",
+            "diagnostics"
           },
-          lualine_c = {'filename'},
-          lualine_x = {'encoding', 'fileformat', 'filetype'},
-          lualine_y = {'progress'},
-          lualine_z = {'location'}
+          lualine_c = {"filename"},
+          lualine_x = {"encoding", "fileformat", "filetype"},
+          lualine_y = {"progress"},
+          lualine_z = {"location"}
         },
         inactive_sections = {
           lualine_a = {},
           lualine_b = {},
-          lualine_c = {'filename'},
-          lualine_x = {'location'},
+          lualine_c = {"filename"},
+          lualine_x = {"location"},
           lualine_y = {},
           lualine_z = {}
         },
       })
     end,
-  }
-  use 'navarasu/onedark.nvim'
-  use {
-    'lukas-reineke/indent-blankline.nvim',
+  })
+  use("navarasu/onedark.nvim")
+  use({
+    "lukas-reineke/indent-blankline.nvim",
     config = function()
-      require('indent_blankline').setup({
+      require("indent_blankline").setup({
         use_treesitter = false,
         buftype_exclude = {"terminal"},
         filetype_exclude = {
@@ -86,13 +86,13 @@ require('packer').startup(function(use)
     cond = function()
       return vim.g.vscode == nil
     end,
-  }
-  use 'editorconfig/editorconfig-vim'
-  use 'tpope/vim-surround'
-  use 'tpope/vim-repeat'
-  use 'lambdalisue/suda.vim'
-  use 'neoclide/jsonc.vim'
-  use 'inkarkat/vim-ReplaceWithRegister'
+  })
+  use("editorconfig/editorconfig-vim")
+  use("tpope/vim-surround")
+  use("tpope/vim-repeat")
+  use("lambdalisue/suda.vim")
+  use("neoclide/jsonc.vim")
+  use("inkarkat/vim-ReplaceWithRegister")
 end)
 
 -- Default indentation
@@ -106,13 +106,13 @@ vim.g.vim_indent_cont = vim.o.shiftwidth
 
 -- Special characters
 vim.opt.list = true
--- vim.opt.listchars:append('space:⋅')
+-- vim.opt.listchars:append("space:⋅")
 -- vim.opt.listchars:append("eol:↴")
-vim.opt.listchars:append('trail:·')
-vim.opt.listchars:append('tab: →')
-vim.opt.listchars:append('nbsp:␣')
-vim.opt.listchars:append('extends:▶')
-vim.opt.listchars:append('precedes:◀')
+vim.opt.listchars:append("trail:·")
+vim.opt.listchars:append("tab: →")
+vim.opt.listchars:append("nbsp:␣")
+vim.opt.listchars:append("extends:▶")
+vim.opt.listchars:append("precedes:◀")
 
 -- Line wrapping
 vim.opt.breakat = " 	!@*-+;:,./?"
@@ -121,10 +121,10 @@ vim.opt.breakat = " 	!@*-+;:,./?"
 vim.opt.ignorecase = true
 
 -- Insert-mode completion
-vim.opt.completeopt = 'menuone,noselect'
+vim.opt.completeopt = "menuone,noselect"
 
 -- Enable mouse support
-vim.opt.mouse = 'a'
+vim.opt.mouse = "a"
 
 -- Highlight current line
 vim.opt.cursorline = true
@@ -146,11 +146,11 @@ vim.opt.updatetime = 100
 vim.opt.termguicolors = true
 
 -- Highlight on yank {{{
-au.group('HighlightOnYank', function(grp)
+au.group("HighlightOnYank", function(grp)
   grp.TextYankPost = {
-    '*',
+    "*",
     function()
-      vim.highlight.on_yank({ higroup = 'Visual', timeout = 250 })
+      vim.highlight.on_yank({ higroup = "Visual", timeout = 250 })
     end,
   }
 end)
@@ -179,21 +179,21 @@ end
 -- }}}
 
 -- Signcolumn {{{
-au.group('AutoSignColumn', function(grp)
+au.group("AutoSignColumn", function(grp)
   grp.BufWinEnter = {
-    '*',
+    "*",
     function()
       local config = vim.api.nvim_win_get_config(0)
-      vim.opt.signcolumn = config.buftype ~= 'nofile' and 'yes:1' or 'no'
+      vim.opt.signcolumn = config.buftype ~= "nofile" and "yes:1" or "no"
     end,
   }
 end)
 -- }}}
 
 -- Git commit column hint {{{
-au.group('GitMessageLength', function(grp)
+au.group("GitMessageLength", function(grp)
   grp.FileType = {
-    'gitcommit',
+    "gitcommit",
     function()
       vim.o.colorcolumn = "80"
     end,
@@ -202,11 +202,11 @@ end)
 -- }}}
 
 -- Disable automatic line continuation of comments {{{
-au.group('DisableCommentContinuation', function(grp)
+au.group("DisableCommentContinuation", function(grp)
   local cmd = {
-    '*',
+    "*",
     function()
-      vim.opt.formatoptions = 'cljq'
+      vim.opt.formatoptions = "cljq"
     end,
   }
 
@@ -217,107 +217,107 @@ end)
 
 -- Navigation with linewrap {{{
 vim.api.nvim_set_keymap(
-  '',
-  'k',
+  "",
+  "k",
   "v:count == 0 ? 'gk' : 'k'",
   { noremap = true, expr = true, silent = true })
 vim.api.nvim_set_keymap(
-  '',
-  'j',
+  "",
+  "j",
   "v:count == 0 ? 'gj' : 'j'",
   { noremap = true, expr = true, silent = true })
 vim.api.nvim_set_keymap(
-  '',
-  '<Up>',
+  "",
+  "<Up>",
   "v:count == 0 ? 'gk' : 'k'",
   { noremap = true, expr = true, silent = true })
 vim.api.nvim_set_keymap(
-  '',
-  '<Down>',
+  "",
+  "<Down>",
   "v:count == 0 ? 'gj' : 'j'",
   { noremap = true, expr = true, silent = true })
 vim.api.nvim_set_keymap(
-  'i',
-  '<Up>',
+  "i",
+  "<Up>",
   "v:count == 0 ? '<C-o>gk' : '<C-o>k'",
   { noremap = true, expr = true, silent = true })
 vim.api.nvim_set_keymap(
-  'i',
-  '<Down>',
+  "i",
+  "<Down>",
   "v:count == 0 ? '<C-o>gj' : '<C-o>j'",
   { noremap = true, expr = true, silent = true })
 -- }}}
 
 -- Tab navigation {{{
-vim.api.nvim_set_keymap('n', '<M-Left>', '<Cmd>tabprev<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<M-Right>', '<Cmd>tabnext<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<M-C-Left>', '<Cmd>tabprev<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<M-C-Right>', '<Cmd>tabnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-Left>", "<Cmd>tabprev<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-Right>", "<Cmd>tabnext<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-C-Left>", "<Cmd>tabprev<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<M-C-Right>", "<Cmd>tabnext<CR>", { noremap = true, silent = true })
 -- }}}
 
 -- Enable emacs-style navigation in command mode {{{
-vim.api.nvim_set_keymap('c', '<C-a>', '<Home>', { noremap = true })
-vim.api.nvim_set_keymap('c', '<C-e>', '<End>', { noremap = true })
+vim.api.nvim_set_keymap("c", "<C-a>", "<Home>", { noremap = true })
+vim.api.nvim_set_keymap("c", "<C-e>", "<End>", { noremap = true })
 -- }}}
 
 -- Unmap undesirable keys {{{
-vim.api.nvim_set_keymap('', '<C-a>', '<nop>', { noremap = true })
-vim.api.nvim_set_keymap('', '<C-x>', '<nop>', { noremap = true })
+vim.api.nvim_set_keymap("", "<C-a>", "<nop>", { noremap = true })
+vim.api.nvim_set_keymap("", "<C-x>", "<nop>", { noremap = true })
 
 vim.api.nvim_set_keymap(
-  'i',
-  '<M-Up>',
-  '<nop>',
+  "i",
+  "<M-Up>",
+  "<nop>",
   { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
-  'i',
-  '<M-Down>',
-  '<nop>',
+  "i",
+  "<M-Down>",
+  "<nop>",
   { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
-  'i',
-  '<M-S-Up>',
-  '<nop>',
+  "i",
+  "<M-S-Up>",
+  "<nop>",
   { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
-  'i',
-  '<M-S-Down>',
-  '<nop>',
+  "i",
+  "<M-S-Down>",
+  "<nop>",
   { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
-  'i',
-  '<S-Up>',
-  '<nop>',
+  "i",
+  "<S-Up>",
+  "<nop>",
   { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
-  'i',
-  '<S-Down>',
-  '<nop>',
+  "i",
+  "<S-Down>",
+  "<nop>",
   { noremap = true, silent = true })
 -- }}}
 
 -- Stay in visual mode when indenting {{{
-vim.api.nvim_set_keymap('v', '<lt>', '<lt>gv', { noremap = true })
-vim.api.nvim_set_keymap('v', '>', '>gv', { noremap = true })
+vim.api.nvim_set_keymap("v", "<lt>", "<lt>gv", { noremap = true })
+vim.api.nvim_set_keymap("v", ">", ">gv", { noremap = true })
 -- }}}
 
 -- Replace-with mappings {{{
-vim.api.nvim_set_keymap('n', 'r', '<nop>', { noremap = true })
-vim.api.nvim_set_keymap('x', 'r', '<nop>', { noremap = true })
-vim.api.nvim_set_keymap('n', 'rc', 'r', { noremap = true })
-vim.api.nvim_set_keymap('x', 'rc', 'r', { noremap = true })
-vim.api.nvim_set_keymap('n', 'rr', '<Plug>ReplaceWithRegisterOperator', {})
-vim.api.nvim_set_keymap('x', 'rr', '<Plug>ReplaceWithRegisterVisual', {})
-vim.api.nvim_set_keymap('x', 'r^', '<Plug>ReplaceWithRegisterLine', {})
+vim.api.nvim_set_keymap("n", "r", "<nop>", { noremap = true })
+vim.api.nvim_set_keymap("x", "r", "<nop>", { noremap = true })
+vim.api.nvim_set_keymap("n", "rc", "r", { noremap = true })
+vim.api.nvim_set_keymap("x", "rc", "r", { noremap = true })
+vim.api.nvim_set_keymap("n", "rr", "<Plug>ReplaceWithRegisterOperator", {})
+vim.api.nvim_set_keymap("x", "rr", "<Plug>ReplaceWithRegisterVisual", {})
+vim.api.nvim_set_keymap("x", "r^", "<Plug>ReplaceWithRegisterLine", {})
 -- }}}
 
 -- Interactive replace {{{
 vim.api.nvim_set_keymap(
-  'n',
-  ';;',
-  ':.,$s~~~cg<Left><Left><Left><Left>', { noremap = true })
+  "n",
+  ";;",
+  ":.,$s~~~cg<Left><Left><Left><Left>", { noremap = true })
 -- }}}
 
 -- Color scheme {{{
-require('onedark').load()
+require("onedark").load()
 -- }}}
