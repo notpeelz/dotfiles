@@ -39,7 +39,7 @@ require('packer').startup(function(use)
         options = {
           icons_enabled = false,
           theme = 'onedark',
-          component_separators = '|',
+          component_separators = '\u{2502}',
           section_separators = '',
         },
         sections = {
