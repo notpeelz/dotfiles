@@ -6,7 +6,7 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
 end
 
-local au = require("au")
+local au = require("core.au")
 
 require("packer").startup(function(use)
   use("wbthomason/packer.nvim")
@@ -15,7 +15,32 @@ require("packer").startup(function(use)
   use({
     "lewis6991/gitsigns.nvim",
     config = function()
-      require("gitsigns").setup()
+      require("gitsigns").setup({
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+          local keymap = require("core.keymap")
+          local map = function(...) keymap.map_buf(bufnr, ...) end
+
+          map("n", "]c", function()
+            vim.schedule(function() gs.next_hunk() end)
+          end)
+          map("n", "[c", function()
+            vim.schedule(function() gs.prev_hunk() end)
+          end)
+          map({"n", "v"}, "<leader>hs", ":Gitsigns stage_hunk<CR>")
+          map({"n", "v"}, "<leader>hr", ":Gitsigns reset_hunk<CR>")
+          map("n", "<leader>hS", gs.stage_buffer)
+          map("n", "<leader>hu", gs.undo_stage_hunk)
+          map("n", "<leader>hR", gs.reset_buffer)
+          map("n", "<leader>hp", gs.preview_hunk)
+          map("n", "<leader>hb", function() gs.blame_line({full = true}) end)
+          map("n", "<leader>tb", gs.toggle_current_line_blame)
+          map("n", "<leader>hd", gs.diffthis)
+          map("n", "<leader>hD", function() gs.diffthis("~") end)
+          map("n", "<leader>td", gs.toggle_deleted)
+          map({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>")
+        end
+      })
     end,
   })
   use({
