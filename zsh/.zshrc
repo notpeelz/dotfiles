@@ -16,6 +16,8 @@ fi
 
 source "$HOME/.powerlevel10k/powerlevel10k.zsh-theme"
 
+zshrc() {
+
 # Make $terminfo available
 zmodload -i zsh/terminfo
 
@@ -28,34 +30,68 @@ bindkey -e
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
 
-if [[ -x /usr/bin/dircolors ]]; then
-  test -r ~/.dircolors \
-    && eval "$(dircolors -b ~/.dircolors)" \
-    || eval "$(dircolors -b)"
+local _LS_COLORS=(
+  # reset to normal
+  'rs=0'
+  # normal text
+  'no=0'
+  # file
+  'fi=0'
+  # directory
+  'di=0;38;2;97;175;239'
+  # executable
+  'ex=0;38;2;166;226;46'
+  # other-writable
+  'ow=44;30'
+  # block device
+  'bd=0;38;2;189;147;249'
+  # character device
+  'cd=0;38;2;189;147;249'
+  # fifo
+  'pi=0;38;2;189;147;249'
+  # socket
+  'so=0;38;2;189;147;249'
+  # door (a Solaris thing)
+  'do=0;38;2;189;147;249'
+  # symlink
+  'ln=0;38;2;255;184;108'
+  # hard link?
+  'mh=0'
+  # setuid/setgid
+  'su=0;38;2;241;250;140;48;2;255;121;198'
+  'sg=0;38;2;241;250;140;48;2;255;121;198'
+  # sticky
+  'st=0;38;2;241;250;140;48;2;139;233;253'
+  # sticky (other writable)
+  'tw=0;38;2;241;250;140;48;2;80;250;123'
+  # missing symlink target
+  'mi=0;38;2;255;85;85;48;2;40;42;54'
+  # broken symlink
+  'or=1;38;2;236;239;244;48;2;191;97;106'
+  # file with capabilities
+  'ca=1;38;2;189;147;249'
+)
+export LS_COLORS="${(j.:.)_LS_COLORS}"
 
-  # Fix ls color for folders with 777 permissions
-  export LS_COLORS="$LS_COLORS:ow=30;44:"
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias diff='diff --color=auto'
 
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-  alias diff='diff --color=auto'
+# XXX: completion breaks if this is set as an alias
+function ip() { command ip --color=auto "$@"; }
 
-  # XXX: completion breaks if this is set as an alias
-  function ip() { command ip --color=auto "$@"; }
+export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
+export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
+export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
+export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
+export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
+export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
+export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
 
-  export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
-  export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
-  export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
-  export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
-  export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
-  export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
-  export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
-
-  # Files and process completion colors
-  zstyle ':completion:*' list-colors "$LS_COLORS"
-  zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-fi
+# Files and process completion colors
+zstyle ':completion:*' list-colors "$LS_COLORS"
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 # }}}
 
 # Aliases {{{
@@ -352,6 +388,11 @@ source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plu
 # Hopefully this is fine...
 source "$_DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 # }}}
+
+}
+
+zshrc
+unfunction zshrc
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
