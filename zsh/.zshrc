@@ -79,7 +79,7 @@ alias egrep='egrep --color=auto'
 alias diff='diff --color=auto'
 
 # XXX: completion breaks if this is set as an alias
-function ip() { command ip --color=auto "$@"; }
+ip() { command ip --color=auto "$@"; }
 
 export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
 export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
@@ -293,10 +293,10 @@ fi
 # Make sure that the terminal is in application mode when zle is active, since
 # only then values from $terminfo are valid
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-  function zle-line-init() {
+  zle-line-init() {
     echoti smkx
   }
-  function zle-line-finish() {
+  zle-line-finish() {
     echoti rmkx
   }
   zle -N zle-line-init
@@ -312,44 +312,44 @@ bindkey '^n' history-search-forward
 # }}}
 
 # Clipboard {{{
-function detect-clipboard() {
+detect-clipboard() {
   emulate -L zsh
 
   if [[ "${OSTYPE}" == darwin* ]] && (( ${+commands[pbcopy]} )) && (( ${+commands[pbpaste]} )); then
-    function clipcopy() { pbcopy < "${1:-/dev/stdin}"; }
-    function clippaste() { pbpaste; }
+    clipcopy() { pbcopy < "${1:-/dev/stdin}"; }
+    clippaste() { pbpaste; }
   elif [[ "${OSTYPE}" == (cygwin|msys)* ]]; then
-    function clipcopy() { cat "${1:-/dev/stdin}" > /dev/clipboard; }
-    function clippaste() { cat /dev/clipboard; }
+    clipcopy() { cat "${1:-/dev/stdin}" > /dev/clipboard; }
+    clippaste() { cat /dev/clipboard; }
   elif [ -n "${WAYLAND_DISPLAY:-}" ] && (( ${+commands[wl-copy]} )) && (( ${+commands[wl-paste]} )); then
-    function clipcopy() { wl-copy < "${1:-/dev/stdin}"; }
-    function clippaste() { wl-paste; }
+    clipcopy() { wl-copy < "${1:-/dev/stdin}"; }
+    clippaste() { wl-paste; }
   elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xclip]} )); then
-    function clipcopy() { xclip -in -selection clipboard < "${1:-/dev/stdin}"; }
-    function clippaste() { xclip -out -selection clipboard; }
+    clipcopy() { xclip -in -selection clipboard < "${1:-/dev/stdin}"; }
+    clippaste() { xclip -out -selection clipboard; }
   elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xsel]} )); then
-    function clipcopy() { xsel --clipboard --input < "${1:-/dev/stdin}"; }
-    function clippaste() { xsel --clipboard --output; }
+    clipcopy() { xsel --clipboard --input < "${1:-/dev/stdin}"; }
+    clippaste() { xsel --clipboard --output; }
   elif (( ${+commands[lemonade]} )); then
-    function clipcopy() { lemonade copy < "${1:-/dev/stdin}"; }
-    function clippaste() { lemonade paste; }
+    clipcopy() { lemonade copy < "${1:-/dev/stdin}"; }
+    clippaste() { lemonade paste; }
   elif (( ${+commands[doitclient]} )); then
-    function clipcopy() { doitclient wclip < "${1:-/dev/stdin}"; }
-    function clippaste() { doitclient wclip -r; }
+    clipcopy() { doitclient wclip < "${1:-/dev/stdin}"; }
+    clippaste() { doitclient wclip -r; }
   elif (( ${+commands[win32yank]} )); then
-    function clipcopy() { win32yank -i < "${1:-/dev/stdin}"; }
-    function clippaste() { win32yank -o; }
+    clipcopy() { win32yank -i < "${1:-/dev/stdin}"; }
+    clippaste() { win32yank -o; }
   elif [[ "$OSTYPE" == linux-android* ]] && (( $+commands[termux-clipboard-set] )); then
-    function clipcopy() { termux-clipboard-set "${1:-/dev/stdin}"; }
-    function clippaste() { termux-clipboard-get; }
+    clipcopy() { termux-clipboard-set "${1:-/dev/stdin}"; }
+    clippaste() { termux-clipboard-get; }
   elif [ -n "${TMUX:-}" ] && (( ${+commands[tmux]} )); then
-    function clipcopy() { tmux load-buffer "${1:--}"; }
-    function clippaste() { tmux save-buffer -; }
+    clipcopy() { tmux load-buffer "${1:--}"; }
+    clippaste() { tmux save-buffer -; }
   elif [[ "$(uname -r)" = *icrosoft* ]]; then
-    function clipcopy() { clip.exe < "${1:-/dev/stdin}"; }
-    function clippaste() { powershell.exe -noprofile -command Get-Clipboard; }
+    clipcopy() { clip.exe < "${1:-/dev/stdin}"; }
+    clippaste() { powershell.exe -noprofile -command Get-Clipboard; }
   else
-    function _retry_clipboard_detection_or_fail() {
+    _retry_clipboard_detection_or_fail() {
       local clipcmd="${1}"; shift
       if detect-clipboard; then
         "${clipcmd}" "$@"
@@ -358,8 +358,8 @@ function detect-clipboard() {
         return 1
       fi
     }
-    function clipcopy() { _retry_clipboard_detection_or_fail clipcopy "$@"; }
-    function clippaste() { _retry_clipboard_detection_or_fail clippaste "$@"; }
+    clipcopy() { _retry_clipboard_detection_or_fail clipcopy "$@"; }
+    clippaste() { _retry_clipboard_detection_or_fail clippaste "$@"; }
     return 1
   fi
 }
@@ -370,7 +370,7 @@ detect-clipboard || true
 # Change terminal title to hostname {{{
 autoload -Uz add-zsh-hook
 
-function _auto_terminal_title() {
+_auto_terminal_title() {
   "$_DOTFILES_DIR/scripts/title.sh" "$HOST" 0
 }
 add-zsh-hook precmd _auto_terminal_title
