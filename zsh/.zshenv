@@ -6,8 +6,8 @@ if [[ -d "$HOME/.nvm" ]]; then
 fi
 
 if [[ -d "$HOME/.dotnet" ]]; then
-  export DOTNET_ROOT="$HOME/.dotnet"
-  export PATH="$PATH:$DOTNET_ROOT"
+  export DOTNET_ROOT="$(dirname "$(readlink -f $(which dotnet))")"
+  export PATH="$PATH:$HOME/.dotnet/tools"
 fi
 
 if [[ -d "$HOME/.local/bin" ]]; then
