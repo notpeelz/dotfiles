@@ -6,7 +6,7 @@
 
 /* Hide tabs when OS titlebar is enabled (intended to use with Tree Style Tab) */
 
-#main-window:not([tabsintitlebar]) #tabbrowser-tabs {
+#main-window:not([tabsintitlebar]) #TabsToolbar {
   visibility: collapse;
 }
 
