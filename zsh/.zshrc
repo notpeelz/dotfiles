@@ -381,9 +381,6 @@ add-zsh-hook precmd _auto_terminal_title
 # }}}
 
 # Plugins {{{
-# FIXME: `yarn add` completion is slow
-source "$_DOTFILES_ZSH_DIR/plugins/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
-
 # XXX: the README states that this should be "at the end of" my zshrc.
 # Hopefully this is fine...
 source "$_DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
