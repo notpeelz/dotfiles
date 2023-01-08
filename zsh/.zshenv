@@ -1,3 +1,11 @@
+if command -v nvim &>/dev/null; then
+  export EDITOR=nvim
+elif command -v vim &>/dev/null; then
+  export EDITOR=vim
+elif command -v nano &>/dev/null; then
+  export EDITOR=nano
+fi
+
 [[ -s "$HOME/.cargo/env" ]] && \. "$HOME/.cargo/env"
 
 if [[ -d "$HOME/.nvm" ]]; then
