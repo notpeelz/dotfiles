@@ -98,6 +98,23 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-
 alias vim='nvim'
 alias vi='nvim'
 
+# 'sudo vim' -> 'sudoedit'
+if command -v sudoedit &>/dev/null; then
+  sudo() {
+    setopt local_options extended_glob unset
+    local -i i=$argv[(i)^-*]
+    # $argv[i] is the first non-option argument (or empty if there is none)
+    case "${argv[i]}" in
+      vim|vim|nvim)
+        argv[$i]=()
+        command sudoedit "${argv[@]}"
+        return "$?"
+        ;;
+    esac
+    command sudo "$@"
+  }
+fi
+
 dotfiles() (
   cd "$_DOTFILES_DIR"
   nvim
