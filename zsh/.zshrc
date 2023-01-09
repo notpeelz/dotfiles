@@ -16,7 +16,7 @@ fi
 
 source "$HOME/.powerlevel10k/powerlevel10k.zsh-theme"
 
-zshrc() {
+() {
 
 # Make $terminfo available
 zmodload -i zsh/terminfo
@@ -387,9 +387,6 @@ source "$_DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighti
 # }}}
 
 }
-
-zshrc
-unfunction zshrc
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
