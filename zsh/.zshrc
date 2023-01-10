@@ -401,6 +401,8 @@ add-zsh-hook precmd _auto_terminal_title
 # XXX: the README states that this should be "at the end of" my zshrc.
 # Hopefully this is fine...
 source "$_DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+ZSH_HIGHLIGHT_STYLES[comment]='fg=#8d94b0'
 # }}}
 
 }
