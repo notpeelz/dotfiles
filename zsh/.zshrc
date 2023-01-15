@@ -165,13 +165,7 @@ zmodload -i zsh/complist
 zstyle ':completion:*' menu select
 
 # Enable completion for commands prefixed with `sudo`
-zstyle ':completion:*:sudo:*' command-path \
-  /usr/local/sbin \
-  /usr/local/bin \
-  /usr/sbin \
-  /usr/bin \
-  /sbin \
-  /bin
+zstyle ':completion:*:sudo:*' command-path "${(s|:|)PATH}"
 
 # Don't autoselect the first completion entry
 unsetopt menu_complete
