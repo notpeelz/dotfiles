@@ -124,6 +124,7 @@ require("packer").startup(function(use)
   use("tpope/vim-repeat")
   use("neoclide/jsonc.vim")
   use("inkarkat/vim-ReplaceWithRegister")
+  use("LnL7/vim-nix")
 end)
 
 -- Default indentation
