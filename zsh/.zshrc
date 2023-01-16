@@ -129,6 +129,10 @@ zshrc() (
   cd "$_DOTFILES_DIR"
   nvim "$_DOTFILES_DIR/zsh/.zshrc"
 )
+
+if [[ "$TERM" == "xterm-kitty" ]]; then
+  alias icat='kitty +kitten icat'
+fi
 # }}}
 
 # History settings {{{
