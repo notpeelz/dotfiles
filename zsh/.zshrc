@@ -1,7 +1,7 @@
 # vim:foldmethod=marker
 
-_DOTFILES_ZSH_DIR="${$(print -P %N):A:h}"
-_DOTFILES_DIR="$_DOTFILES_ZSH_DIR/.."
+DOTFILES_ZSH_DIR="${$(print -P %N):A:h}"
+DOTFILES_DIR="$DOTFILES_ZSH_DIR/.."
 
 (( ${+commands[direnv]} )) && emulate zsh -c "$(direnv export zsh)"
 
@@ -116,18 +116,18 @@ if command -v sudoedit &>/dev/null; then
 fi
 
 dotfiles() (
-  cd "$_DOTFILES_DIR"
+  cd "$DOTFILES_DIR"
   nvim
 )
 
 vimrc() (
-  (cd "$_DOTFILES_DIR"
-  nvim "$_DOTFILES_DIR/vim/.config/nvim/init.lua")
+  (cd "$DOTFILES_DIR"
+  nvim "$DOTFILES_DIR/vim/.config/nvim/init.lua")
 )
 
 zshrc() (
-  cd "$_DOTFILES_DIR"
-  nvim "$_DOTFILES_DIR/zsh/.zshrc"
+  cd "$DOTFILES_DIR"
+  nvim "$DOTFILES_DIR/zsh/.zshrc"
 )
 
 if [[ "$TERM" == "xterm-kitty" ]]; then
@@ -386,19 +386,19 @@ detect-clipboard || true
 autoload -Uz add-zsh-hook
 
 _auto_terminal_title() {
-  "$_DOTFILES_DIR/scripts/title.sh" "$HOST" 0
+  "$DOTFILES_DIR/scripts/title.sh" "$HOST" 0
 }
 add-zsh-hook precmd _auto_terminal_title
 
 # XXX: force set the title on shell init because zsh's stdin is set to
 # /dev/null when the hook first runs (causing the TTY detection to break)
-"$_DOTFILES_DIR/scripts/title.sh" "$HOST" 1
+"$DOTFILES_DIR/scripts/title.sh" "$HOST" 1
 # }}}
 
 # Plugins {{{
 # XXX: the README states that this should be "at the end of" my zshrc.
 # Hopefully this is fine...
-source "$_DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "$DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 ZSH_HIGHLIGHT_STYLES[comment]='fg=#8d94b0'
 # }}}
