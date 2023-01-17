@@ -22,7 +22,11 @@ apps=(systemd ssh zsh git vim tmux)
 stowit() {
   local target="$1"
   local app="$2"
-  stow -v -t "$target" "$app"
+  # XXX: the no-folding option prevents stow from symlinking directories.
+  # This is desirable in case a system already has, e.g. a `.ssh` folder.
+  # If the `.ssh` folder gets symlinked, all new files created inside would
+  # show up as "untracked" in git.
+  stow -v --no-folding -t "$target" "$app"
   if [[ -x "$app/install.sh" ]]; then
     "$app/install.sh"
   fi
