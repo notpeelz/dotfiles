@@ -22,7 +22,7 @@ apps=(systemd ssh zsh git vim tmux)
 stowit() {
   local target="$1"
   local app="$2"
-  stow -v ${opt_adopt:+--adopt} -t "$target" "$app"
+  stow -v -t "$target" "$app"
   if [[ -x "$app/install.sh" ]]; then
     "$app/install.sh"
   fi
@@ -31,11 +31,15 @@ stowit() {
 scriptfile="$(basename ${BASH_SOURCE[0]})"
 
 exit_with_help() {
-  echo "Usage: $scriptfile [--adopt]"
+  echo "Usage: $scriptfile"
   exit 1
 }
 
-options="$(getopt -n "$scriptfile" -o='' --long=adopt -- "$@")" || exit_with_help
+options="$(getopt -n "$scriptfile" \
+  -o='h' \
+  --long='help' \
+  -- "$@"
+)" || exit_with_help
 
 eval set -- "$options"
 while true; do
@@ -46,7 +50,6 @@ while true; do
   [[ "$1" == "--" ]] && { shift; break; }
 
   case "$1" in
-    --adopt) opt_adopt=1 ;;
     *) exit_with_help ;;
   esac
   shift
