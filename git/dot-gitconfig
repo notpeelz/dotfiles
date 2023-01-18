@@ -1,3 +1,5 @@
+# vim:ft=gitconfig
+
 [user]
 	name = peelz
 	email = peelz.dev@gmail.com

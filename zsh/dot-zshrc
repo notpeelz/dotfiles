@@ -1,4 +1,4 @@
-# vim:foldmethod=marker
+# vim:ft=zsh foldmethod=marker
 
 DOTFILES_ZSH_DIR="${$(print -P %N):A:h}"
 DOTFILES_DIR="$DOTFILES_ZSH_DIR/.."
@@ -122,12 +122,12 @@ dotfiles() (
 
 vimrc() (
   (cd "$DOTFILES_DIR"
-  nvim "$DOTFILES_DIR/vim/.config/nvim/init.lua")
+  nvim "$DOTFILES_DIR/vim/dot-config/nvim/init.lua")
 )
 
 zshrc() (
   cd "$DOTFILES_DIR"
-  nvim "$DOTFILES_DIR/zsh/.zshrc"
+  nvim "$DOTFILES_DIR/zsh/dot-zshrc"
 )
 
 if [[ "$TERM" == "xterm-kitty" ]]; then
