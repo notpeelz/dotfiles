@@ -3,7 +3,9 @@
 AddKeysToAgent no
 Host *
   PermitLocalCommand yes
-  LocalCommand ${DOTFILES_DIR}/scripts/title.sh "%r@%n"
+  # FIXME: this should use $DOTFILES_DIR, but for some reason the var
+  # is undefined
+  LocalCommand ~/dotfiles/scripts/title.sh "%r@%n"
 Host debian1.lan
   User peelz
   IdentityFile ${XDG_RUNTIME_DIR}/git_secrets/private/debian1/id_peelz
