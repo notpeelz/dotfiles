@@ -223,6 +223,11 @@ ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
 
 bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 
+# Load compinit {{{
+autoload -Uz compinit
+compinit
+# }}}
+
 # Add ~/.zfunc to the fpath {{{
 [[ ! -d "$HOME/.zfunc" ]] && mkdir -p "$HOME/.zfunc"
 fpath+="$HOME/.zfunc"
@@ -231,9 +236,16 @@ fpath+="$HOME/.zfunc"
 # dotnet {{{
 _dotnet_zsh_complete() {
   local completions=("$(dotnet complete "$words")")
-  reply=( "${(ps:\n:)completions}" )
+
+  if [[ -z "$completions" ]]; then
+    _arguments '*::arguments: _normal'
+    return
+  fi
+
+  _values = "${(ps:\n:)completions}"
 }
-compctl -K _dotnet_zsh_complete dotnet
+
+compdef _dotnet_zsh_complete dotnet
 # }}}
 
 # rustup {{{
