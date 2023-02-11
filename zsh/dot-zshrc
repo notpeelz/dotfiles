@@ -395,19 +395,6 @@ detect-clipboard() {
 detect-clipboard || true
 # }}}
 
-# Change terminal title to hostname {{{
-autoload -Uz add-zsh-hook
-
-_auto_terminal_title() {
-  "$DOTFILES_DIR/scripts/title.sh" "$HOST" 0
-}
-add-zsh-hook precmd _auto_terminal_title
-
-# XXX: force set the title on shell init because zsh's stdin is set to
-# /dev/null when the hook first runs (causing the TTY detection to break)
-"$DOTFILES_DIR/scripts/title.sh" "$HOST" 1
-# }}}
-
 # Plugins {{{
 # XXX: the README states that this should be "at the end of" my zshrc.
 # Hopefully this is fine...
