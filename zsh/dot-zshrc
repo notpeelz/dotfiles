@@ -105,7 +105,7 @@ if command -v sudoedit &>/dev/null; then
     local -i i=$argv[(i)^-*]
     # $argv[i] is the first non-option argument (or empty if there is none)
     case "${argv[i]}" in
-      vim|vim|nvim)
+      vim|nvim)
         argv[$i]=()
         command sudoedit "${argv[@]}"
         return "$?"
