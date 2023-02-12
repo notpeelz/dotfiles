@@ -185,6 +185,10 @@ zstyle ':completion:*' menu select
 # Enable completion for commands prefixed with `sudo`
 zstyle ':completion:*:sudo:*' command-path "${(s|:|)PATH}"
 
+# Enable automatic discovery of new programs in $PATH
+# NOTE: can degrade performance of the shell
+zstyle ':completion:*' rehash true
+
 # Don't autoselect the first completion entry
 unsetopt menu_complete
 
