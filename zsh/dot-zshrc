@@ -115,6 +115,19 @@ if command -v sudoedit &>/dev/null; then
   }
 fi
 
+# Using default settings, running `paru` will update all repo and AUR packages.
+# When using RepoOnly, `paru` only checks for repo updates.
+# This workaround restores the default behavior.
+if command -v paru &>/dev/null; then
+  paru() {
+    if [[ "$#" -eq 0 ]]; then
+      command paru -Syu --aur --repo
+    else
+      command paru "$@"
+    fi
+  }
+fi
+
 dotfiles() (
   cd "$DOTFILES_DIR"
   nvim
