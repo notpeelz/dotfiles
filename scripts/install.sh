@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-apps=(systemd ssh zsh git vim tmux)
+apps=(zsh git vim tmux)
 
 ######
 
