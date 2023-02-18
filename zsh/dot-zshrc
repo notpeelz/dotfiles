@@ -121,7 +121,7 @@ fi
 if command -v paru &>/dev/null; then
   paru() {
     if [[ "$#" -eq 0 ]]; then
-      command paru -Syu --aur --repo
+      command paru -Syu --mode all
     else
       command paru "$@"
     fi
