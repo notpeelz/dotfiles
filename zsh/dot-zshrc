@@ -192,9 +192,6 @@ zstyle ':completion:*' rehash true
 # Don't autoselect the first completion entry
 unsetopt menu_complete
 
-# cd /u/lo/l<TAB> expands to /usr/local/lib
-setopt complete_in_word
-
 # Show completion menu on succesive tab presses
 setopt auto_menu
 
