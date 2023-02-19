@@ -195,10 +195,6 @@ unsetopt menu_complete
 # Show completion menu on succesive tab presses
 setopt auto_menu
 
-# Forces the cursor to the end of the word after it is completed,
-# even if completion took place in the middle.
-setopt always_to_end
-
 # Completion always takes place at the cursor position in the word
 setopt complete_in_word
 
