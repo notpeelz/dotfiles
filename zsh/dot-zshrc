@@ -274,13 +274,6 @@ fi
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 # }}}
 
-# npm {{{
-# FIXME: this completion is not ideal (no `npm install` completion)
-if type npm &>/dev/null; then
-  source <(npm completion)
-fi
-# }}}
-
 autoload -Uz compinit && compinit
 autoload -U bashcompinit && bashcompinit
 # }}}
