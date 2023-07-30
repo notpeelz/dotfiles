@@ -1,18 +1,25 @@
 -- vim:foldmethod=marker
--- Install packer
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
+-- Install lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
 local au = require("core.au")
 
-require("packer").startup(function(use)
-  use("wbthomason/packer.nvim")
-  use("nvim-lua/plenary.nvim")
-  use("tpope/vim-fugitive")
-  use({
+require("lazy").setup({
+  "wbthomason/packer.nvim",
+  "nvim-lua/plenary.nvim",
+  "tpope/vim-fugitive",
+  {
     "lewis6991/gitsigns.nvim",
     config = function()
       require("gitsigns").setup({
@@ -42,8 +49,8 @@ require("packer").startup(function(use)
         end
       })
     end,
-  })
-  use({
+  },
+  {
     "numToStr/Comment.nvim",
     tag = (function()
       if vim.fn.has("nvim-0.7") == 0 then
@@ -56,17 +63,19 @@ require("packer").startup(function(use)
         extended = true,
       })
     end,
-  })
-  use({
+  },
+  {
     "navarasu/onedark.nvim",
     event = "VimEnter",
     config = function()
       require("onedark").load()
     end,
-  })
-  use({
+  },
+  {
     "nvim-lualine/lualine.nvim",
-    after = "onedark.nvim",
+    dependencies = {
+      "onedark.nvim",
+    },
     config = function()
       require("lualine").setup({
         options = {
@@ -97,8 +106,8 @@ require("packer").startup(function(use)
         },
       })
     end,
-  })
-  use({
+  },
+  {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
       require("indent_blankline").setup({
@@ -118,16 +127,16 @@ require("packer").startup(function(use)
     cond = function()
       return vim.g.vscode == nil
     end,
-  })
-  use("editorconfig/editorconfig-vim")
-  use("tpope/vim-surround")
-  use("tpope/vim-repeat")
-  use("neoclide/jsonc.vim")
-  use("inkarkat/vim-ReplaceWithRegister")
+  },
+  "editorconfig/editorconfig-vim",
+  "tpope/vim-surround",
+  "tpope/vim-repeat",
+  "neoclide/jsonc.vim",
+  "inkarkat/vim-ReplaceWithRegister",
   -- Filetypes
-  use("LnL7/vim-nix")
-  use("fladson/vim-kitty")
-end)
+  "LnL7/vim-nix",
+  "fladson/vim-kitty",
+})
 
 -- Default indentation
 vim.o.tabstop = 2
