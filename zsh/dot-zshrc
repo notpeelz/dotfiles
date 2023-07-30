@@ -270,7 +270,11 @@ compdef _dotnet_zsh_complete dotnet
 
 # rustup {{{
 if [[ ! -e "$HOME/.zfunc/_rustup" ]] && type rustup &>/dev/null; then
-  rustup completions zsh > "$HOME/.zfunc/_rustup"
+  (
+    # XXX: rustup looks for rust-toolchain.toml and tries to install it
+    cd "$HOME"
+    rustup completions zsh > "$HOME/.zfunc/_rustup"
+  )
 fi
 # }}}
 
