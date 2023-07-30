@@ -16,3 +16,6 @@
 [submodule "dot_zsh-plugins/external_powerlevel10k"]
 	path = dot_zsh-plugins/external_powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
+[submodule "dot_local/gdb-plugins/external_gef"]
+	path = dot_local/gdb-plugins/external_gef
+	url = https://github.com/hugsy/gef.git
