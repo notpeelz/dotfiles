@@ -4,11 +4,11 @@
 [submodule "external_dot_powerlevel10k"]
 	path = external_dot_powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
-[submodule "dot_tmux-plugins/external_tmux-sensible"]
-	path = dot_tmux-plugins/external_tmux-sensible
+[submodule "dot_local/share/tmux/plugins/external_tmux-sensible"]
+	path = dot_local/share/tmux/plugins/external_tmux-sensible
 	url = https://github.com/tmux-plugins/tmux-sensible
-[submodule "dot_tmux-plugins/external_tmux-onedark-theme"]
-	path = dot_tmux-plugins/external_tmux-onedark-theme
+[submodule "dot_local/share/tmux/plugins/external_tmux-onedark-theme"]
+	path = dot_local/share/tmux/plugins/external_tmux-onedark-theme
 	url = https://github.com/odedlaz/tmux-onedark-theme.git
 [submodule "dot_zsh-plugins/external_dot_powerlevel10k"]
 	path = dot_zsh-plugins/external_dot_powerlevel10k
