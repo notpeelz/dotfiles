@@ -1,8 +1,5 @@
 # vim:ft=zsh foldmethod=marker
 
-DOTFILES_ZSH_DIR="${$(print -P %N):A:h}"
-DOTFILES_DIR="$DOTFILES_ZSH_DIR/.."
-
 (( ${+commands[direnv]} )) && emulate zsh -c "$(direnv export zsh)"
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -14,7 +11,7 @@ fi
 
 (( ${+commands[direnv]} )) && emulate zsh -c "$(direnv hook zsh)"
 
-source "$HOME/.powerlevel10k/powerlevel10k.zsh-theme"
+source "$HOME/.zsh-plugins/powerlevel10k/powerlevel10k.zsh-theme"
 
 () {
 
@@ -137,21 +134,6 @@ if command -v paru &>/dev/null; then
     fi
   }
 fi
-
-dotfiles() (
-  cd "$DOTFILES_DIR"
-  nvim
-)
-
-vimrc() (
-  (cd "$DOTFILES_DIR"
-  nvim "$DOTFILES_DIR/vim/dot-config/nvim/init.lua")
-)
-
-zshrc() (
-  cd "$DOTFILES_DIR"
-  nvim "$DOTFILES_DIR/zsh/dot-zshrc"
-)
 # }}}
 
 # History settings {{{
@@ -403,9 +385,9 @@ detect-clipboard || true
 # }}}
 
 # Plugins {{{
-# XXX: the README states that this should be "at the end of" my zshrc.
-# Hopefully this is fine...
-source "$DOTFILES_ZSH_DIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [[ -d "$HOME/.zsh-plugins" ]]; then
+  source "$HOME/.zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
 
 ZSH_HIGHLIGHT_STYLES[comment]='fg=#8d94b0'
 # }}}
