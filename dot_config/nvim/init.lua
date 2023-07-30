@@ -136,6 +136,7 @@ require("lazy").setup({
   -- Filetypes
   "LnL7/vim-nix",
   "fladson/vim-kitty",
+  "tikhomirov/vim-glsl",
 })
 
 -- Default indentation
