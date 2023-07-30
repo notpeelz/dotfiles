@@ -105,6 +105,10 @@ fi
 alias vim='nvim'
 alias vi='nvim'
 
+if command -v exa &>/dev/null; then
+  alias ls='exa --group --git'
+fi
+
 # 'sudo vim' -> 'sudoedit'
 if command -v sudoedit &>/dev/null; then
   sudo() {
