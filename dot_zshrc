@@ -11,7 +11,7 @@ fi
 
 (( ${+commands[direnv]} )) && emulate zsh -c "$(direnv hook zsh)"
 
-source "$HOME/.zsh-plugins/powerlevel10k/powerlevel10k.zsh-theme"
+source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme"
 
 () {
 
@@ -389,8 +389,8 @@ detect-clipboard || true
 # }}}
 
 # Plugins {{{
-if [[ -d "$HOME/.zsh-plugins" ]]; then
-  source "$HOME/.zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [[ -d "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins" ]]; then
+  source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 ZSH_HIGHLIGHT_STYLES[comment]='fg=#8d94b0'

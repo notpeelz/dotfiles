@@ -19,3 +19,9 @@
 [submodule "dot_local/gdb-plugins/external_gef"]
 	path = dot_local/gdb-plugins/external_gef
 	url = https://github.com/hugsy/gef.git
+[submodule "dot_local/share/zsh/plugins/external_zsh-syntax-highlighting"]
+	path = dot_local/share/zsh/plugins/external_zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "dot_local/share/zsh/plugins/external_powerlevel10k"]
+	path = dot_local/share/zsh/plugins/external_powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git
