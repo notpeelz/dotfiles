@@ -14,6 +14,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local au = require("core.au")
+local keymap = require("core.keymap")
 
 require("lazy").setup({
   "nvim-lua/plenary.nvim",
@@ -23,7 +24,6 @@ require("lazy").setup({
     opts = {
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
-        local keymap = require("core.keymap")
         local map = function(...) keymap.map_buf(bufnr, ...) end
 
         map("n", "]c", function()
@@ -251,104 +251,52 @@ end)
 -- }}}
 
 -- Navigation with linewrap {{{
-vim.api.nvim_set_keymap(
-  "",
-  "k",
-  "v:count == 0 ? 'gk' : 'k'",
-  { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap(
-  "",
-  "j",
-  "v:count == 0 ? 'gj' : 'j'",
-  { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap(
-  "",
-  "<Up>",
-  "v:count == 0 ? 'gk' : 'k'",
-  { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap(
-  "",
-  "<Down>",
-  "v:count == 0 ? 'gj' : 'j'",
-  { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap(
-  "i",
-  "<Up>",
-  "v:count == 0 ? '<C-o>gk' : '<C-o>k'",
-  { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap(
-  "i",
-  "<Down>",
-  "v:count == 0 ? '<C-o>gj' : '<C-o>j'",
-  { noremap = true, expr = true, silent = true })
+keymap.map("", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
+keymap.map("", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
+keymap.map("", "<Up>", "v:count == 0 ? 'gk' : 'k'", { expr = true })
+keymap.map("", "<Down>", "v:count == 0 ? 'gj' : 'j'", { expr = true })
+keymap.map("i", "<Up>", "v:count == 0 ? '<C-o>gk' : '<C-o>k'", { expr = true })
+keymap.map("i", "<Down>", "v:count == 0 ? '<C-o>gj' : '<C-o>j'", { expr = true })
 -- }}}
 
 -- Tab navigation {{{
-vim.api.nvim_set_keymap("n", "<M-Left>", "<Cmd>tabprev<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<M-Right>", "<Cmd>tabnext<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<M-C-Left>", "<Cmd>tabprev<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<M-C-Right>", "<Cmd>tabnext<CR>", { noremap = true, silent = true })
+keymap.map("n", "<M-Left>", "<Cmd>tabprev<CR>")
+keymap.map("n", "<M-Right>", "<Cmd>tabnext<CR>")
+keymap.map("n", "<M-C-Left>", "<Cmd>tabprev<CR>")
+keymap.map("n", "<M-C-Right>", "<Cmd>tabnext<CR>")
 -- }}}
 
 -- Enable emacs-style navigation in command mode {{{
-vim.api.nvim_set_keymap("c", "<C-a>", "<Home>", { noremap = true })
-vim.api.nvim_set_keymap("c", "<C-e>", "<End>", { noremap = true })
+keymap.map("c", "<C-a>", "<Home>")
+keymap.map("c", "<C-e>", "<End>")
 -- }}}
 
 -- Unmap undesirable keys {{{
-vim.api.nvim_set_keymap("", "<C-a>", "<nop>", { noremap = true })
-vim.api.nvim_set_keymap("", "<C-x>", "<nop>", { noremap = true })
+keymap.map("", "<C-a>", "<nop>")
+keymap.map("", "<C-x>", "<nop>")
 
-vim.api.nvim_set_keymap(
-  "i",
-  "<M-Up>",
-  "<nop>",
-  { noremap = true, silent = true })
-vim.api.nvim_set_keymap(
-  "i",
-  "<M-Down>",
-  "<nop>",
-  { noremap = true, silent = true })
-vim.api.nvim_set_keymap(
-  "i",
-  "<M-S-Up>",
-  "<nop>",
-  { noremap = true, silent = true })
-vim.api.nvim_set_keymap(
-  "i",
-  "<M-S-Down>",
-  "<nop>",
-  { noremap = true, silent = true })
-vim.api.nvim_set_keymap(
-  "i",
-  "<S-Up>",
-  "<nop>",
-  { noremap = true, silent = true })
-vim.api.nvim_set_keymap(
-  "i",
-  "<S-Down>",
-  "<nop>",
-  { noremap = true, silent = true })
+keymap.map("i", "<M-Up>", "<nop>")
+keymap.map("i", "<M-Down>", "<nop>")
+keymap.map("i", "<M-S-Up>", "<nop>")
+keymap.map("i", "<M-S-Down>", "<nop>")
+keymap.map("i", "<S-Up>", "<nop>")
+keymap.map("i", "<S-Down>", "<nop>")
 -- }}}
 
 -- Stay in visual mode when indenting {{{
-vim.api.nvim_set_keymap("v", "<lt>", "<lt>gv", { noremap = true })
-vim.api.nvim_set_keymap("v", ">", ">gv", { noremap = true })
+keymap.map("v", "<lt>", "<lt>gv")
+keymap.map("v", ">", ">gv")
 -- }}}
 
 -- Replace-with mappings {{{
-vim.api.nvim_set_keymap("n", "r", "<nop>", { noremap = true })
-vim.api.nvim_set_keymap("x", "r", "<nop>", { noremap = true })
-vim.api.nvim_set_keymap("n", "rc", "r", { noremap = true })
-vim.api.nvim_set_keymap("x", "rc", "r", { noremap = true })
-vim.api.nvim_set_keymap("n", "rr", "<Plug>ReplaceWithRegisterOperator", {})
-vim.api.nvim_set_keymap("x", "rr", "<Plug>ReplaceWithRegisterVisual", {})
-vim.api.nvim_set_keymap("x", "r^", "<Plug>ReplaceWithRegisterLine", {})
+keymap.map("n", "r", "<nop>")
+keymap.map("x", "r", "<nop>")
+keymap.map("n", "rc", "r")
+keymap.map("x", "rc", "r")
+keymap.map("n", "rr", "<Plug>ReplaceWithRegisterOperator")
+keymap.map("x", "rr", "<Plug>ReplaceWithRegisterVisual")
 -- }}}
 
 -- Interactive replace {{{
-vim.api.nvim_set_keymap(
-  "n",
-  ";;",
-  ":.,$s~~~cg<Left><Left><Left><Left>", { noremap = true })
+keymap.map("n", ";;", ":.,$s~~~cg<Left><Left><Left><Left>")
 -- }}}

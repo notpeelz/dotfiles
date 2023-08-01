@@ -36,32 +36,40 @@ end
 function S.map_buf(bufnr, mode, l, r, opts)
   opts = get_opts(opts)
 
-  if type(r) == "function" then
-    r = create_mapping(mode, l, r)
+  function map(mode)
+    local r = r
+    if type(r) == "function" then
+      r = create_mapping(mode, l, r)
+    end
+    vim.api.nvim_buf_set_keymap(bufnr, mode, l, r, opts)
   end
 
   if type(mode) == "table" then
     for _, mode in ipairs(mode) do
-      vim.api.nvim_buf_set_keymap(bufnr, mode, l, r, opts or default_opts)
+      map(mode)
     end
   else
-    vim.api.nvim_buf_set_keymap(bufnr, mode, l, r, opts or default_opts)
+    map(mode)
   end
 end
 
-function S.map(bufnr, mode, l, r, opts)
+function S.map(mode, l, r, opts)
   opts = get_opts(opts)
 
-  if type(r) == "function" then
-    r = create_mapping(mode, l, r)
+  function map(mode)
+    local r = r
+    if type(r) == "function" then
+      r = create_mapping(mode, l, r)
+    end
+    vim.api.nvim_set_keymap(mode, l, r, opts)
   end
 
   if type(mode) == "table" then
     for _, mode in ipairs(mode) do
-      vim.api.nvim_set_keymap(bufnr, mode, l, r, opts or default_opts)
+      map(mode)
     end
   else
-    vim.api.nvim_set_keymap(bufnr, mode, l, r, opts or default_opts)
+    map(mode)
   end
 end
 
