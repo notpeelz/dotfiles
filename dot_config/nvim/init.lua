@@ -16,7 +16,6 @@ vim.opt.rtp:prepend(lazypath)
 local au = require("core.au")
 
 require("lazy").setup({
-  "wbthomason/packer.nvim",
   "nvim-lua/plenary.nvim",
   "tpope/vim-fugitive",
   {
