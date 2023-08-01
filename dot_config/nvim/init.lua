@@ -119,6 +119,28 @@ require("lazy").setup({
       return vim.g.vscode == nil
     end,
   },
+  {
+    "akinsho/toggleterm.nvim",
+    config = function()
+      local Terminal = require("toggleterm.terminal").Terminal
+      local term = Terminal:new({
+        direction = "float",
+        hidden = true,
+        float_opts = {
+          border = "curved",
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+        end,
+      })
+
+      function toggle()
+        term:toggle()
+      end
+
+      keymap.map({ "n", "t" }, "<C-space>", toggle)
+    end,
+  },
   "editorconfig/editorconfig-vim",
   "tpope/vim-surround",
   "tpope/vim-repeat",
