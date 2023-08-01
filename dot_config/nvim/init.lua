@@ -121,7 +121,7 @@ require("lazy").setup({
   },
   {
     "akinsho/toggleterm.nvim",
-    config = function()
+    keys = function()
       local Terminal = require("toggleterm.terminal").Terminal
       local term = Terminal:new({
         direction = "float",
@@ -138,7 +138,9 @@ require("lazy").setup({
         term:toggle()
       end
 
-      keymap.map({ "n", "t" }, "<C-space>", toggle)
+      return {
+        keymap.mapping{ { "n", "t" }, "<C-t>", toggle }
+      }
     end,
   },
   "editorconfig/editorconfig-vim",
