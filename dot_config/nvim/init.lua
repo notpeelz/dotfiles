@@ -316,6 +316,7 @@ keymap.map("x", "r", "<nop>")
 keymap.map("n", "rc", "r")
 keymap.map("x", "rc", "r")
 keymap.map("n", "rr", "<Plug>ReplaceWithRegisterOperator")
+keymap.map("n", "r^", "<Plug>ReplaceWithRegisterLine")
 keymap.map("x", "rr", "<Plug>ReplaceWithRegisterVisual")
 -- }}}
 
