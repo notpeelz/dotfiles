@@ -21,34 +21,32 @@ require("lazy").setup({
   "tpope/vim-fugitive",
   {
     "lewis6991/gitsigns.nvim",
-    config = function()
-      require("gitsigns").setup({
-        on_attach = function(bufnr)
-          local gs = package.loaded.gitsigns
-          local keymap = require("core.keymap")
-          local map = function(...) keymap.map_buf(bufnr, ...) end
+    opts = {
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+        local keymap = require("core.keymap")
+        local map = function(...) keymap.map_buf(bufnr, ...) end
 
-          map("n", "]c", function()
-            vim.schedule(function() gs.next_hunk() end)
-          end)
-          map("n", "[c", function()
-            vim.schedule(function() gs.prev_hunk() end)
-          end)
-          map({"n", "v"}, "<leader>hs", ":Gitsigns stage_hunk<CR>")
-          map({"n", "v"}, "<leader>hr", ":Gitsigns reset_hunk<CR>")
-          map("n", "<leader>hS", gs.stage_buffer)
-          map("n", "<leader>hu", gs.undo_stage_hunk)
-          map("n", "<leader>hR", gs.reset_buffer)
-          map("n", "<leader>hp", gs.preview_hunk)
-          map("n", "<leader>hb", function() gs.blame_line({full = true}) end)
-          map("n", "<leader>tb", gs.toggle_current_line_blame)
-          map("n", "<leader>hd", gs.diffthis)
-          map("n", "<leader>hD", function() gs.diffthis("~") end)
-          map("n", "<leader>td", gs.toggle_deleted)
-          map({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>")
-        end
-      })
-    end,
+        map("n", "]c", function()
+          vim.schedule(function() gs.next_hunk() end)
+        end)
+        map("n", "[c", function()
+          vim.schedule(function() gs.prev_hunk() end)
+        end)
+        map({"n", "v"}, "<leader>hs", ":Gitsigns stage_hunk<CR>")
+        map({"n", "v"}, "<leader>hr", ":Gitsigns reset_hunk<CR>")
+        map("n", "<leader>hS", gs.stage_buffer)
+        map("n", "<leader>hu", gs.undo_stage_hunk)
+        map("n", "<leader>hR", gs.reset_buffer)
+        map("n", "<leader>hp", gs.preview_hunk)
+        map("n", "<leader>hb", function() gs.blame_line({full = true}) end)
+        map("n", "<leader>tb", gs.toggle_current_line_blame)
+        map("n", "<leader>hd", gs.diffthis)
+        map("n", "<leader>hD", function() gs.diffthis("~") end)
+        map("n", "<leader>td", gs.toggle_deleted)
+        map({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>")
+      end
+    },
   },
   {
     "numToStr/Comment.nvim",
@@ -57,12 +55,10 @@ require("lazy").setup({
         return "v0.6"
       end
     end)(),
-    config = function()
-      require("Comment").setup({
-        basic = true,
-        extended = true,
-      })
-    end,
+    opts = {
+      basic = true,
+      extended = true,
+    },
   },
   {
     "navarasu/onedark.nvim",
@@ -76,54 +72,50 @@ require("lazy").setup({
     dependencies = {
       "onedark.nvim",
     },
-    config = function()
-      require("lualine").setup({
-        options = {
-          icons_enabled = false,
-          theme = "onedark",
-          component_separators = "\u{2502}",
-          section_separators = "",
+    opts = {
+      options = {
+        icons_enabled = false,
+        theme = "onedark",
+        component_separators = "\u{2502}",
+        section_separators = "",
+      },
+      sections = {
+        lualine_a = {"mode"},
+        lualine_b = {
+          {"branch", icons_enabled = true},
+          "diff",
+          "diagnostics"
         },
-        sections = {
-          lualine_a = {"mode"},
-          lualine_b = {
-            {"branch", icons_enabled = true},
-            "diff",
-            "diagnostics"
-          },
-          lualine_c = {"filename"},
-          lualine_x = {"encoding", "fileformat", "filetype"},
-          lualine_y = {"progress"},
-          lualine_z = {"location"}
-        },
-        inactive_sections = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {"filename"},
-          lualine_x = {"location"},
-          lualine_y = {},
-          lualine_z = {}
-        },
-      })
-    end,
+        lualine_c = {"filename"},
+        lualine_x = {"encoding", "fileformat", "filetype"},
+        lualine_y = {"progress"},
+        lualine_z = {"location"}
+      },
+      inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {"filename"},
+        lualine_x = {"location"},
+        lualine_y = {},
+        lualine_z = {}
+      },
+    },
   },
   {
     "lukas-reineke/indent-blankline.nvim",
-    config = function()
-      require("indent_blankline").setup({
-        use_treesitter = false,
-        buftype_exclude = {"terminal"},
-        filetype_exclude = {
-          "qf",
-          "startify",
-          "help",
-          "coc-explorer",
-          "coctree",
-          "fzf",
-          "Trouble",
-        },
-      })
-    end,
+    opts = {
+      use_treesitter = false,
+      buftype_exclude = {"terminal"},
+      filetype_exclude = {
+        "qf",
+        "startify",
+        "help",
+        "coc-explorer",
+        "coctree",
+        "fzf",
+        "Trouble",
+      },
+    },
     cond = function()
       return vim.g.vscode == nil
     end,
