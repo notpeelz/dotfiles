@@ -21,6 +21,22 @@ require("lazy").setup(
     { import = "plugins" },
   },
   {
+    ui = {
+      icons = {
+        cmd = "⌘",
+        config = "🛠",
+        event = "📅",
+        ft = "📂",
+        init = "⚙",
+        keys = "🗝",
+        plugin = "🔌",
+        runtime = "💻",
+        source = "📄",
+        start = "🚀",
+        task = "📌",
+        lazy = "💤 ",
+      },
+    },
     change_detection = {
       enabled = false,
     },
