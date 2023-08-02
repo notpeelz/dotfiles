@@ -294,7 +294,7 @@ au.group("GitMessageLength", {
   FileType = {
     pattern = "gitcommit",
     function()
-      vim.o.colorcolumn = "80"
+      vim.o.colorcolumn = "72"
     end,
   },
 })
