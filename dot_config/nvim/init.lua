@@ -251,14 +251,11 @@ vim.opt.updatetime = 100
 vim.opt.termguicolors = true
 
 -- Highlight on yank {{{
-au.group("HighlightOnYank", function(grp)
-  grp.TextYankPost = {
-    "*",
-    function()
-      vim.highlight.on_yank({ higroup = "Visual", timeout = 250 })
-    end,
-  }
-end)
+au.group("HighlightOnYank", {
+  TextYankPost = function()
+    vim.highlight.on_yank({ higroup = "Visual", timeout = 250 })
+  end,
+})
 -- }}}
 
 -- Clipboard {{{
@@ -284,39 +281,35 @@ end
 -- }}}
 
 -- Signcolumn {{{
-au.group("AutoSignColumn", function(grp)
-  grp.BufWinEnter = {
-    "*",
-    function()
-      local config = vim.api.nvim_win_get_config(0)
-      vim.opt.signcolumn = config.buftype ~= "nofile" and "yes:1" or "no"
-    end,
-  }
-end)
+au.group("AutoSignColumn", {
+  BufWinEnter = function()
+    local config = vim.api.nvim_win_get_config(0)
+    vim.opt.signcolumn = config.buftype ~= "nofile" and "yes:1" or "no"
+  end
+})
 -- }}}
 
 -- Git commit column hint {{{
-au.group("GitMessageLength", function(grp)
-  grp.FileType = {
-    "gitcommit",
+au.group("GitMessageLength", {
+  FileType = {
+    pattern = "gitcommit",
     function()
       vim.o.colorcolumn = "80"
     end,
-  }
-end)
+  },
+})
 -- }}}
 
 -- Disable automatic line continuation of comments {{{
-au.group("DisableCommentContinuation", function(grp)
-  local cmd = {
-    "*",
-    function()
-      vim.opt.formatoptions = "cljq"
-    end,
-  }
+au.group("DisableCommentContinuation", function()
+  local cmd = function()
+    vim.opt.formatoptions = "cljq"
+  end
 
-  grp.BufEnter = cmd
-  grp.BufNewFile = cmd
+  return {
+    BufEnter = cmd,
+    BufNewFile = cmd,
+  }
 end)
 -- }}}
 

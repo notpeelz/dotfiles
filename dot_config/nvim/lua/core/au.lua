@@ -1,48 +1,38 @@
--- https://gist.github.com/numToStr/1ab83dd2e919de9235f9f774ef8076da
-local cmd = vim.api.nvim_command
+local S = {}
 
-local function autocmd(this, event, spec)
-  local is_table = type(spec) == 'table'
-  local pattern = is_table and spec[1] or '*'
-  local action = is_table and spec[2] or spec
-  if type(action) == 'function' then
-    action = this.set(action)
-  end
-  local e = type(event) == 'table' and table.concat(event, ',') or event
-  cmd('autocmd ' .. e .. ' ' .. pattern .. ' ' .. action)
-end
+function S.group(name, cmds)
+  local group = vim.api.nvim_create_augroup(name, {})
+  local function create_cmds(t)
+    for event, o in pairs(t) do
+      local opts = {}
+      if type(o) == "table" then
+        local callback = o[1]
+        if type(callback) ~= "function" then
+          error("autocmd group entry[1] should be a function")
+        end
+        for k, v in pairs(o) do
+          if type(k) ~= "number" then
+            opts[k] = v
+          end
+        end
+        opts.callback = callback
+      elseif type(o) == "function" then
+        opts.callback = o
+      else
+        error("invalid autocmd group entry; expected a table or a function")
+      end
 
-local S = {
-  __au = {},
-}
+      opts.group = group
 
-local X = setmetatable({}, {
-  __index = S,
-  __newindex = autocmd,
-  __call = autocmd,
-})
-
-function S.exec(id)
-  S.__au[id]()
-end
-
-function S.set(fn)
-  local id = string.format('%p', fn)
-  S.__au[id] = fn
-  return string.format('lua require("core.au").exec("%s")', id)
-end
-
-function S.group(grp, cmds)
-  cmd('augroup ' .. grp)
-  cmd('autocmd!')
-  if type(cmds) == 'function' then
-    cmds(X)
-  else
-    for _, au in ipairs(cmds) do
-      autocmd(S, au[1], { au[2], au[3] })
+      vim.api.nvim_create_autocmd(event, opts)
     end
   end
-  cmd('augroup END')
+
+  if type(cmds) == "function" then
+    create_cmds(cmds())
+  else
+    create_cmds(cmds)
+  end
 end
 
-return X
+return S
