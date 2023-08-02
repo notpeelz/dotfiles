@@ -32,17 +32,17 @@ require("lazy").setup({
         map("n", "[c", function()
           vim.schedule(function() gs.prev_hunk() end)
         end)
-        map({"n", "v"}, "<leader>hs", ":Gitsigns stage_hunk<CR>")
-        map({"n", "v"}, "<leader>hr", ":Gitsigns reset_hunk<CR>")
-        map("n", "<leader>hS", gs.stage_buffer)
-        map("n", "<leader>hu", gs.undo_stage_hunk)
-        map("n", "<leader>hR", gs.reset_buffer)
-        map("n", "<leader>hp", gs.preview_hunk)
-        map("n", "<leader>hb", function() gs.blame_line({full = true}) end)
-        map("n", "<leader>tb", gs.toggle_current_line_blame)
-        map("n", "<leader>hd", gs.diffthis)
-        map("n", "<leader>hD", function() gs.diffthis("~") end)
-        map("n", "<leader>td", gs.toggle_deleted)
+        map({"n", "v"}, "<Space>hs", ":Gitsigns stage_hunk<CR>")
+        map({"n", "v"}, "<Space>hr", ":Gitsigns reset_hunk<CR>")
+        map("n", "<Space>hS", gs.stage_buffer)
+        map("n", "<Space>hu", gs.undo_stage_hunk)
+        map("n", "<Space>hR", gs.reset_buffer)
+        map("n", "<Space>hp", gs.preview_hunk)
+        map("n", "<Space>hb", function() gs.blame_line({full = true}) end)
+        map("n", "<Space>tb", gs.toggle_current_line_blame)
+        map("n", "<Space>hd", gs.diffthis)
+        map("n", "<Space>hD", function() gs.diffthis("~") end)
+        map("n", "<Space>td", gs.toggle_deleted)
         map({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>")
       end
     },
@@ -140,6 +140,41 @@ require("lazy").setup({
 
       return {
         keymap.mapping{ { "n", "t" }, "<C-t>", toggle }
+      }
+    end,
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    opts = {
+      defaults = {
+        mappings = {
+          i = {
+            ["<Tab>"] = "toggle_selection",
+            ["<S-Tab>"] = nil,
+          },
+          n = {
+            ["<Tab>"] = "toggle_selection",
+            ["<S-Tab>"] = nil,
+          },
+        },
+      },
+    },
+    keys = function()
+      local builtin = require("telescope.builtin")
+      return {
+        keymap.mapping{ "n", "<Space>ff", builtin.find_files },
+        keymap.mapping{ "n", "<Space>fg", builtin.live_grep },
+        keymap.mapping{ "n", "<Space>fb", builtin.buffers },
+        keymap.mapping{ "n", "<Space>fh", builtin.help_tags },
+      }
+    end,
+  },
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    keys = function()
+      local fb = require("telescope").extensions.file_browser
+      return {
+        keymap.mapping{ "n", "<Space>fs", fb.file_browser },
       }
     end,
   },
@@ -307,6 +342,7 @@ keymap.map("c", "<C-e>", "<End>")
 -- }}}
 
 -- Unmap undesirable keys {{{
+keymap.map("", "<C-Space>", "<nop>")
 keymap.map("", "<C-a>", "<nop>")
 keymap.map("", "<C-x>", "<nop>")
 
