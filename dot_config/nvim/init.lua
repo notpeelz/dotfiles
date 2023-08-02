@@ -145,7 +145,18 @@ require("lazy").setup({
   "tpope/vim-surround",
   "tpope/vim-repeat",
   "neoclide/jsonc.vim",
-  "inkarkat/vim-ReplaceWithRegister",
+  {
+    "inkarkat/vim-ReplaceWithRegister",
+    keys = {
+      keymap.mapping{ "n", "r", "<nop>" },
+      keymap.mapping{ "x", "r", "<nop>" },
+      keymap.mapping{ "n", "rc", "r" },
+      keymap.mapping{ "x", "rc", "r" },
+      keymap.mapping{ "n", "rr", "<Plug>ReplaceWithRegisterOperator" },
+      keymap.mapping{ "n", "r^", "<Plug>ReplaceWithRegisterLine" },
+      keymap.mapping{ "x", "rr", "<Plug>ReplaceWithRegisterVisual" },
+    },
+  },
   -- Filetypes
   "LnL7/vim-nix",
   "fladson/vim-kitty",
@@ -308,16 +319,6 @@ keymap.map("i", "<S-Down>", "<nop>")
 -- Stay in visual mode when indenting {{{
 keymap.map("v", "<lt>", "<lt>gv")
 keymap.map("v", ">", ">gv")
--- }}}
-
--- Replace-with mappings {{{
-keymap.map("n", "r", "<nop>")
-keymap.map("x", "r", "<nop>")
-keymap.map("n", "rc", "r")
-keymap.map("x", "rc", "r")
-keymap.map("n", "rr", "<Plug>ReplaceWithRegisterOperator")
-keymap.map("n", "r^", "<Plug>ReplaceWithRegisterLine")
-keymap.map("x", "rr", "<Plug>ReplaceWithRegisterVisual")
 -- }}}
 
 -- Interactive replace {{{
