@@ -177,8 +177,17 @@ keymap.map({ "c", "n" }, "<C-a>", "<Home>")
 keymap.map({ "c", "n" }, "<C-e>", "<End>")
 -- }}}
 
+-- Scrolling {{{
+keymap.map({ "n", "x" }, "<C-d>", "<C-d>")
+keymap.map({ "n", "x" }, "<C-S-d>", "<C-u>")
+keymap.map({ "n", "x" }, "<C-s>", "<C-e>")
+keymap.map({ "n", "x" }, "<C-S-s>", "<C-y>")
+-- }}}
+
 -- Unmap undesirable keys {{{
 keymap.map("", "<C-Space>", "<nop>")
+keymap.map("", "<C-S-e>", "<nop>")
+keymap.map("", "<C-y>", "<nop>")
 keymap.map("", "<C-x>", "<nop>")
 
 keymap.map("i", "<M-Up>", "<nop>")
