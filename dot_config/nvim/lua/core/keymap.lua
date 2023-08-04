@@ -1,7 +1,7 @@
 local S = {}
 
-local function with_default_opts(opts)
-  if opts.noremap == nil then
+local function with_default_opts(mode, opts)
+  if opts.noremap == nil and opts.remap == nil then
     opts.noremap = true
   end
   if opts.silent == nil then
