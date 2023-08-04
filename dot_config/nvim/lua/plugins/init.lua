@@ -1,7 +1,6 @@
 local keymap = require("core.keymap")
 
 return {
-  "nvim-lua/plenary.nvim",
   "editorconfig/editorconfig-vim",
   "tpope/vim-surround",
   "tpope/vim-repeat",

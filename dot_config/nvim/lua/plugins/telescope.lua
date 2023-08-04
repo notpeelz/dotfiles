@@ -3,6 +3,7 @@ local keymap = require("core.keymap")
 return {
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       defaults = {
         mappings = {
@@ -29,6 +30,7 @@ return {
   },
   {
     "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
     keys = function()
       local fb = require("telescope").extensions.file_browser
       return {
