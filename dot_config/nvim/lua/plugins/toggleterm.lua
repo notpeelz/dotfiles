@@ -11,6 +11,13 @@ return {
         float_opts = {
           border = "curved",
         },
+        highlights = {
+          Normal = {},
+          NormalFloat = {},
+          FloatBorder = {
+            link = "TelescopePromptBorder",
+          },
+        },
         on_open = function(term)
           vim.cmd("startinsert!")
         end,
