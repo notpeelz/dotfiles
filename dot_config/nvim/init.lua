@@ -172,14 +172,13 @@ keymap.map("n", "<M-C-Left>", "<Cmd>tabprev<CR>")
 keymap.map("n", "<M-C-Right>", "<Cmd>tabnext<CR>")
 -- }}}
 
--- Enable emacs-style navigation in command mode {{{
-keymap.map("c", "<C-a>", "<Home>")
-keymap.map("c", "<C-e>", "<End>")
+-- Enable emacs-style navigation {{{
+keymap.map({ "c", "n" }, "<C-a>", "<Home>")
+keymap.map({ "c", "n" }, "<C-e>", "<End>")
 -- }}}
 
 -- Unmap undesirable keys {{{
 keymap.map("", "<C-Space>", "<nop>")
-keymap.map("", "<C-a>", "<nop>")
 keymap.map("", "<C-x>", "<nop>")
 
 keymap.map("i", "<M-Up>", "<nop>")
