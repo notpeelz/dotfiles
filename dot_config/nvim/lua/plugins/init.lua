@@ -61,7 +61,7 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     opts = {
-      use_treesitter = false,
+      use_treesitter = true,
       buftype_exclude = {
         "terminal"
       },
