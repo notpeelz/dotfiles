@@ -204,5 +204,5 @@ keymap.map("v", ">", ">gv")
 -- }}}
 
 -- Interactive replace {{{
-keymap.map("n", ";;", ":.,$s~~~cg<Left><Left><Left><Left>")
+keymap.map("n", ";;", ":.,$s~~~cg<Left><Left><Left><Left>", { silent = false })
 -- }}}
