@@ -12,6 +12,7 @@ return {
         "rust",
         "zig",
         "lua",
+        "python",
         "vim",
         "vimdoc",
         "diff",
