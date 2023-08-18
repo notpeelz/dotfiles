@@ -231,7 +231,7 @@ compinit
 
 # Add ~/.zfunc to the fpath {{{
 [[ ! -d "$HOME/.zfunc" ]] && mkdir -p "$HOME/.zfunc"
-fpath+="$HOME/.zfunc"
+fpath+=("$HOME/.zfunc")
 # }}}
 
 # dotnet {{{
@@ -261,12 +261,14 @@ fi
 
 # cargo {{{
 if type rustc &>/dev/null; then
-  fpath+="$(rustc --print sysroot)/share/zsh/site-functions"
+  fpath+=("$(rustc --print sysroot)/share/zsh/site-functions")
 fi
 # }}}
 
-# nvm (Node Version Manager) {{{
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# asdf {{{
+if type asdf &>/dev/null; then
+  fpath+=("${ASDF_DIR}/completions")
+fi
 # }}}
 
 autoload -Uz compinit && compinit
