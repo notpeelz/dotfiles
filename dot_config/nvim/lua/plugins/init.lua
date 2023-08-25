@@ -2,8 +2,10 @@ local keymap = require("core.keymap")
 
 return {
   "editorconfig/editorconfig-vim",
-  "tpope/vim-surround",
-  "tpope/vim-repeat",
+  {
+    "kylechui/nvim-surround",
+    opts = {},
+  },
   {
     "lambdalisue/suda.vim",
     config = function()
