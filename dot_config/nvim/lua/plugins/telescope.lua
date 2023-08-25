@@ -5,6 +5,8 @@ local function make_picker(o)
   local function attach_mappings(_, map)
     map({ "n", "i" }, "<Tab>", actions.toggle_selection)
     map({ "n", "i" }, "<S-Tab>", nil)
+    map({ "n", "i" }, "<C-Up>", actions.cycle_history_prev)
+    map({ "n", "i" }, "<C-Down>", actions.cycle_history_next)
     map("n", "<C-c>", "close")
     return true
   end
