@@ -14,6 +14,7 @@
   "plenary.nvim": { "branch": "master", "commit": "0dbe561ae023f02c2fb772b879e905055b939ce3" },
   "suda.vim": { "branch": "master", "commit": "8b0fc3711760195aba104e2d190cff9af8267052" },
   "telescope-file-browser.nvim": { "branch": "master", "commit": "ad7b637c72549713b9aaed7c4f9c79c62bcbdff0" },
+  "telescope-live-grep-args.nvim": { "branch": "master", "commit": "0f75ea809c46af8997c64f49c52e3c641d887885" },
   "telescope.nvim": { "branch": "master", "commit": "2d92125620417fbea82ec30303823e3cd69e90e8" },
   "toggleterm.nvim": { "branch": "main", "commit": "12cba0a1967b4f3f31903484dec72a6100dcf515" },
   "vim-ReplaceWithRegister": { "branch": "master", "commit": "aad1e8fa31cb4722f20fe40679caa56e25120032" },
