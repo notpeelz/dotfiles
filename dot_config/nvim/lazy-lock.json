@@ -1,5 +1,6 @@
 {
   "Comment.nvim": { "branch": "master", "commit": "0236521ea582747b58869cb72f70ccfa967d2e89" },
+  "aerial.nvim": { "branch": "master", "commit": "ffb5fd0aa7fcd5c3f68df38f89af3aa007f76604" },
   "editorconfig-vim": { "branch": "master", "commit": "e014708e917b457e8f6c57f357d55dd3826880d4" },
   "gitsigns.nvim": { "branch": "main", "commit": "5a2b1205841bc06ffb15719b14d54987e17b22ae" },
   "indent-blankline.nvim": { "branch": "master", "commit": "4541d690816cb99a7fc248f1486aa87f3abce91c" },
