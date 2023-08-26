@@ -35,6 +35,7 @@ return {
         "jq",
         "glsl",
         "hlsl",
+        "ini",
       },
       highlight = {
         enable = true,
