@@ -1,0 +1,30 @@
+# vim:ft=python
+
+import os
+import atexit
+import readline
+import rlcompleter
+
+readline.parse_and_bind("tab: complete")
+readline.set_history_length(1000)
+
+if "XDG_DATA_HOME" in os.environ:
+    data_dir = os.path.join(os.path.expanduser(os.environ["XDG_DATA_HOME"]), "python")
+else:
+    data_dir = os.path.expanduser("~/.local/share/python")
+os.makedirs(data_dir, exist_ok=True)
+
+history_file = os.path.join(data_dir, "history")
+try:
+    readline.read_history_file(history_file)
+    history_len = readline.get_current_history_length()
+except FileNotFoundError:
+    open(history_file, "wb").close()
+    history_len = 0
+
+def save(old_history_len, history_file):
+    new_history_len = readline.get_current_history_length()
+    readline.set_history_length(1000)
+    readline.append_history_file(new_history_len - old_history_len, history_file)
+
+atexit.register(save, history_len, history_file)

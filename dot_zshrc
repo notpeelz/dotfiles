@@ -141,7 +141,7 @@ fi
 # }}}
 
 # History settings {{{
-HISTFILE="$HOME/.zsh_history"
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 HISTSIZE=10000
 SAVEHIST=10000
 # Allow multiple sessions to append to one history
@@ -203,7 +203,7 @@ zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-dir
 
 # Use caching so that commands like apt and dpkg complete are useable
 zstyle ':completion:*' use-cache yes
-zstyle ':completion:*' cache-path $ZSH_CACHE_DIR
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
 
 # Don't complete uninteresting users
 zstyle ':completion:*:*:*:users' ignored-patterns \
@@ -225,13 +225,17 @@ ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
 bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 
 # Load compinit {{{
-autoload -Uz compinit
-compinit
-# }}}
+if [[ ! -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" ]]; then
+  mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
+fi
+fpath+=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc")
 
-# Add ~/.zfunc to the fpath {{{
-[[ ! -d "$HOME/.zfunc" ]] && mkdir -p "$HOME/.zfunc"
-fpath+=("$HOME/.zfunc")
+autoload -Uz compinit
+autoload -U bashcompinit
+# XXX: the folder needs to exist otherwise compinit won't create the file
+mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+bashcompinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/bashcompdump-$ZSH_VERSION"
 # }}}
 
 # dotnet {{{
@@ -250,11 +254,11 @@ compdef _dotnet_zsh_complete dotnet
 # }}}
 
 # rustup {{{
-if [[ ! -e "$HOME/.zfunc/_rustup" ]] && type rustup &>/dev/null; then
+if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup" ]] && type rustup &>/dev/null; then
   (
     # XXX: rustup looks for rust-toolchain.toml and tries to install it
-    cd "$HOME"
-    rustup completions zsh > "$HOME/.zfunc/_rustup"
+    cd "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
+    rustup completions zsh > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup"
   )
 fi
 # }}}
@@ -271,8 +275,8 @@ if type asdf &>/dev/null; then
 fi
 # }}}
 
-autoload -Uz compinit && compinit
-autoload -U bashcompinit && bashcompinit
+# Cache completions
+compdump
 # }}}
 
 # Fuzzy up/down completion {{{

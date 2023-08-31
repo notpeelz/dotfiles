@@ -1,7 +1,6 @@
-# vim:ft=zsh
+# vim:ft=zsh foldmethod=marker
 
-export NIX_INSTALLER_NO_MODIFY_PROFILE=1
-
+# EDITOR {{{
 if command -v nvim &>/dev/null; then
   export EDITOR=nvim
 elif command -v vim &>/dev/null; then
@@ -9,22 +8,23 @@ elif command -v vim &>/dev/null; then
 elif command -v nano &>/dev/null; then
   export EDITOR=nano
 fi
+# }}}
 
+# asdf {{{
 export ASDF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/asdf"
 export ASDF_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/asdf"
 export ASDF_CONFIG_FILE="${XDG_CONFIG_HOME-$HOME/.config}/asdf/asdf.conf"
 export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY="latest_available"
 . "$ASDF_DIR/asdf.sh"
+# }}}
 
-if [[ -s "$HOME/.cargo/env" ]]; then
-  . "$HOME/.cargo/env"
-fi
+# PATH {{{
+# Binaries installed via cargo
+export PATH="$PATH:$CARGO_HOME/bin"
 
-if [[ -d "$HOME/.dotnet" ]]; then
-  export DOTNET_ROOT="$(dirname "$(readlink -f $(which dotnet))")"
-  export PATH="$PATH:$HOME/.dotnet/tools"
-fi
+# Binaries installed via dotnet
+export PATH="$PATH:$DOTNET_CLI_HOME/tools"
 
-if [[ -d "$HOME/.local/bin" ]]; then
-  export PATH="$HOME/.local/bin:$PATH"
-fi
+# User-local binaries should shadow system binaries
+export PATH="$HOME/.local/bin:$PATH"
+# }}}
