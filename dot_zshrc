@@ -398,9 +398,7 @@ detect-clipboard || true
 # }}}
 
 # Plugins {{{
-if [[ -d "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins" ]]; then
-  source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-fi
+source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 ZSH_HIGHLIGHT_STYLES[comment]='fg=#8d94b0'
 # }}}
