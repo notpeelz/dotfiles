@@ -95,6 +95,9 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-
 if command -v bat &>/dev/null; then
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
   export MANROFFOPT="-c"
+elif command -v batcat &>/dev/null; then
+  export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
+  export MANROFFOPT="-c"
 elif command -v less &>/dev/null; then
   export MANPAGER="less -R --use-color -Dd+r -Du+b"
   export MANROFFOPT="-P -c"
