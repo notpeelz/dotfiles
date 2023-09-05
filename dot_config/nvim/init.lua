@@ -93,6 +93,20 @@ vim.opt.updatetime = 100
 -- Enable true color (24-bit)
 vim.opt.termguicolors = true
 
+-- Folds {{{
+vim.opt.fillchars = {
+  eob = " ",
+  fold = " ",
+  foldsep = " ",
+  foldopen = "⏷",
+  foldclose = "⏵"
+}
+vim.o.foldcolumn = "1"
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+-- }}}
+
 -- Highlight on yank {{{
 au.group("HighlightOnYank", {
   TextYankPost = function()

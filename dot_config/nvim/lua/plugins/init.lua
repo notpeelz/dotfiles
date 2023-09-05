@@ -64,6 +64,9 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     opts = {
       use_treesitter = true,
+      indent = {
+        priority = 12,
+      },
       buftype_exclude = {
         "terminal"
       },

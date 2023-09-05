@@ -2,14 +2,20 @@ return {
   {
     "navarasu/onedark.nvim",
     event = "VimEnter",
-    config = function()
+    init = function()
       require("onedark").load()
     end,
+    opts = {
+      style = "dark",
+      highlights = {
+        FoldColumn = { bg = "SignColumn" },
+      },
+    },
   },
   {
     "nvim-lualine/lualine.nvim",
     dependencies = {
-      "onedark.nvim",
+      { "navarasu/onedark.nvim", optional = true },
     },
     opts = {
       options = {
@@ -39,5 +45,30 @@ return {
         lualine_z = {},
       },
     },
+  },
+  {
+    "luukvbaal/statuscol.nvim",
+    dependencies = {
+      { "navarasu/onedark.nvim", optional = true },
+    },
+    config = function()
+      local builtin = require("statuscol.builtin")
+      require("statuscol").setup({
+        segments = {
+          { text = { "%s" }, click = "v:lua.ScSa" },
+          {
+            text = { builtin.lnumfunc, " " },
+            click = "v:lua.ScLa",
+            condition = {
+              true,
+              function()
+                return vim.opt_local.number:get()
+              end,
+            },
+          },
+          { text = { builtin.foldfunc, " " }, click = "v:lua.ScFa" },
+        },
+      })
+    end,
   },
 }
