@@ -30,6 +30,7 @@ return {
         "sql",
         "json",
         "jsonc",
+        "xml",
         "toml",
         "yaml",
         "jq",
