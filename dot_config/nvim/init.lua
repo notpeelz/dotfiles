@@ -44,13 +44,13 @@ require("lazy").setup(
 )
 
 -- Default indentation
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-vim.o.shiftround = true
-vim.o.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.shiftround = true
+vim.opt.expandtab = true
 
 -- Syncs the vim continuation indentation with shiftwidth
-vim.g.vim_indent_cont = vim.o.shiftwidth
+vim.g.vim_indent_cont = vim.opt.shiftwidth
 
 -- Special characters
 vim.opt.list = true
@@ -101,10 +101,10 @@ vim.opt.fillchars = {
   foldopen = "⏷",
   foldclose = "⏵"
 }
-vim.o.foldcolumn = "1"
-vim.o.foldlevel = 99
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true
+vim.opt.foldcolumn = "1"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 -- }}}
 
 -- Highlight on yank {{{
@@ -151,7 +151,7 @@ au.group("GitMessageLength", {
   FileType = {
     pattern = "gitcommit",
     function()
-      vim.o.colorcolumn = "72"
+      vim.opt.colorcolumn = "72"
     end,
   },
 })
