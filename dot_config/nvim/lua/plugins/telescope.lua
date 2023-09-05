@@ -1,8 +1,8 @@
 local keymap = require("core.keymap")
 
 local function make_picker(o)
-  local actions = require("telescope.actions")
   local function attach_mappings(_, map)
+    local actions = require("telescope.actions")
     map("i", "<C-a>", { type = "command", "<Home>" })
     map("i", "<C-e>", { type = "command", "<End>" })
     map({ "n", "i" }, "<Tab>", actions.toggle_selection)
@@ -15,6 +15,7 @@ local function make_picker(o)
     end
     return true
   end
+
   return function()
     return o[1]{
       attach_mappings = attach_mappings,
@@ -35,14 +36,38 @@ return {
       },
     },
     opts = {},
-    keys = function()
-      local builtin = require("telescope.builtin")
-      return {
-        keymap.mapping{ "n", "<Space>ff", make_picker{ builtin.find_files } },
-        keymap.mapping{ "n", "<Space>fb", make_picker{ builtin.buffers } },
-        keymap.mapping{ "n", "<Space>fh", make_picker{ builtin.help_tags } },
-      }
-    end,
+    keys = {
+      keymap.mapping{
+        "n",
+        "<Space>ff",
+        make_picker{
+          function(...)
+            local builtin = require("telescope.builtin")
+            return builtin.find_files(...)
+          end
+        },
+      },
+      keymap.mapping{
+        "n",
+        "<Space>fb",
+        make_picker{
+          function(...)
+            local builtin = require("telescope.builtin")
+            return builtin.buffers(...)
+          end
+        },
+      },
+      keymap.mapping{
+        "n",
+        "<Space>fh",
+        make_picker{
+          function(...)
+            local builtin = require("telescope.builtin")
+            return builtin.help_tags(...)
+          end
+        },
+      },
+    },
   },
   {
     "nvim-telescope/telescope-file-browser.nvim",
@@ -50,43 +75,49 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
     },
-    keys = function()
-      local fb = require("telescope").extensions.file_browser
-      return {
-        keymap.mapping{ "n", "<Space>fs", make_picker{ fb.file_browser } },
-      }
-    end,
+    keys = {
+      keymap.mapping{
+        "n",
+        "<Space>fs",
+        make_picker{
+          function(...)
+            local fb = require("telescope").extensions.file_browser
+            return fb.file_browser(...)
+          end
+        }
+      },
+    }
   },
   {
     "nvim-telescope/telescope-live-grep-args.nvim",
     dependencies = {
       "nvim-telescope/telescope.nvim",
     },
-    keys = function()
-      local lga = require("telescope").extensions.live_grep_args
-      local action_state = require("telescope.actions.state")
-      local function quote_prompt(bufnr)
-        local picker = action_state.get_current_picker(bufnr)
-        local prompt = picker:_get_prompt()
-        prompt = vim.trim(prompt)
-        prompt = "-- \"" .. prompt:gsub("\"", "\\\"") .. "\""
-        picker:set_prompt(prompt)
-        vim.cmd.normal{ "I", bang = true }
-      end
+    keys = {
+      keymap.mapping{
+        "n",
+        "<Space>fg",
+        make_picker{
+          function(...)
+            local lga = require("telescope").extensions.live_grep_args
+            return lga.live_grep_args(...)
+          end,
+          mappings = function(map)
+            local function quote_prompt(bufnr)
+              local action_state = require("telescope.actions.state")
+              local picker = action_state.get_current_picker(bufnr)
+              local prompt = picker:_get_prompt()
+              prompt = vim.trim(prompt)
+              prompt = "-- \"" .. prompt:gsub("\"", "\\\"") .. "\""
+              picker:set_prompt(prompt)
+              vim.cmd.normal{ "I", bang = true }
+            end
 
-      return {
-        keymap.mapping{
-          "n",
-          "<Space>fg",
-          make_picker{
-            lga.live_grep_args,
-            mappings = function(map)
-              map("i", "<C-k>", quote_prompt)
-            end,
-          }
-        }
-      }
-    end,
+            map("i", "<C-k>", quote_prompt)
+          end,
+        },
+      },
+    },
   },
   {
     "stevearc/aerial.nvim",
@@ -95,11 +126,16 @@ return {
       { "nvim-treesitter/nvim-treesitter", optional = true },
     },
     opts = {},
-    keys = function()
-      local aerial = require("telescope").extensions.aerial
-      return {
-        keymap.mapping{ "n", "<Space>fo", make_picker{ aerial.aerial } }
-      }
-    end,
+    keys = {
+      keymap.mapping{ "n",
+        "<Space>fo",
+        make_picker{
+          function(...)
+            local aerial = require("telescope").extensions.aerial
+            aerial.aerial(...)
+          end,
+        },
+      },
+    },
   },
 }

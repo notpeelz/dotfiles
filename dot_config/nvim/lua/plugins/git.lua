@@ -6,7 +6,7 @@ return {
     "lewis6991/gitsigns.nvim",
     opts = {
       on_attach = function(bufnr)
-        local gs = package.loaded.gitsigns
+        local gs = require("gitsigns")
         local map = function(...) keymap.map_buf(bufnr, ...) end
 
         map("n", "]c", function()

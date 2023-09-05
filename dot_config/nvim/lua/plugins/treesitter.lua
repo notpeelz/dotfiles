@@ -105,11 +105,14 @@ return {
       zindex = 20,
       on_attach = nil,
     },
-    keys = function()
-      local ctx = require("treesitter-context")
-      return {
-        keymap.mapping{ "n", "[p", ctx.go_to_context },
-      }
-    end,
+    keys = {
+      keymap.mapping{ "n",
+        "[p",
+        function(...)
+          local ctx = require("treesitter-context")
+          return ctx.go_to_context(...)
+        end,
+      },
+    },
   },
 }
