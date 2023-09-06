@@ -1,7 +1,8 @@
 local keymap = require("core.keymap")
+local au = require("core.au")
 
 local instance = nil
-function get()
+function get_or_create_term()
   local Terminal = require("toggleterm.terminal").Terminal
   instance = instance or Terminal:new({
     direction = "float",
@@ -23,22 +24,27 @@ function get()
   return instance
 end
 
-local lazyterm = {}
-setmetatable(lazyterm, {
-  __index = function(_, k)
-    return get()[k]
-  end,
-})
-
 return {
   {
     "akinsho/toggleterm.nvim",
+    init = function()
+      au.group("FloatTermUnfocus", {
+        WinLeave = function(e)
+          if instance == nil or e.buf ~= instance.bufnr then
+            return
+          end
+
+          instance:close()
+        end
+      })
+    end,
     keys = {
       keymap.mapping{
         { "n", "t" },
         "<C-t>",
         function()
-          lazyterm:toggle()
+          local term = get_or_create_term()
+          term:toggle()
         end,
       }
     }
