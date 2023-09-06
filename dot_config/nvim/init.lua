@@ -139,9 +139,9 @@ end
 
 -- Signcolumn {{{
 au.group("AutoSignColumn", {
-  BufWinEnter = function()
-    local config = vim.api.nvim_win_get_config(0)
-    vim.opt.signcolumn = config.buftype ~= "nofile" and "yes:1" or "no"
+  BufWinEnter = function(e)
+    local buftype = vim.api.nvim_buf_get_option(e.buf, "buftype")
+    vim.opt.signcolumn = buftype == "" and "yes:1" or "no"
   end
 })
 -- }}}
