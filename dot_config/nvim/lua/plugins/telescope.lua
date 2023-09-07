@@ -123,7 +123,7 @@ return {
     "stevearc/aerial.nvim",
     dependencies = {
       "nvim-telescope/telescope.nvim",
-      { "nvim-treesitter/nvim-treesitter", optional = true },
+      "nvim-treesitter/nvim-treesitter",
     },
     opts = {},
     keys = {

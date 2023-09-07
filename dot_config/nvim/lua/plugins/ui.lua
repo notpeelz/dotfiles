@@ -15,7 +15,7 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     dependencies = {
-      { "navarasu/onedark.nvim", optional = true },
+      "navarasu/onedark.nvim",
     },
     opts = {
       options = {
@@ -48,9 +48,6 @@ return {
   },
   {
     "luukvbaal/statuscol.nvim",
-    dependencies = {
-      { "navarasu/onedark.nvim", optional = true },
-    },
     config = function()
       local builtin = require("statuscol.builtin")
       require("statuscol").setup({
@@ -69,6 +66,27 @@ return {
           { text = { builtin.foldfunc, " " }, click = "v:lua.ScFa" },
         },
       })
+    end,
+  },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {
+      use_treesitter = true,
+      indent = {
+        priority = 12,
+      },
+      buftype_exclude = {
+        "terminal"
+      },
+      filetype_exclude = {
+        "help",
+      },
+    },
+    cond = function()
+      return vim.g.vscode == nil
     end,
   },
 }

@@ -115,35 +115,4 @@ return {
       },
     },
   },
-  {
-    "kevinhwang91/nvim-ufo",
-    lazy = false,
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "kevinhwang91/promise-async",
-      { "luukvbaal/statuscol.nvim", optional = true },
-    },
-    keys = {
-      keymap.mapping{
-        "n",
-        "zR",
-        function()
-          require("ufo").openAllFolds()
-        end,
-      },
-      keymap.mapping{
-        "n",
-        "zM",
-        function()
-          require("ufo").closeAllFolds()
-        end,
-      },
-    },
-    opts = {
-      event = "BufReadPost",
-      provider_selector = function(bufnr, filetype, buftype)
-        return { "treesitter", "indent" }
-      end,
-    },
-  },
 }

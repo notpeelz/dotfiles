@@ -3,10 +3,6 @@ local keymap = require("core.keymap")
 return {
   "editorconfig/editorconfig-vim",
   {
-    "kylechui/nvim-surround",
-    opts = {},
-  },
-  {
     "lambdalisue/suda.vim",
     config = function()
       local cmds = {
@@ -37,7 +33,12 @@ return {
     end,
   },
   {
+    "kylechui/nvim-surround",
+    opts = {},
+  },
+  {
     "inkarkat/vim-ReplaceWithRegister",
+    lazy = false,
     keys = {
       keymap.mapping{ "n", "r", "<nop>" },
       keymap.mapping{ "x", "r", "<nop>" },
@@ -49,7 +50,41 @@ return {
     },
   },
   {
+    "kevinhwang91/nvim-ufo",
+    lazy = false,
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "kevinhwang91/promise-async",
+      "luukvbaal/statuscol.nvim",
+    },
+    keys = {
+      keymap.mapping{
+        "n",
+        "zR",
+        function()
+          require("ufo").openAllFolds()
+        end,
+      },
+      keymap.mapping{
+        "n",
+        "zM",
+        function()
+          require("ufo").closeAllFolds()
+        end,
+      },
+    },
+    opts = {
+      event = "BufReadPost",
+      provider_selector = function(bufnr, filetype, buftype)
+        return { "treesitter", "indent" }
+      end,
+    },
+  },
+  {
     "numToStr/Comment.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
     tag = (function()
       if vim.fn.has("nvim-0.7") == 0 then
         return "v0.6"
@@ -59,23 +94,5 @@ return {
       basic = true,
       extended = true,
     },
-  },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    opts = {
-      use_treesitter = true,
-      indent = {
-        priority = 12,
-      },
-      buftype_exclude = {
-        "terminal"
-      },
-      filetype_exclude = {
-        "help",
-      },
-    },
-    cond = function()
-      return vim.g.vscode == nil
-    end,
   },
 }
