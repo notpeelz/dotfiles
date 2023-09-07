@@ -95,4 +95,10 @@ return {
       extended = true,
     },
   },
+  {
+    "andymass/vim-matchup",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+  },
 }
