@@ -101,4 +101,14 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
   },
+  {
+    "windwp/nvim-autopairs",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    event = "InsertEnter",
+    opts = {
+      check_ts = true,
+    },
+  },
 }
