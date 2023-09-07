@@ -2,6 +2,7 @@ local keymap = require("core.keymap")
 
 return {
   "editorconfig/editorconfig-vim",
+  "lbrayner/vim-rzip",
   {
     "lambdalisue/suda.vim",
     config = function()
