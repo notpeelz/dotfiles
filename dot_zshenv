@@ -1,5 +1,15 @@
 # vim:ft=zsh foldmethod=marker
 
+# Source environment.d {{{
+set -a
+if [[ -z "${ENVIRONMENTD_SOURCED:-}" ]]; then
+  for f in "${XDG_CONFIG_HOME:-$HOME/.config}/environment.d/"*.conf; do
+    source "$f"
+  done
+fi
+set +a
+# }}}
+
 # EDITOR {{{
 if command -v nvim &>/dev/null; then
   export EDITOR=nvim
