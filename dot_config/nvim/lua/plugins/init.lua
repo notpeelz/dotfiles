@@ -4,6 +4,17 @@ return {
   "editorconfig/editorconfig-vim",
   "lbrayner/vim-rzip",
   {
+    "samjwill/nvim-unception",
+    init = function()
+      vim.g.unception_open_buffer_in_new_tab = true
+      vim.g.unception_enable_flavor_text = false
+    end,
+    cond = function()
+      -- unception doesn't play nice with fugitive's interactive rebase
+      return os.getenv("GIT_EXEC_PATH") == nil
+    end,
+  },
+  {
     "lambdalisue/suda.vim",
     config = function()
       local cmds = {

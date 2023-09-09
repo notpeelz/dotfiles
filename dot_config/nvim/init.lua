@@ -221,6 +221,129 @@ keymap.map("v", ">", ">gv")
 keymap.map("n", ";;", ":.,$s~~~cg<Left><Left><Left><Left>", { silent = false })
 -- }}}
 
+-- Floating term {{{
+do
+  local function percentbbox(h, w)
+    local row, col, height, width
+    if h <= 1 then
+      row = math.floor(vim.o.lines / 2 * (1 - h)) - 1
+      height = math.floor(vim.o.lines * h)
+    else
+      row = math.floor(vim.o.lines / 2 - h / 2) - 1
+      height = h
+    end
+
+    if w <= 1 then
+      col = math.floor(vim.o.columns / 2 * (1 - w))
+      width = math.floor(vim.o.columns * w)
+    else
+      col = math.floor(vim.o.columns / 2 - w / 2)
+      width = w
+    end
+    return row, col, height, width
+  end
+
+  local instance = {}
+  function get_or_create_term_buf()
+    if instance.bufnr == nil then
+      assert(instance.winid == nil, "terminal window wasn't cleaned up properly")
+      assert(instance.termid == nil, "terminal job wasn't cleaned up properly")
+
+      local bufnr = vim.api.nvim_create_buf(true, false)
+      local termid = vim.api.nvim_buf_call(bufnr, function()
+        vim.fn.termopen({ vim.o.shell, "-l" }, {
+          detach = 1,
+          on_exit = function()
+            instance.termid = nil
+            if instance == nil then
+              return
+            end
+
+            if instance.winid ~= nil
+              and instance.bufnr ~= nil
+              and vim.api.nvim_win_get_buf(instance.winid) == instance.bufnr
+            then
+              vim.api.nvim_win_close(instance.winid, true)
+              instance.winid = nil
+            end
+
+            if instance.bufnr ~= nil then
+              vim.api.nvim_buf_delete(instance.bufnr, {
+                force = true,
+              })
+              instance.bufnr = nil
+            end
+          end,
+        })
+      end)
+
+      instance = {
+        bufnr = bufnr,
+      }
+    end
+    return instance.bufnr
+  end
+
+  au.group("FloatTerm", {
+    BufDelete = function(e)
+      if instance.bufnr == nil then
+        return
+      end
+      local bufnr = tonumber(e.buf)
+      if bufnr == instance.bufnr then
+        instance.bufnr = nil
+      end
+    end,
+    WinClosed = function()
+      if instance.winid == nil then
+        return
+      end
+
+      if not vim.api.nvim_win_is_valid(instance.winid) then
+        instance.winid = nil
+      end
+    end,
+    WinLeave = function()
+      local winid = vim.api.nvim_get_current_win()
+      if instance.winid == nil then
+        return
+      end
+
+      if winid == instance.winid then
+        vim.api.nvim_win_close(instance.winid, true)
+        instance.winid = nil
+      end
+    end,
+  })
+
+  keymap.map({ "", "t" }, "<C-t>", function()
+    local bufnr = get_or_create_term_buf()
+    if instance.winid ~= nil then
+      vim.api.nvim_win_close(instance.winid, true)
+      instance.winid = nil
+    else
+      local row, col, height, width = percentbbox(0.8, 0.8)
+      instance.winid = vim.api.nvim_open_win(bufnr, true, {
+        relative = "editor",
+        row = row,
+        col = col,
+        width = width,
+        height = height,
+        focusable = true,
+        style = "minimal",
+        border = "rounded",
+      })
+      vim.api.nvim_set_option_value(
+        "winhighlight",
+        "FloatBorder:TelescopePromptBorder,NormalFloat:Normal",
+        { win = instance.winid }
+      )
+      vim.cmd.startinsert{ bang = true }
+    end
+  end)
+end
+-- }}}
+
 -- Synchronize shell working directory on exit {{{
 au.group("UpdateParentShellPwd", {
   ExitPre = function(e)
