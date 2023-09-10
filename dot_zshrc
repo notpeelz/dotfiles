@@ -227,35 +227,6 @@ ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
 
 bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 
-# Load compinit {{{
-if [[ ! -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" ]]; then
-  mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
-fi
-fpath+=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc")
-
-autoload -Uz compinit
-autoload -U bashcompinit
-# XXX: the folder needs to exist otherwise compinit won't create the file
-mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
-bashcompinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/bashcompdump-$ZSH_VERSION"
-# }}}
-
-# dotnet {{{
-_dotnet_zsh_complete() {
-  local completions=("$(dotnet complete "$words")")
-
-  if [[ -z "$completions" ]]; then
-    _arguments '*::arguments: _normal'
-    return
-  fi
-
-  _values = "${(ps:\n:)completions}"
-}
-
-compdef _dotnet_zsh_complete dotnet
-# }}}
-
 # rustup {{{
 if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup" ]] && type rustup &>/dev/null; then
   (
@@ -268,18 +239,30 @@ fi
 
 # cargo {{{
 if type rustc &>/dev/null; then
-  fpath+=("$(rustc --print sysroot)/share/zsh/site-functions")
+  fpath=("$(rustc --print sysroot)/share/zsh/site-functions" "${fpath[@]}")
 fi
 # }}}
 
 # asdf {{{
 if type asdf &>/dev/null; then
-  fpath+=("${ASDF_DIR}/completions")
+  fpath=("${ASDF_DIR}/completions" "${fpath[@]}")
 fi
 # }}}
 
-# Cache completions
-compdump
+# Load compinit {{{
+if [[ ! -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" ]]; then
+  mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
+fi
+fpath=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" "${fpath[@]}")
+
+# XXX: any modification to fpath must be done before loading compinit
+autoload -Uz compinit
+autoload -U bashcompinit
+# XXX: the folder needs to exist otherwise compinit won't create the file
+mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+bashcompinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/bashcompdump-$ZSH_VERSION"
+# }}}
 # }}}
 
 # Fuzzy up/down completion {{{
