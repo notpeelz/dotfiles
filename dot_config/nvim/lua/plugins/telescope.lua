@@ -70,25 +70,6 @@ return {
     },
   },
   {
-    "nvim-telescope/telescope-file-browser.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
-    },
-    keys = {
-      keymap.mapping{
-        "n",
-        "<Space>fs",
-        make_picker{
-          function(...)
-            local fb = require("telescope").extensions.file_browser
-            return fb.file_browser(...)
-          end
-        }
-      },
-    }
-  },
-  {
     "nvim-telescope/telescope-live-grep-args.nvim",
     dependencies = {
       "nvim-telescope/telescope.nvim",
