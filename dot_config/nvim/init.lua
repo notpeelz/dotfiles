@@ -137,7 +137,9 @@ end
 au.group("AutoSignColumn", {
   BufWinEnter = function(e)
     local buftype = vim.api.nvim_buf_get_option(e.buf, "buftype")
-    vim.opt.signcolumn = buftype == "" and "yes:1" or "no"
+    vim.opt.signcolumn = (buftype == "" or buftype == "acwrite")
+      and "yes:1"
+      or "no"
   end
 })
 -- }}}
