@@ -115,6 +115,14 @@ au.group("HighlightOnYank", {
 })
 -- }}}
 
+-- Disable the annoying readonly warning {{{
+au.group("NoReadonly", {
+  BufEnter = function()
+    vim.opt_local.ro = false
+  end,
+})
+-- }}}
+
 -- Clipboard {{{
 do
   local uname = vim.loop.os_uname()
