@@ -231,7 +231,6 @@ bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup" ]] && type rustup &>/dev/null; then
   (
     # XXX: rustup looks for rust-toolchain.toml and tries to install it
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
     cd "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
     rustup completions zsh > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup"
   )
@@ -245,16 +244,11 @@ fi
 # }}}
 
 # Load compinit {{{
-if [[ ! -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" ]]; then
-  mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
-fi
 fpath=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" "${fpath[@]}")
 
 # XXX: any modification to fpath must be done before loading compinit
 autoload -Uz compinit
 autoload -U bashcompinit
-# XXX: the folder needs to exist otherwise compinit won't create the file
-mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
 bashcompinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/bashcompdump-$ZSH_VERSION"
 # }}}
