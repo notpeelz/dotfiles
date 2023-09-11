@@ -231,6 +231,7 @@ bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup" ]] && type rustup &>/dev/null; then
   (
     # XXX: rustup looks for rust-toolchain.toml and tries to install it
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
     cd "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
     rustup completions zsh > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup"
   )
@@ -240,12 +241,6 @@ fi
 # cargo {{{
 if type rustc &>/dev/null; then
   fpath=("$(rustc --print sysroot)/share/zsh/site-functions" "${fpath[@]}")
-fi
-# }}}
-
-# asdf {{{
-if type asdf &>/dev/null; then
-  fpath=("${ASDF_DIR}/completions" "${fpath[@]}")
 fi
 # }}}
 
@@ -416,5 +411,43 @@ add-zsh-hook -Uz chpwd() {
 
 }
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# powerlevel10k config {{{
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# configure p10k to use rtx instead of asdf
+# https://github.com/romkatv/powerlevel10k/issues/2212#issuecomment-1685084366
+() {
+  function prompt_rtx() {
+    local plugins=("${(@f)$(rtx ls --current 2>/dev/null | awk '!/\(symlink\)/ && $3!="~/.tool-versions" && $3!="~/.config/rtx/config.toml" {print $1, $2}')}")
+    local plugin
+    for plugin in ${(k)plugins}; do
+      local parts=("${(@s/ /)plugin}")
+      local tool=${(U)parts[1]}
+      local version=${parts[2]}
+      p10k segment -r -i "${tool}_ICON" -s $tool -t "$version"
+    done
+  }
+
+  typeset -g POWERLEVEL9K_RTX_FOREGROUND=6
+
+  typeset -g POWERLEVEL9K_RTX_RUBY_FOREGROUND=1
+  typeset -g POWERLEVEL9K_RTX_PYTHON_FOREGROUND=6
+  typeset -g POWERLEVEL9K_RTX_GOLANG_FOREGROUND=6
+  typeset -g POWERLEVEL9K_RTX_NODEJS_FOREGROUND=2
+  typeset -g POWERLEVEL9K_RTX_RUST_FOREGROUND=4
+  typeset -g POWERLEVEL9K_RTX_DOTNET_CORE_FOREGROUND=5
+  typeset -g POWERLEVEL9K_RTX_FLUTTER_FOREGROUND=4
+  typeset -g POWERLEVEL9K_RTX_LUA_FOREGROUND=4
+  typeset -g POWERLEVEL9K_RTX_JAVA_FOREGROUND=4
+  typeset -g POWERLEVEL9K_RTX_PERL_FOREGROUND=6
+  typeset -g POWERLEVEL9K_RTX_ERLANG_FOREGROUND=1
+  typeset -g POWERLEVEL9K_RTX_ELIXIR_FOREGROUND=5
+  typeset -g POWERLEVEL9K_RTX_POSTGRES_FOREGROUND=6
+  typeset -g POWERLEVEL9K_RTX_PHP_FOREGROUND=5
+  typeset -g POWERLEVEL9K_RTX_HASKELL_FOREGROUND=3
+  typeset -g POWERLEVEL9K_RTX_JULIA_FOREGROUND=2
+
+  # Substitute the default asdf prompt element
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/rtx}")
+}
+# }}}

@@ -25,9 +25,3 @@
 [submodule "dot_local/share/zsh/plugins/external_powerlevel10k"]
 	path = dot_local/share/zsh/plugins/external_powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
-[submodule "dot_local/share/asdf/plugins/external_nodejs"]
-	path = dot_local/share/asdf/plugins/external_nodejs
-	url = https://github.com/asdf-vm/asdf-nodejs.git
-[submodule "dot_local/share/zsh/plugins/external_asdf"]
-	path = dot_local/share/zsh/plugins/external_asdf
-	url = https://github.com/asdf-vm/asdf.git

@@ -20,12 +20,13 @@ elif command -v nano &>/dev/null; then
 fi
 # }}}
 
-# asdf {{{
-export ASDF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/asdf"
-export ASDF_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/asdf"
-export ASDF_CONFIG_FILE="${XDG_CONFIG_HOME-$HOME/.config}/asdf/asdf.conf"
-export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY="latest_available"
-. "$ASDF_DIR/asdf.sh"
+# rtx {{{
+if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx" ]] && type rtx &>/dev/null; then
+  rtx activate > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx"
+fi
+if [[ -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx"
+fi
 # }}}
 
 # PATH {{{
