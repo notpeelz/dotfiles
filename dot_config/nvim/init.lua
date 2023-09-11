@@ -3,7 +3,7 @@
 local au = require("core.au")
 local keymap = require("core.keymap")
 
-vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")
+vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/plugins/lazy.nvim")
 require("lazy").setup(
   {
     { import = "plugins" },

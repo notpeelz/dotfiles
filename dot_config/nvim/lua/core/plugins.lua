@@ -1,6 +1,6 @@
 local function get_plugin_path(spec)
   return string.format(
-    "%s/lazy/%s",
+    "%s/plugins/%s",
     vim.fn.stdpath("data"),
     spec[1] or spec.dir or spec.name
   )
