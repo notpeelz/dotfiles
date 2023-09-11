@@ -25,3 +25,126 @@
 [submodule "dot_local/share/zsh/plugins/external_powerlevel10k"]
 	path = dot_local/share/zsh/plugins/external_powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
+[submodule "dot_local/share/nvim/lazy/external_aerial.nvim"]
+	path = dot_local/share/nvim/lazy/external_aerial.nvim
+	url = https://github.com/stevearc/aerial.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_comment.nvim"]
+	path = dot_local/share/nvim/lazy/external_comment.nvim
+	url = https://github.com/numToStr/Comment.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_gitsigns.nvim"]
+	path = dot_local/share/nvim/lazy/external_gitsigns.nvim
+	url = https://github.com/lewis6991/gitsigns.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_indent-blankline.nvim"]
+	path = dot_local/share/nvim/lazy/external_indent-blankline.nvim
+	url = https://github.com/lukas-reineke/indent-blankline.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_lazy.nvim"]
+	path = dot_local/share/nvim/lazy/external_lazy.nvim
+	url = https://github.com/folke/lazy.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_lualine.nvim"]
+	path = dot_local/share/nvim/lazy/external_lualine.nvim
+	url = https://github.com/nvim-lualine/lualine.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_nvim-autopairs"]
+	path = dot_local/share/nvim/lazy/external_nvim-autopairs
+	url = https://github.com/windwp/nvim-autopairs.git
+[submodule "dot_local/share/nvim/lazy/external_nvim-surround"]
+	path = dot_local/share/nvim/lazy/external_nvim-surround
+	url = https://github.com/kylechui/nvim-surround.git
+[submodule "dot_local/share/nvim/lazy/external_nvim-treesitter"]
+	path = dot_local/share/nvim/lazy/external_nvim-treesitter
+	url = https://github.com/nvim-treesitter/nvim-treesitter.git
+[submodule "dot_local/share/nvim/lazy/external_nvim-treesitter-context"]
+	path = dot_local/share/nvim/lazy/external_nvim-treesitter-context
+	url = https://github.com/nvim-treesitter/nvim-treesitter-context.git
+[submodule "dot_local/share/nvim/lazy/external_nvim-treesitter-textobjects"]
+	path = dot_local/share/nvim/lazy/external_nvim-treesitter-textobjects
+	url = https://github.com/nvim-treesitter/nvim-treesitter-textobjects.git
+[submodule "dot_local/share/nvim/lazy/external_nvim-ufo"]
+	path = dot_local/share/nvim/lazy/external_nvim-ufo
+	url = https://github.com/kevinhwang91/nvim-ufo.git
+[submodule "dot_local/share/nvim/lazy/external_nvim-unception"]
+	path = dot_local/share/nvim/lazy/external_nvim-unception
+	url = https://github.com/samjwill/nvim-unception.git
+[submodule "dot_local/share/nvim/lazy/external_onedark.nvim"]
+	path = dot_local/share/nvim/lazy/external_onedark.nvim
+	url = https://github.com/navarasu/onedark.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_plenary.nvim"]
+	path = dot_local/share/nvim/lazy/external_plenary.nvim
+	url = https://github.com/nvim-lua/plenary.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_promise-async"]
+	path = dot_local/share/nvim/lazy/external_promise-async
+	url = https://github.com/kevinhwang91/promise-async.git
+[submodule "dot_local/share/nvim/lazy/external_statuscol.nvim"]
+	path = dot_local/share/nvim/lazy/external_statuscol.nvim
+	url = https://github.com/luukvbaal/statuscol.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_suda.vim"]
+	path = dot_local/share/nvim/lazy/external_suda.vim
+	url = https://github.com/lambdalisue/suda.vim.git
+[submodule "dot_local/share/nvim/lazy/external_telescope-live-grep-args.nvim"]
+	path = dot_local/share/nvim/lazy/external_telescope-live-grep-args.nvim
+	url = https://github.com/nvim-telescope/telescope-live-grep-args.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_telescope.nvim"]
+	path = dot_local/share/nvim/lazy/external_telescope.nvim
+	url = https://github.com/nvim-telescope/telescope.nvim.git
+[submodule "dot_local/share/nvim/lazy/external_vim-fugitive"]
+	path = dot_local/share/nvim/lazy/external_vim-fugitive
+	url = https://github.com/tpope/vim-fugitive.git
+[submodule "dot_local/share/nvim/lazy/external_vim-kitty"]
+	path = dot_local/share/nvim/lazy/external_vim-kitty
+	url = https://github.com/fladson/vim-kitty.git
+[submodule "dot_local/share/nvim/lazy/external_vim-matchup"]
+	path = dot_local/share/nvim/lazy/external_vim-matchup
+	url = https://github.com/andymass/vim-matchup.git
+[submodule "dot_local/share/nvim/lazy/external_vim-ReplaceWithRegister"]
+	path = dot_local/share/nvim/lazy/external_vim-ReplaceWithRegister
+	url = https://github.com/inkarkat/vim-ReplaceWithRegister.git
+[submodule "dot_local/share/nvim/lazy/external_vim-rzip"]
+	path = dot_local/share/nvim/lazy/external_vim-rzip
+	url = https://github.com/lbrayner/vim-rzip.git
+[submodule "external_aerial.nvim"]
+	branch = master
+[submodule "external_comment.nvim"]
+	branch = master
+[submodule "external_gitsigns.nvim"]
+	branch = main
+[submodule "external_indent-blankline.nvim"]
+	branch = master
+[submodule "external_lazy.nvim"]
+	branch = stable
+[submodule "external_nvim-autopairs"]
+	branch = master
+[submodule "external_nvim-surround"]
+	branch = main
+[submodule "external_nvim-treesitter"]
+	branch = master
+[submodule "external_nvim-treesitter-context"]
+	branch = master
+[submodule "external_nvim-treesitter-textobjects"]
+	branch = master
+[submodule "external_nvim-ufo"]
+	branch = main
+[submodule "external_nvim-unception"]
+	branch = main
+[submodule "external_onedark.nvim"]
+	branch = master
+[submodule "external_plenary.nvim"]
+	branch = master
+[submodule "external_promise-async"]
+	branch = main
+[submodule "external_statuscol.nvim"]
+	branch = main
+[submodule "external_suda.vim"]
+	branch = master
+[submodule "external_telescope-live-grep-args.nvim"]
+	branch = master
+[submodule "external_telescope.nvim"]
+	branch = master
+[submodule "external_vim-fugitive"]
+	branch = master
+[submodule "external_vim-kitty"]
+	branch = main
+[submodule "external_vim-matchup"]
+	branch = master
+[submodule "external_vim-ReplaceWithRegister"]
+	branch = master
+[submodule "external_vim-rzip"]
+	branch = master

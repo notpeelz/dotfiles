@@ -1,4 +1,5 @@
 local keymap = require("core.keymap")
+local plugins = require("core.plugins")
 
 local function make_picker(o)
   local function attach_mappings(_, map)
@@ -23,11 +24,11 @@ local function make_picker(o)
   end
 end
 
-return {
+return plugins{
   {
-    "nvim-telescope/telescope.nvim",
+    "telescope.nvim",
     dependencies = {
-      "nvim-lua/plenary.nvim",
+      "plenary.nvim",
     },
     extensions = {
       aerial = {},
@@ -70,9 +71,9 @@ return {
     },
   },
   {
-    "nvim-telescope/telescope-live-grep-args.nvim",
+    "telescope-live-grep-args.nvim",
     dependencies = {
-      "nvim-telescope/telescope.nvim",
+      "telescope.nvim",
     },
     keys = {
       keymap.mapping{
@@ -101,10 +102,10 @@ return {
     },
   },
   {
-    "stevearc/aerial.nvim",
+    "aerial.nvim",
     dependencies = {
-      "nvim-telescope/telescope.nvim",
-      "nvim-treesitter/nvim-treesitter",
+      "telescope.nvim",
+      "nvim-treesitter",
     },
     opts = {},
     keys = {

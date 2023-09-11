@@ -1,10 +1,10 @@
 local keymap = require("core.keymap")
+local plugins = require("core.plugins")
 
-return {
-  "editorconfig/editorconfig-vim",
-  "lbrayner/vim-rzip",
+return plugins{
+  "vim-rzip",
   {
-    "samjwill/nvim-unception",
+    "nvim-unception",
     init = function()
       vim.g.unception_open_buffer_in_new_tab = true
       vim.g.unception_enable_flavor_text = false
@@ -15,7 +15,7 @@ return {
     end,
   },
   {
-    "lambdalisue/suda.vim",
+    "suda.vim",
     config = function()
       local cmds = {
         { "W", "write" },
@@ -45,11 +45,11 @@ return {
     end,
   },
   {
-    "kylechui/nvim-surround",
+    "nvim-surround",
     opts = {},
   },
   {
-    "inkarkat/vim-ReplaceWithRegister",
+    "vim-ReplaceWithRegister",
     lazy = false,
     keys = {
       keymap.mapping{ "n", "r", "<nop>" },
@@ -62,12 +62,12 @@ return {
     },
   },
   {
-    "kevinhwang91/nvim-ufo",
+    "nvim-ufo",
     lazy = false,
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "kevinhwang91/promise-async",
-      "luukvbaal/statuscol.nvim",
+      "nvim-treesitter",
+      "promise-async",
+      "statuscol.nvim",
     },
     keys = {
       keymap.mapping{
@@ -93,9 +93,9 @@ return {
     },
   },
   {
-    "numToStr/Comment.nvim",
+    "comment.nvim",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter",
     },
     tag = (function()
       if vim.fn.has("nvim-0.7") == 0 then
@@ -108,15 +108,15 @@ return {
     },
   },
   {
-    "andymass/vim-matchup",
+    "vim-matchup",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter",
     },
   },
   {
-    "windwp/nvim-autopairs",
+    "nvim-autopairs",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter",
     },
     event = "InsertEnter",
     opts = {

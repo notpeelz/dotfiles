@@ -1,8 +1,9 @@
 local keymap = require("core.keymap")
+local plugins = require("core.plugins")
 
-return {
+return plugins{
   {
-    "nvim-treesitter/nvim-treesitter",
+    "nvim-treesitter",
     build = ":TSUpdate",
     main = "nvim-treesitter.configs",
     opts = {
@@ -82,16 +83,16 @@ return {
     },
   },
   {
-    "nvim-treesitter/nvim-treesitter-textobjects",
+    "nvim-treesitter-textobjects",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter",
     },
   },
   {
-    "nvim-treesitter/nvim-treesitter-context",
+    "nvim-treesitter-context",
     lazy = false,
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter",
     },
     opts = {
       enable = true,

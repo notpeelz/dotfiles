@@ -1,6 +1,8 @@
-return {
+local plugins = require("core.plugins")
+
+return plugins{
   {
-    "navarasu/onedark.nvim",
+    "onedark.nvim",
     event = "VimEnter",
     init = function()
       require("onedark").load()
@@ -13,9 +15,9 @@ return {
     },
   },
   {
-    "nvim-lualine/lualine.nvim",
+    "lualine.nvim",
     dependencies = {
-      "navarasu/onedark.nvim",
+      "onedark.nvim",
     },
     opts = {
       options = {
@@ -47,7 +49,7 @@ return {
     },
   },
   {
-    "luukvbaal/statuscol.nvim",
+    "statuscol.nvim",
     config = function()
       local builtin = require("statuscol.builtin")
       require("statuscol").setup({
@@ -69,9 +71,9 @@ return {
     end,
   },
   {
-    "lukas-reineke/indent-blankline.nvim",
+    "indent-blankline.nvim",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter",
     },
     opts = {
       use_treesitter = true,

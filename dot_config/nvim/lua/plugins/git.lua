@@ -1,9 +1,10 @@
 local keymap = require("core.keymap")
+local plugins = require("core.plugins")
 
-return {
-  "tpope/vim-fugitive",
+return plugins{
+  "vim-fugitive",
   {
-    "lewis6991/gitsigns.nvim",
+    "gitsigns.nvim",
     opts = {
       on_attach = function(bufnr)
         local gs = require("gitsigns")
