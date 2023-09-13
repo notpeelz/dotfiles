@@ -185,8 +185,8 @@ keymap.map("n", "<M-C-Right>", "<Cmd>tabnext<CR>")
 -- }}}
 
 -- Enable emacs-style navigation {{{
-keymap.map({ "c", "n" }, "<C-a>", "<Home>")
-keymap.map({ "c", "n" }, "<C-e>", "<End>")
+keymap.map({ "c", "n", "i" }, "<C-a>", "<Home>")
+keymap.map({ "c", "n", "i" }, "<C-e>", "<End>")
 -- }}}
 
 -- Scrolling {{{
