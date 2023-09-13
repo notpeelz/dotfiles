@@ -31,6 +31,7 @@ return plugins{
         "sql",
         "json",
         "jsonc",
+        "json5",
         "xml",
         "toml",
         "yaml",
