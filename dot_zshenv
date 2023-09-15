@@ -6,13 +6,16 @@ mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
 
 # Source environment.d {{{
-set -a
 if [[ -z "${ENVIRONMENTD_SOURCED:-}" ]]; then
-  for f in "${XDG_CONFIG_HOME:-$HOME/.config}/environment.d/"*.conf; do
-    source "$f"
+  set -a
+  for gen in /usr/lib/systemd/user-environment-generators/*; do
+    if command -v "$gen" &>/dev/null; then
+      source <("$gen")
+    fi
   done
+  set +a
+  export ENVIRONMENTD_SOURCED=zsh
 fi
-set +a
 # }}}
 
 # EDITOR {{{
