@@ -225,6 +225,8 @@ zstyle '*' single-ignored show
 # Replace the completion suffix (final slash of a dir) with a space
 ZLE_SPACE_SUFFIX_CHARS=$'&|'
 
+# Completion binds
+bindkey "${terminfo[ht]}" complete-word
 bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 
 # rustup {{{
