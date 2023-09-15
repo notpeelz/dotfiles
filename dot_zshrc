@@ -248,9 +248,7 @@ fpath=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" "${fpath[@]}")
 
 # XXX: any modification to fpath must be done before loading compinit
 autoload -Uz compinit
-autoload -U bashcompinit
 compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
-bashcompinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/bashcompdump-$ZSH_VERSION"
 # }}}
 # }}}
 
