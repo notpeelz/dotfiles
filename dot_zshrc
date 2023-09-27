@@ -108,8 +108,8 @@ fi
 alias vim='nvim'
 alias vi='nvim'
 
-if command -v exa &>/dev/null; then
-  alias ls='exa --group --git'
+if command -v eza &>/dev/null; then
+  alias ls='eza --group --git'
 fi
 
 # 'sudo vim' -> 'sudoedit'
