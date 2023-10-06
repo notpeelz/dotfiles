@@ -113,14 +113,4 @@ return plugins{
       "nvim-treesitter",
     },
   },
-  {
-    "nvim-autopairs",
-    dependencies = {
-      "nvim-treesitter",
-    },
-    event = "InsertEnter",
-    opts = {
-      check_ts = true,
-    },
-  },
 }

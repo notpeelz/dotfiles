@@ -41,10 +41,6 @@
 [submodule "dot_local/share/nvim/plugins/external_lualine.nvim"]
 	path = dot_local/share/nvim/plugins/external_lualine.nvim
 	url = https://github.com/nvim-lualine/lualine.nvim.git
-[submodule "dot_local/share/nvim/plugins/external_nvim-autopairs"]
-	path = dot_local/share/nvim/plugins/external_nvim-autopairs
-	url = https://github.com/windwp/nvim-autopairs.git
-	branch = master
 [submodule "dot_local/share/nvim/plugins/external_nvim-surround"]
 	path = dot_local/share/nvim/plugins/external_nvim-surround
 	url = https://github.com/kylechui/nvim-surround.git
