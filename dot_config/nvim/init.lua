@@ -114,20 +114,58 @@ au.group("NoReadonly", {
 -- Clipboard {{{
 do
   local uname = vim.loop.os_uname()
+  local wl_display = os.getenv("WAYLAND_DISPLAY")
+  local x_display = os.getenv("DISPLAY")
+
   if uname ~= nil
     and uname.sysname == "Linux"
-    and uname.release:find("microsoft") then
+    and uname.release:find("microsoft")
+  then
     vim.g.clipboard = {
       name = "win32yank-wsl",
       copy = {
         ["+"] = "win32yank.exe -i --crlf",
-        ["*"] = "win32yank.exe -i --crlf",
       },
       paste = {
         ["+"] = "win32yank.exe -o --lf",
-        ["*"] = "win32yank.exe -o --lf",
       },
       cache_enabled = 0,
+    }
+  elseif wl_display ~= nil and wl_display:len() > 0 then
+    vim.g.clipboard = {
+      name = "wayland",
+      copy = {
+        ["+"] = "wl-copy",
+        ["*"] = "true",
+      },
+      paste = {
+        ["+"] = "wl-paste",
+        ["*"] = "true",
+      }
+    }
+  elseif x_display ~= nil and x_display:len() > 0 then
+    vim.g.clipboard = {
+      name = "x11",
+      copy = {
+        ["+"] = "xsel --clipboard -i",
+        ["*"] = "true",
+      },
+      paste = {
+        ["+"] = "xsel --clipboard -o",
+        ["*"] = "true",
+      }
+    }
+  else
+    vim.g.clipboard = {
+      name = "void",
+      copy = {
+        ["+"] = "true",
+        ["*"] = "true",
+      },
+      paste = {
+        ["+"] = "true",
+        ["*"] = "true",
+      }
     }
   end
 end
