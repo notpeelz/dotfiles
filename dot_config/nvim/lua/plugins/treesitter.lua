@@ -6,11 +6,6 @@ return plugins{
     "nvim-treesitter",
     build = ":TSUpdate",
     main = "nvim-treesitter.configs",
-    config = function(plugin, opts)
-      require("nvim-treesitter.configs").setup(opts)
-      -- https://github.com/nvim-treesitter/nvim-treesitter/issues/655#issuecomment-1470096879
-      vim.treesitter.language.register("bash", "zsh")
-    end,
     opts = {
       ensure_installed = {
         "query",
