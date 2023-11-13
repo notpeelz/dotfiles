@@ -17,6 +17,7 @@ return plugins{
         "bash",
         "c",
         "cpp",
+        "vala",
         "rust",
         "zig",
         "lua",
