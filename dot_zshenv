@@ -29,21 +29,10 @@ fi
 # }}}
 
 # rtx {{{
-if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx" ]] && type rtx &>/dev/null; then
-  rtx activate > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx"
-fi
-if [[ -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx" ]]; then
+if type rtx &>/dev/null; then
+  if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx" ]]; then
+    rtx activate > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx"
+  fi
   source "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx"
 fi
-# }}}
-
-# PATH {{{
-# Binaries installed via cargo
-export PATH="$PATH:$CARGO_HOME/bin"
-
-# Binaries installed via dotnet
-export PATH="$PATH:$DOTNET_CLI_HOME/tools"
-
-# User-local binaries should shadow system binaries
-export PATH="$HOME/.local/bin:$PATH"
 # }}}
