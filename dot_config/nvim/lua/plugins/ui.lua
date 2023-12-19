@@ -72,19 +72,13 @@ return plugins{
   },
   {
     "indent-blankline.nvim",
+    main = "ibl",
     dependencies = {
       "nvim-treesitter",
     },
     opts = {
-      use_treesitter = true,
       indent = {
         priority = 12,
-      },
-      buftype_exclude = {
-        "terminal"
-      },
-      filetype_exclude = {
-        "help",
       },
     },
     cond = function()
