@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+
+session_name="$(tmux display-message -p '#S')"
+if [[ "$session_name" == "_popup-"* ]]; then
+  tmux detach-client
+else
+  tmux display-popup -h 80% -w 80% -E -- "$SCRIPT_DIR/popup-init" "$session_name"
+fi
