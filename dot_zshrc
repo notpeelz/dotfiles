@@ -392,6 +392,9 @@ add-zsh-hook -Uz chpwd() {
 # powerlevel10k config {{{
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+typeset -g POWERLEVEL9K_LOCK_ICON='∅'
+typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
+
 # configure p10k to use rtx instead of asdf
 # https://github.com/romkatv/powerlevel10k/issues/2212#issuecomment-1685084366
 () {
