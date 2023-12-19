@@ -229,22 +229,6 @@ ZLE_SPACE_SUFFIX_CHARS=$'&|'
 bindkey "${terminfo[ht]}" complete-word
 bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 
-# rustup {{{
-if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup" ]] && type rustup &>/dev/null; then
-  (
-    # XXX: rustup looks for rust-toolchain.toml and tries to install it
-    cd "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
-    rustup completions zsh > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc/_rustup"
-  )
-fi
-# }}}
-
-# cargo {{{
-if type rustc &>/dev/null; then
-  fpath=("$(rustc --print sysroot)/share/zsh/site-functions" "${fpath[@]}")
-fi
-# }}}
-
 # Load compinit {{{
 fpath=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" "${fpath[@]}")
 
