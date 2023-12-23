@@ -1,5 +1,5 @@
 local plugins = require("core.plugins")
 
 return plugins{
-  "fladson/vim-kitty",
+  "vim-kitty",
 }
