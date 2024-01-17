@@ -28,11 +28,11 @@ elif command -v nano &>/dev/null; then
 fi
 # }}}
 
-# rtx {{{
-if type rtx &>/dev/null; then
-  if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx" ]]; then
-    rtx activate > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx"
+# mise {{{
+if type mise &>/dev/null; then
+  if [[ ! -e "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/mise" ]]; then
+    mise activate > "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/mise"
   fi
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/rtx"
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/mise"
 fi
 # }}}

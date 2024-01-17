@@ -395,11 +395,11 @@ add-zsh-hook -Uz chpwd() {
 typeset -g POWERLEVEL9K_LOCK_ICON='∅'
 typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
 
-# configure p10k to use rtx instead of asdf
+# configure p10k to use mise instead of asdf
 # https://github.com/romkatv/powerlevel10k/issues/2212#issuecomment-1685084366
 () {
-  function prompt_rtx() {
-    local plugins=("${(@f)$(rtx ls --current 2>/dev/null | awk -v RS= '!/\(symlink\)/ && $3!="~/.tool-versions" && $3!="~/.config/rtx/config.toml" {print $1, $2}')}")
+  function prompt_mise() {
+    local plugins=("${(@f)$(mise ls --current 2>/dev/null | awk -v RS= '!/\(symlink\)/ && $3!="~/.tool-versions" && $3!="~/.config/mise/config.toml" {print $1, $2}')}")
     local plugin
     for plugin in ${(k)plugins}; do
       local parts=("${(@s/ /)plugin}")
@@ -409,26 +409,26 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
     done
   }
 
-  typeset -g POWERLEVEL9K_RTX_FOREGROUND=6
+  typeset -g POWERLEVEL9K_MISE_FOREGROUND=6
 
-  typeset -g POWERLEVEL9K_RTX_RUBY_FOREGROUND=1
-  typeset -g POWERLEVEL9K_RTX_PYTHON_FOREGROUND=6
-  typeset -g POWERLEVEL9K_RTX_GOLANG_FOREGROUND=6
-  typeset -g POWERLEVEL9K_RTX_NODEJS_FOREGROUND=2
-  typeset -g POWERLEVEL9K_RTX_RUST_FOREGROUND=4
-  typeset -g POWERLEVEL9K_RTX_DOTNET_CORE_FOREGROUND=5
-  typeset -g POWERLEVEL9K_RTX_FLUTTER_FOREGROUND=4
-  typeset -g POWERLEVEL9K_RTX_LUA_FOREGROUND=4
-  typeset -g POWERLEVEL9K_RTX_JAVA_FOREGROUND=4
-  typeset -g POWERLEVEL9K_RTX_PERL_FOREGROUND=6
-  typeset -g POWERLEVEL9K_RTX_ERLANG_FOREGROUND=1
-  typeset -g POWERLEVEL9K_RTX_ELIXIR_FOREGROUND=5
-  typeset -g POWERLEVEL9K_RTX_POSTGRES_FOREGROUND=6
-  typeset -g POWERLEVEL9K_RTX_PHP_FOREGROUND=5
-  typeset -g POWERLEVEL9K_RTX_HASKELL_FOREGROUND=3
-  typeset -g POWERLEVEL9K_RTX_JULIA_FOREGROUND=2
+  typeset -g POWERLEVEL9K_MISE_RUBY_FOREGROUND=1
+  typeset -g POWERLEVEL9K_MISE_PYTHON_FOREGROUND=6
+  typeset -g POWERLEVEL9K_MISE_GOLANG_FOREGROUND=6
+  typeset -g POWERLEVEL9K_MISE_NODEJS_FOREGROUND=2
+  typeset -g POWERLEVEL9K_MISE_RUST_FOREGROUND=4
+  typeset -g POWERLEVEL9K_MISE_DOTNET_CORE_FOREGROUND=5
+  typeset -g POWERLEVEL9K_MISE_FLUTTER_FOREGROUND=4
+  typeset -g POWERLEVEL9K_MISE_LUA_FOREGROUND=4
+  typeset -g POWERLEVEL9K_MISE_JAVA_FOREGROUND=4
+  typeset -g POWERLEVEL9K_MISE_PERL_FOREGROUND=6
+  typeset -g POWERLEVEL9K_MISE_ERLANG_FOREGROUND=1
+  typeset -g POWERLEVEL9K_MISE_ELIXIR_FOREGROUND=5
+  typeset -g POWERLEVEL9K_MISE_POSTGRES_FOREGROUND=6
+  typeset -g POWERLEVEL9K_MISE_PHP_FOREGROUND=5
+  typeset -g POWERLEVEL9K_MISE_HASKELL_FOREGROUND=3
+  typeset -g POWERLEVEL9K_MISE_JULIA_FOREGROUND=2
 
   # Substitute the default asdf prompt element
-  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/rtx}")
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/mise}")
 }
 # }}}
