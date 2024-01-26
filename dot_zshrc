@@ -15,6 +15,7 @@ source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/powerlevel10k/powerleve
 
 () {
 
+emulate -L zsh
 autoload -Uz add-zle-hook-widget
 
 # Make $terminfo available
