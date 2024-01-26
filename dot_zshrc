@@ -148,8 +148,8 @@ fi
 
 # History settings {{{
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=100000
 # Allow multiple sessions to append to one history
 setopt append_history
 # Disable history bangs
