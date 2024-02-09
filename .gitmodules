@@ -1,115 +1,115 @@
-[submodule "dot_local/share/tmux/plugins/external_tmux-sensible"]
-	path = dot_local/share/tmux/plugins/external_tmux-sensible
+[submodule ".local/share/tmux/plugins/tmux-sensible"]
+	path = .local/share/tmux/plugins/tmux-sensible
 	url = https://github.com/tmux-plugins/tmux-sensible
 	branch = master
-[submodule "dot_local/share/tmux/plugins/external_tmux-onedark-theme"]
-	path = dot_local/share/tmux/plugins/external_tmux-onedark-theme
+[submodule ".local/share/tmux/plugins/tmux-onedark-theme"]
+	path = .local/share/tmux/plugins/tmux-onedark-theme
 	url = https://github.com/odedlaz/tmux-onedark-theme.git
 	branch = master
-[submodule "dot_local/share/gdb-plugins/external_gef"]
-	path = dot_local/share/gdb-plugins/external_gef
+[submodule ".local/share/gdb-plugins/gef"]
+	path = .local/share/gdb-plugins/gef
 	url = https://github.com/hugsy/gef.git
 	branch = main
-[submodule "dot_local/share/zsh/plugins/external_zsh-syntax-highlighting"]
-	path = dot_local/share/zsh/plugins/external_zsh-syntax-highlighting
+[submodule ".local/share/zsh/plugins/zsh-syntax-highlighting"]
+	path = .local/share/zsh/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
 	branch = master
-[submodule "dot_local/share/zsh/plugins/external_powerlevel10k"]
-	path = dot_local/share/zsh/plugins/external_powerlevel10k
+[submodule ".local/share/zsh/plugins/powerlevel10k"]
+	path = .local/share/zsh/plugins/powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_aerial.nvim"]
-	path = dot_local/share/nvim/plugins/external_aerial.nvim
+[submodule ".local/share/nvim/plugins/aerial.nvim"]
+	path = .local/share/nvim/plugins/aerial.nvim
 	url = https://github.com/stevearc/aerial.nvim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_comment.nvim"]
-	path = dot_local/share/nvim/plugins/external_comment.nvim
+[submodule ".local/share/nvim/plugins/comment.nvim"]
+	path = .local/share/nvim/plugins/comment.nvim
 	url = https://github.com/numToStr/Comment.nvim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_gitsigns.nvim"]
-	path = dot_local/share/nvim/plugins/external_gitsigns.nvim
+[submodule ".local/share/nvim/plugins/gitsigns.nvim"]
+	path = .local/share/nvim/plugins/gitsigns.nvim
 	url = https://github.com/lewis6991/gitsigns.nvim.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_indent-blankline.nvim"]
-	path = dot_local/share/nvim/plugins/external_indent-blankline.nvim
+[submodule ".local/share/nvim/plugins/indent-blankline.nvim"]
+	path = .local/share/nvim/plugins/indent-blankline.nvim
 	url = https://github.com/lukas-reineke/indent-blankline.nvim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_lazy.nvim"]
-	path = dot_local/share/nvim/plugins/external_lazy.nvim
+[submodule ".local/share/nvim/plugins/lazy.nvim"]
+	path = .local/share/nvim/plugins/lazy.nvim
 	url = https://github.com/folke/lazy.nvim.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_lualine.nvim"]
-	path = dot_local/share/nvim/plugins/external_lualine.nvim
+[submodule ".local/share/nvim/plugins/lualine.nvim"]
+	path = .local/share/nvim/plugins/lualine.nvim
 	url = https://github.com/nvim-lualine/lualine.nvim.git
-[submodule "dot_local/share/nvim/plugins/external_nvim-surround"]
-	path = dot_local/share/nvim/plugins/external_nvim-surround
+[submodule ".local/share/nvim/plugins/nvim-surround"]
+	path = .local/share/nvim/plugins/nvim-surround
 	url = https://github.com/kylechui/nvim-surround.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_nvim-treesitter"]
-	path = dot_local/share/nvim/plugins/external_nvim-treesitter
+[submodule ".local/share/nvim/plugins/nvim-treesitter"]
+	path = .local/share/nvim/plugins/nvim-treesitter
 	url = https://github.com/nvim-treesitter/nvim-treesitter.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_nvim-treesitter-context"]
-	path = dot_local/share/nvim/plugins/external_nvim-treesitter-context
+[submodule ".local/share/nvim/plugins/nvim-treesitter-context"]
+	path = .local/share/nvim/plugins/nvim-treesitter-context
 	url = https://github.com/nvim-treesitter/nvim-treesitter-context.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_nvim-treesitter-textobjects"]
-	path = dot_local/share/nvim/plugins/external_nvim-treesitter-textobjects
+[submodule ".local/share/nvim/plugins/nvim-treesitter-textobjects"]
+	path = .local/share/nvim/plugins/nvim-treesitter-textobjects
 	url = https://github.com/nvim-treesitter/nvim-treesitter-textobjects.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_nvim-ufo"]
-	path = dot_local/share/nvim/plugins/external_nvim-ufo
+[submodule ".local/share/nvim/plugins/nvim-ufo"]
+	path = .local/share/nvim/plugins/nvim-ufo
 	url = https://github.com/kevinhwang91/nvim-ufo.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_nvim-unception"]
-	path = dot_local/share/nvim/plugins/external_nvim-unception
+[submodule ".local/share/nvim/plugins/nvim-unception"]
+	path = .local/share/nvim/plugins/nvim-unception
 	url = https://github.com/samjwill/nvim-unception.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_onedark.nvim"]
-	path = dot_local/share/nvim/plugins/external_onedark.nvim
+[submodule ".local/share/nvim/plugins/onedark.nvim"]
+	path = .local/share/nvim/plugins/onedark.nvim
 	url = https://github.com/navarasu/onedark.nvim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_plenary.nvim"]
-	path = dot_local/share/nvim/plugins/external_plenary.nvim
+[submodule ".local/share/nvim/plugins/plenary.nvim"]
+	path = .local/share/nvim/plugins/plenary.nvim
 	url = https://github.com/nvim-lua/plenary.nvim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_promise-async"]
-	path = dot_local/share/nvim/plugins/external_promise-async
+[submodule ".local/share/nvim/plugins/promise-async"]
+	path = .local/share/nvim/plugins/promise-async
 	url = https://github.com/kevinhwang91/promise-async.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_statuscol.nvim"]
-	path = dot_local/share/nvim/plugins/external_statuscol.nvim
+[submodule ".local/share/nvim/plugins/statuscol.nvim"]
+	path = .local/share/nvim/plugins/statuscol.nvim
 	url = https://github.com/luukvbaal/statuscol.nvim.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_suda.vim"]
-	path = dot_local/share/nvim/plugins/external_suda.vim
+[submodule ".local/share/nvim/plugins/suda.vim"]
+	path = .local/share/nvim/plugins/suda.vim
 	url = https://github.com/lambdalisue/suda.vim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_telescope-live-grep-args.nvim"]
-	path = dot_local/share/nvim/plugins/external_telescope-live-grep-args.nvim
+[submodule ".local/share/nvim/plugins/telescope-live-grep-args.nvim"]
+	path = .local/share/nvim/plugins/telescope-live-grep-args.nvim
 	url = https://github.com/nvim-telescope/telescope-live-grep-args.nvim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_telescope.nvim"]
-	path = dot_local/share/nvim/plugins/external_telescope.nvim
+[submodule ".local/share/nvim/plugins/telescope.nvim"]
+	path = .local/share/nvim/plugins/telescope.nvim
 	url = https://github.com/nvim-telescope/telescope.nvim.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_vim-fugitive"]
-	path = dot_local/share/nvim/plugins/external_vim-fugitive
+[submodule ".local/share/nvim/plugins/vim-fugitive"]
+	path = .local/share/nvim/plugins/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_vim-kitty"]
-	path = dot_local/share/nvim/plugins/external_vim-kitty
+[submodule ".local/share/nvim/plugins/vim-kitty"]
+	path = .local/share/nvim/plugins/vim-kitty
 	url = https://github.com/fladson/vim-kitty.git
 	branch = main
-[submodule "dot_local/share/nvim/plugins/external_vim-matchup"]
-	path = dot_local/share/nvim/plugins/external_vim-matchup
+[submodule ".local/share/nvim/plugins/vim-matchup"]
+	path = .local/share/nvim/plugins/vim-matchup
 	url = https://github.com/andymass/vim-matchup.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_vim-ReplaceWithRegister"]
-	path = dot_local/share/nvim/plugins/external_vim-ReplaceWithRegister
+[submodule ".local/share/nvim/plugins/vim-ReplaceWithRegister"]
+	path = .local/share/nvim/plugins/vim-ReplaceWithRegister
 	url = https://github.com/inkarkat/vim-ReplaceWithRegister.git
 	branch = master
-[submodule "dot_local/share/nvim/plugins/external_vim-rzip"]
-	path = dot_local/share/nvim/plugins/external_vim-rzip
+[submodule ".local/share/nvim/plugins/vim-rzip"]
+	path = .local/share/nvim/plugins/vim-rzip
 	url = https://github.com/lbrayner/vim-rzip.git
 	branch = master
