@@ -368,34 +368,6 @@ source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/zsh-syntax-highlighting
 ZSH_HIGHLIGHT_STYLES[comment]="fg=#8d94b0"
 # }}}
 
-# Synchronize working directory with nvim {{{
-# Change our working directory when leaving nvim
-function nvim() {
-  local tmp="$(mktemp -p "${XDG_RUNTIME_DIR:-/tmp}" nvim-shell-pwd.XXXXXXXXXX)"
-  NVIM_SHELL_PWD_PATH="$tmp" command nvim "$@"
-  local new_pwd="$(cat "$tmp")"
-  rm -f "$tmp"
-  if [[ -d "$new_pwd" ]]; then
-    cd "$new_pwd"
-  fi
-}
-
-# Change neovim's working directory from terminal buffers
-autoload -U add-zsh-hook
-add-zsh-hook -Uz chpwd() {
-  if [[ -n "${NVIM:-}" ]]; then
-    local new_nvim_pwd="${PWD//\\/\\\\}"
-    local new_nvim_pwd="${new_nvim_pwd//\"/\\\"}"
-
-    command nvim \
-      -u NONE \
-      --headless \
-      --server "$NVIM" \
-      --remote-expr "chdir(\"$new_nvim_pwd\")" &>/dev/null
-  fi
-}
-# }}}
-
 }
 
 # powerlevel10k config {{{
