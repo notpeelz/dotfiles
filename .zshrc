@@ -232,7 +232,11 @@ bindkey "${terminfo[ht]}" complete-word
 bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
 
 # Load compinit {{{
-fpath=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc" "${fpath[@]}")
+fpath=(
+  "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/functions"
+  "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/functions"
+  "${fpath[@]}"
+)
 
 # XXX: any modification to fpath must be done before loading compinit
 autoload -Uz compinit
