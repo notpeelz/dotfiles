@@ -61,10 +61,6 @@
 	path = .local/share/nvim/plugins/nvim-ufo
 	url = https://github.com/kevinhwang91/nvim-ufo.git
 	branch = main
-[submodule ".local/share/nvim/plugins/nvim-unception"]
-	path = .local/share/nvim/plugins/nvim-unception
-	url = https://github.com/samjwill/nvim-unception.git
-	branch = main
 [submodule ".local/share/nvim/plugins/onedark.nvim"]
 	path = .local/share/nvim/plugins/onedark.nvim
 	url = https://github.com/navarasu/onedark.nvim.git
