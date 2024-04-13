@@ -375,7 +375,9 @@ ZSH_HIGHLIGHT_STYLES[comment]="fg=#8d94b0"
 }
 
 # powerlevel10k config {{{
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [[ -f "${XDG_CONFIG_HOME:-${HOME}/.config}/p10k.zsh" ]]; then
+  source "${XDG_CONFIG_HOME:-${HOME}/.config}/p10k.zsh"
+fi
 
 typeset -g POWERLEVEL9K_LOCK_ICON='∅'
 typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
