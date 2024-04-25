@@ -111,6 +111,16 @@ au.group("NoReadonly", {
 })
 -- }}}
 
+-- Fix cursor shape not resetting on exit {{{
+-- https://github.com/neovim/neovim/issues/4396#issuecomment-1377191592
+au.group("FixCursorShapeReset", {
+  VimLeave = function()
+    vim.opt.guicursor = nil
+    vim.fn.chansend(vim.v.stderr, "\x1b[ q")
+  end,
+})
+-- }}}
+
 -- Clipboard {{{
 do
   local uname = vim.loop.os_uname()
