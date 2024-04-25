@@ -303,8 +303,8 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
 fi
 
 # Skips over words using ctrl-left/right
-bindkey "\e[1;5D" backward-word
-bindkey "\e[1;5C" forward-word
+bindkey "${terminfo[kLFT5]}" backward-word
+bindkey "${terminfo[kRIT5]}" forward-word
 # History search
 bindkey "^p" history-search-backward
 bindkey "^n" history-search-forward
