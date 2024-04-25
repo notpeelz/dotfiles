@@ -290,16 +290,18 @@ add-zle-hook-widget zle-line-finish _zshrc-set-cursor
 # Mappings {{{
 # Make sure that the terminal is in application mode when zle is active, since
 # only then values from $terminfo are valid
-if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-  _zshrc-set-appmode() {
+_zshrc-set-appmode() {
+  if (( ${+terminfo[smkx]} )); then
     echoti smkx
-  }
-  _zshrc-unset-appmode() {
+  fi
+}
+_zshrc-unset-appmode() {
+  if (( ${+terminfo[rmkx]} )); then
     echoti rmkx
-  }
-  add-zle-hook-widget zle-line-init _zshrc-set-appmode
-  add-zle-hook-widget zle-line-finish _zshrc-unset-appmode
-fi
+  fi
+}
+add-zle-hook-widget zle-line-init _zshrc-set-appmode
+add-zle-hook-widget zle-line-finish _zshrc-unset-appmode
 
 # Skips over words using ctrl-left/right
 bindkey "${terminfo[kLFT5]}" backward-word
