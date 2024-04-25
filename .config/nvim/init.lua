@@ -379,20 +379,3 @@ do
   end)
 end
 -- }}}
-
--- Synchronize shell working directory on exit {{{
-au.group("UpdateParentShellPwd", {
-  ExitPre = function(e)
-    pcall(function()
-      local new_pwd_path = os.getenv("NVIM_SHELL_PWD_PATH")
-      if new_pwd_path == nil then
-        return
-      end
-
-      local f = io.open(new_pwd_path, "w")
-      f:write(vim.loop.cwd())
-      f:close()
-    end)
-  end
-})
--- }}}
