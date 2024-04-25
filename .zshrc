@@ -282,7 +282,7 @@ export BAT_THEME="Monokai Extended Bright"
 # }}}
 
 _zshrc-set-cursor() {
-  print -n '\033[6 q'
+  echoti Ss 6
 }
 
 add-zle-hook-widget zle-line-init _zshrc-set-cursor
