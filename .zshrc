@@ -73,8 +73,6 @@ local _LS_COLORS=(
 export LS_COLORS="${(j.:.)_LS_COLORS}"
 
 alias grep="grep --color=auto"
-alias fgrep="fgrep --color=auto"
-alias egrep="egrep --color=auto"
 alias diff="diff --color=auto"
 
 # XXX: completion breaks if this is set as an alias
