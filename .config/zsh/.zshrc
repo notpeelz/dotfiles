@@ -387,14 +387,27 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
 # https://github.com/romkatv/powerlevel10k/issues/2212#issuecomment-1685084366
 () {
   function prompt_mise() {
-    local plugins=("${(@f)$(mise ls --current 2>/dev/null | awk -v RS= '!/\(symlink\)/ && $3!="~/.tool-versions" && $3!="~/.config/mise/config.toml" {print $1, $2}')}")
-    local plugin
-    for plugin in ${(k)plugins}; do
-      local parts=("${(@s/ /)plugin}")
-      local tool=${(U)parts[1]}
-      local version=${parts[2]}
-      p10k segment -r -i "${tool}_ICON" -s $tool -t "$version"
-    done
+    while IFS= read -r line; do
+      eval "local parts=(${line})"
+      local tool_name="${parts[1]}"
+      local tool_version="${parts[2]}"
+      local tool_path="${parts[3]}"
+      case "${tool_path}" in
+        "${HOME}/.tool-versions") ;&
+        "${HOME}/.config/mise/config.toml")
+          ;;
+        *)
+          p10k segment -r -i "${(U)tool_name}_ICON" -s "${tool_name}" -t "${tool_version}"
+          ;;
+      esac
+    done < <(
+      mise ls -Jc 2>/dev/null | jq -r '
+        to_entries[]
+        | {k: .key, v: .value[0]}
+        | [.k, .v.version, .v.source.path]
+        | @sh
+      '
+    )
   }
 
   typeset -g POWERLEVEL9K_MISE_FOREGROUND=6
