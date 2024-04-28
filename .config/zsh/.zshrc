@@ -210,8 +210,12 @@ zstyle "*" single-ignored show
 ZLE_SPACE_SUFFIX_CHARS=$'&|'
 
 # Completion binds
-bindkey "${terminfo[ht]}" complete-word
-bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
+if (( ${+terminfo[ht]} )); then
+  bindkey "${terminfo[ht]}" complete-word
+fi
+if (( ${+terminfo[kcbt]} )); then
+  bindkey -M menuselect "${terminfo[kcbt]}" reverse-menu-complete
+fi
 
 # Load compinit {{{
 fpath=(
@@ -232,8 +236,12 @@ autoload -Uz down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 
-bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
-bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
+if (( ${+terminfo[kcuu1]} )); then
+  bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
+fi
+if (( ${+terminfo[kcud1]} )); then
+  bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
+fi
 # }}}
 
 # Directory history {{{
@@ -287,8 +295,11 @@ add-zle-hook-widget zle-line-init _zshrc-set-appmode
 add-zle-hook-widget zle-line-finish _zshrc-unset-appmode
 
 # Skips over words using ctrl-left/right
-bindkey "${terminfo[kLFT5]}" backward-word
-bindkey "${terminfo[kRIT5]}" forward-word
+if (( ${+terminfo[kLFT5]} && ${+terminfo[kRIT5]} )); then
+  bindkey "${terminfo[kLFT5]}" backward-word
+  bindkey "${terminfo[kRIT5]}" forward-word
+fi
+
 # History search
 bindkey "^p" history-search-backward
 bindkey "^n" history-search-forward
