@@ -112,23 +112,6 @@ if command -v eza &>/dev/null; then
   alias ls="eza --group --git"
 fi
 
-# "sudo vim" -> "sudoedit"
-if command -v sudoedit &>/dev/null; then
-  sudo() {
-    setopt local_options extended_glob unset
-    local -i i=$argv[(i)^-*]
-    # $argv[i] is the first non-option argument (or empty if there is none)
-    case "${argv[i]}" in
-      vim|nvim)
-        argv[$i]=()
-        command sudoedit "${argv[@]}"
-        return "$?"
-        ;;
-    esac
-    command sudo "$@"
-  }
-fi
-
 # Using default settings, running `paru` will update all repo and AUR packages.
 # When using RepoOnly, `paru` only checks for repo updates.
 # This workaround restores the default behavior.
