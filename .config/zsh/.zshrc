@@ -105,6 +105,16 @@ elif (( ${+commands[less]} )); then
 fi
 # }}}
 
+# Editor {{{
+if (( ${+commands[nvim]} )); then
+  export EDITOR=nvim
+elif (( ${+commands[vim]} )); then
+  export EDITOR=vim
+elif (( ${+commands[nano]} )); then
+  export EDITOR=nano
+fi
+# }}}
+
 # Aliases {{{
 alias vim="nvim"
 alias vi="nvim"
