@@ -318,62 +318,6 @@ bindkey "^p" history-search-backward
 bindkey "^n" history-search-forward
 # }}}
 
-# Clipboard {{{
-_zshrc-detect-clipboard() {
-  emulate -L zsh
-
-  if [[ "${OSTYPE}" == darwin* ]] && (( ${+commands[pbcopy]} )) && (( ${+commands[pbpaste]} )); then
-    clipcopy() { pbcopy < "${1:-/dev/stdin}"; }
-    clippaste() { pbpaste; }
-  elif [[ "${OSTYPE}" == (cygwin|msys)* ]]; then
-    clipcopy() { cat "${1:-/dev/stdin}" > /dev/clipboard; }
-    clippaste() { cat /dev/clipboard; }
-  elif [ -n "${WAYLAND_DISPLAY:-}" ] && (( ${+commands[wl-copy]} )) && (( ${+commands[wl-paste]} )); then
-    clipcopy() { wl-copy < "${1:-/dev/stdin}"; }
-    clippaste() { wl-paste; }
-  elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xclip]} )); then
-    clipcopy() { xclip -in -selection clipboard < "${1:-/dev/stdin}"; }
-    clippaste() { xclip -out -selection clipboard; }
-  elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xsel]} )); then
-    clipcopy() { xsel --clipboard --input < "${1:-/dev/stdin}"; }
-    clippaste() { xsel --clipboard --output; }
-  elif (( ${+commands[lemonade]} )); then
-    clipcopy() { lemonade copy < "${1:-/dev/stdin}"; }
-    clippaste() { lemonade paste; }
-  elif (( ${+commands[doitclient]} )); then
-    clipcopy() { doitclient wclip < "${1:-/dev/stdin}"; }
-    clippaste() { doitclient wclip -r; }
-  elif (( ${+commands[win32yank]} )); then
-    clipcopy() { win32yank -i < "${1:-/dev/stdin}"; }
-    clippaste() { win32yank -o; }
-  elif [[ "$OSTYPE" == linux-android* ]] && (( $+commands[termux-clipboard-set] )); then
-    clipcopy() { termux-clipboard-set "${1:-/dev/stdin}"; }
-    clippaste() { termux-clipboard-get; }
-  elif [ -n "${TMUX:-}" ] && (( ${+commands[tmux]} )); then
-    clipcopy() { tmux load-buffer "${1:--}"; }
-    clippaste() { tmux save-buffer -; }
-  elif [[ "$(uname -r)" = *icrosoft* ]]; then
-    clipcopy() { clip.exe < "${1:-/dev/stdin}"; }
-    clippaste() { powershell.exe -noprofile -command Get-Clipboard; }
-  else
-    _retry_clipboard_detection_or_fail() {
-      local clipcmd="${1}"; shift
-      if _zshrc-detect-clipboard; then
-        "${clipcmd}" "$@"
-      else
-        print "${clipcmd}: Platform $OSTYPE not supported or xclip/xsel not installed" >&2
-        return 1
-      fi
-    }
-    clipcopy() { _retry_clipboard_detection_or_fail clipcopy "$@"; }
-    clippaste() { _retry_clipboard_detection_or_fail clippaste "$@"; }
-    return 1
-  fi
-}
-
-_zshrc-detect-clipboard || true
-# }}}
-
 # Plugins {{{
 source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
