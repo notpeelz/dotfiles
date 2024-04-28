@@ -164,6 +164,14 @@ setopt inc_append_history
 setopt share_history
 # }}}
 
+# Functions {{{
+fpath=(
+  "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/functions"
+  "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/functions"
+  "${fpath[@]}"
+)
+# }}}
+
 # Completion {{{
 # Menu selection
 zmodload -i zsh/complist
@@ -228,12 +236,6 @@ if (( ${+terminfo[kcbt]} )); then
 fi
 
 # Load compinit {{{
-fpath=(
-  "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/functions"
-  "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/functions"
-  "${fpath[@]}"
-)
-
 # XXX: any modification to fpath must be done before loading compinit
 autoload -Uz compinit
 compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
