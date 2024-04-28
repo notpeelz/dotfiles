@@ -6,11 +6,11 @@ mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zfunc"
 
 # EDITOR {{{
-if command -v nvim &>/dev/null; then
+if (( ${+commands[nvim]} )); then
   export EDITOR=nvim
-elif command -v vim &>/dev/null; then
+elif (( ${+commands[vim]} )); then
   export EDITOR=vim
-elif command -v nano &>/dev/null; then
+elif (( ${+commands[nano]} )); then
   export EDITOR=nano
 fi
 # }}}

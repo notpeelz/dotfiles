@@ -92,13 +92,13 @@ zstyle ":completion:*:*:kill:*:processes" list-colors "=(#b) #([0-9]#) ([0-9a-z-
 # }}}
 
 # Manpage colors {{{
-if command -v bat &>/dev/null; then
+if (( ${+commands[bat]} )); then
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
   export MANROFFOPT="-c"
-elif command -v batcat &>/dev/null; then
+elif (( ${+commands[batcat]} )); then
   export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
   export MANROFFOPT="-c"
-elif command -v less &>/dev/null; then
+elif (( ${+commands[less]} )); then
   export MANPAGER="less -R --use-color -Dd+r -Du+b"
   export MANROFFOPT="-P -c"
 fi
@@ -108,14 +108,14 @@ fi
 alias vim="nvim"
 alias vi="nvim"
 
-if command -v eza &>/dev/null; then
+if (( ${+commands[eza]} )); then
   alias ls="eza --group --git"
 fi
 
 # Using default settings, running `paru` will update all repo and AUR packages.
 # When using RepoOnly, `paru` only checks for repo updates.
 # This workaround restores the default behavior.
-if command -v paru &>/dev/null; then
+if (( ${+commands[paru]} )); then
   paru() {
     if [[ "$#" -eq 0 ]]; then
       command paru -Syu --mode all
