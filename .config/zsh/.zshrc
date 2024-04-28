@@ -170,6 +170,7 @@ fpath=(
   "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/functions"
   "${fpath[@]}"
 )
+autoload -Uz "${fpath[1]}"/*(.:t)
 # }}}
 
 # Completion {{{
