@@ -285,7 +285,9 @@ export BAT_THEME="Monokai Extended Bright"
 # }}}
 
 _zshrc-set-cursor() {
-  echoti Ss 6
+  if (( ${+terminfo[Ss]} )); then
+    echoti Ss 6
+  fi
 }
 
 add-zle-hook-widget zle-line-init _zshrc-set-cursor
