@@ -9,3 +9,5 @@
 	editor = nvim
 [pull]
 	ff = only
+[diff]
+	wsErrorHighlight = all
