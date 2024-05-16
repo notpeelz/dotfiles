@@ -149,7 +149,7 @@ do
         ["*"] = "true",
       },
       paste = {
-        ["+"] = "wl-paste",
+        ["+"] = "wl-paste -n",
         ["*"] = "true",
       }
     }
