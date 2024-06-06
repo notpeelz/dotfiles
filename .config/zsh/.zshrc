@@ -84,14 +84,8 @@ zstyle ":completion:*:*:kill:*:processes" list-colors "=(#b) #([0-9]#) ([0-9a-z-
 # }}}
 
 # Manpage colors {{{
-if (( ${+commands[bat]} )); then
-  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-  export MANROFFOPT="-c"
-elif (( ${+commands[batcat]} )); then
-  export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
-  export MANROFFOPT="-c"
-elif (( ${+commands[less]} )); then
-  export MANPAGER="less -R --use-color -Dd+r -Du+b"
+if (( ${+commands[less]} )); then
+  export MANPAGER="less -R --use-color -Dd208 -Du+G"
   export MANROFFOPT="-P -c"
 fi
 # }}}
