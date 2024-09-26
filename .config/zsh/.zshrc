@@ -120,6 +120,16 @@ if (( ${+commands[paru]} )); then
     fi
   }
 fi
+
+# Avoid stupid mistakes like pressing enter too early when typing `sudo rm /...`
+# This forces me to type `rm /... -rf` instead of `rm -rf /...`
+rm() {
+  if [[ "$#" -ge 1 && "$1" == "-rf" ]]; then
+    echo "nuh uh"
+    return 1
+  fi
+  command rm "$@"
+}
 # }}}
 
 # History settings {{{
