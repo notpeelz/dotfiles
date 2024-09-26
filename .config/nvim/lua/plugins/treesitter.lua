@@ -42,6 +42,7 @@ return plugins{
         "ini",
         "latex",
         "ini",
+        "kdl",
       },
       highlight = {
         enable = true,
