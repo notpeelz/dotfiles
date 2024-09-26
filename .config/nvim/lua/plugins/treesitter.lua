@@ -41,6 +41,7 @@ return plugins{
         "hlsl",
         "ini",
         "latex",
+        "ini",
       },
       highlight = {
         enable = true,
