@@ -1,6 +1,6 @@
 [submodule ".local/share/tmux/plugins/tmux-sensible"]
 	path = .local/share/tmux/plugins/tmux-sensible
-	url = https://github.com/tmux-plugins/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible.git
 	branch = master
 [submodule ".local/share/tmux/plugins/tmux-onedark-theme"]
 	path = .local/share/tmux/plugins/tmux-onedark-theme
