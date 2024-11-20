@@ -350,7 +350,7 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
           ;;
       esac
     done < <(
-      mise ls -Jc 2>/dev/null | jq -r '
+      mise ls -Joc 2>/dev/null | jq -r '
         to_entries[]
         | {k: .key, v: .value[0]}
         | [.k, .v.version, .v.source.path]
