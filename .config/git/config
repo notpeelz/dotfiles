@@ -7,7 +7,14 @@
 	defaultBranch = master
 [core]
 	editor = nvim
+	pager = delta
 [pull]
 	ff = only
 [diff]
 	wsErrorHighlight = all
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+[merge]
+	conflictStyle = zdiff3
