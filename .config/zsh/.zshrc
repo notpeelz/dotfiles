@@ -161,12 +161,24 @@ setopt share_history
 # }}}
 
 # Functions {{{
-fpath=(
+local fpath_dirs=(
   "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/functions"
   "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/functions"
+)
+
+fpath=(
+  "${fpath_dirs[@]}"
   "${fpath[@]}"
 )
-autoload -Uz "${fpath[1]}"/*(.:t)
+
+for dir in "${fpath_dirs[@]}"; do
+  if [[ -d "${dir}" ]]; then
+    local functions=("${dir}"/*(N:t))
+    if (( ${#functions[@]} )); then
+      autoload -Uz "${functions[@]}"
+    fi
+  fi
+done
 # }}}
 
 # Completion {{{
