@@ -5,13 +5,13 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+if [[ -r "${XDG_CACHE_HOME:-${HOME}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-${HOME}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 (( ${+commands[direnv]} )) && emulate zsh -c "$(direnv hook zsh)"
 
-source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme"
+source "${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme"
 
 () {
 
@@ -79,7 +79,7 @@ alias diff="diff --color=auto"
 ip() { command ip --color=auto "$@"; }
 
 # Files and process completion colors
-zstyle ":completion:*" list-colors "$LS_COLORS"
+zstyle ":completion:*" list-colors "${LS_COLORS}"
 zstyle ":completion:*:*:kill:*:processes" list-colors "=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01"
 # }}}
 
@@ -133,7 +133,7 @@ rm() {
 # }}}
 
 # History settings {{{
-HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/zsh/history"
 HISTSIZE=100000
 SAVEHIST=100000
 # Allow multiple sessions to append to one history
@@ -162,8 +162,8 @@ setopt share_history
 
 # Functions {{{
 local fpath_dirs=(
-  "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/functions"
-  "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/functions"
+  "${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/functions"
+  "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/functions"
 )
 
 fpath=(
@@ -209,14 +209,14 @@ zstyle ":completion:*" matcher-list "" "m:{a-zA-Z-_}={A-Za-z_-}" "r:|=*" "l:|=* 
 zstyle ":completion:*" special-dirs true
 
 # Process completion
-zstyle ":completion:*:*:*:*:processes" command "ps -u $USERNAME -o pid,user,comm -w -w"
+zstyle ":completion:*:*:*:*:processes" command "ps -u ${USER} -o pid,user,comm -w -w"
 
 # Disable named-directories autocompletion
 zstyle ":completion:*:cd:*" tag-order local-directories directory-stack path-directories
 
 # Use caching so that commands like apt and dpkg complete are useable
 zstyle ":completion:*" use-cache yes
-zstyle ":completion:*" cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+zstyle ":completion:*" cache-path "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/zcompcache"
 
 # Don't complete uninteresting users
 zstyle ":completion:*:*:*:users" ignored-patterns \
@@ -247,7 +247,7 @@ fi
 # Load compinit {{{
 # XXX: any modification to fpath must be done before loading compinit
 autoload -Uz compinit
-compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+compinit -d "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/zcompdump-${ZSH_VERSION}"
 # }}}
 # }}}
 
@@ -329,7 +329,7 @@ bindkey "^n" history-search-forward
 # }}}
 
 # Plugins {{{
-source "${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 ZSH_HIGHLIGHT_STYLES[comment]="fg=#8d94b0"
 # }}}
