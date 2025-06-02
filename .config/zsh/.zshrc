@@ -108,6 +108,10 @@ if (( ${+commands[eza]} )); then
   alias ls="eza --group --git"
 fi
 
+alias gdm="gitdot main"
+alias gda="gitdot arch"
+alias gdp="gitdot pc"
+
 # Using default settings, running `paru` will update all repo and AUR packages.
 # When using RepoOnly, `paru` only checks for repo updates.
 # This workaround restores the default behavior.
