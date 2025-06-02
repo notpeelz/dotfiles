@@ -10,10 +10,6 @@
 	path = .local/share/gdb-plugins/gef
 	url = https://github.com/hugsy/gef.git
 	branch = main
-[submodule ".local/share/zsh/plugins/git-completion"]
-	path = .local/share/zsh/plugins/git-completion
-	url = https://github.com/felipec/git-completion.git
-	branch = master
 [submodule ".local/share/zsh/plugins/zsh-syntax-highlighting"]
 	path = .local/share/zsh/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
