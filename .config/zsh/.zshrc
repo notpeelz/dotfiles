@@ -330,6 +330,9 @@ fi
 # History search
 bindkey "^p" history-search-backward
 bindkey "^n" history-search-forward
+
+# Delete key
+bindkey "${terminfo[kdch1]}" delete-char
 # }}}
 
 # Plugins {{{
