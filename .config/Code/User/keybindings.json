@@ -1,0 +1,251 @@
+[
+  // Completion navigation with Tab key
+  {
+    "key": "tab",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus || suggestWidgetVisible && textInputFocus && !suggestWidgetHasFocusedSuggestion"
+  },
+  {
+    "key": "shift+tab",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus || suggestWidgetVisible && textInputFocus && !suggestWidgetHasFocusedSuggestion"
+  },
+  // Completion
+  {
+    "key": "ctrl+q",
+    "command": "noop"
+  },
+  {
+    "key": "ctrl+shift+q",
+    "command": "noop"
+  },
+  {
+    "key": "ctrl+q",
+    "command": "editor.action.commentLine",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+q",
+    "command": "editor.action.blockComment",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+/",
+    "command": "editor.action.commentLine",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+/",
+    "command": "editor.action.blockComment",
+    "when": "editorTextFocus"
+  },
+  // Hide/focus sidebar
+  {
+    "key": "ctrl+shift+b",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  // Build tasks
+  {
+    "key": "ctrl+b",
+    "command": "workbench.action.tasks.build"
+  },
+  // Suggest/hover
+  {
+    "key": "ctrl+shift+space",
+    "command": "editor.action.showHover",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+space",
+    "command": "editor.action.hideHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "ctrl+space",
+    "command": "editor.action.triggerSuggest",
+    "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+  // Better word skipping
+  {
+    "key": "ctrl+left",
+    "command": "cursorWordPartLeft",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "ctrl+shift+left",
+    "command": "cursorWordPartLeftSelect",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "ctrl+right",
+    "command": "cursorWordPartRight",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "ctrl+shift+right",
+    "command": "cursorWordPartRightSelect",
+    "when": "textInputFocus"
+  },
+  // Toggle between focusing terminal/editor
+  {
+    "key": "ctrl+shift+`",
+    "command": "terminal.focus",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+`",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "alt+`",
+    "command": "workbench.action.terminal.focusNext"
+  },
+  {
+    "key": "alt+shift+`",
+    "command": "workbench.action.terminal.focusPrevious"
+  },
+  // Disable opening external terminal
+  {
+    "key": "ctrl+shift+c",
+    "command": "-workbench.action.terminal.openNativeConsole",
+    "when": "!terminalFocus"
+  },
+  // Open new terminal tab
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalFocus"
+  },
+  // Close terminal tab
+  {
+    "key": "ctrl+shift+w",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus"
+  },
+  // Unmap default ctrl+shift+w to avoid oopsies
+  {
+    "key": "ctrl+shift+w",
+    "command": "-workbench.action.closeWindow"
+  },
+  // Toggle maximize terminal
+  {
+    "key": "ctrl+space",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "terminalFocus"
+  },
+  // Paste from clipboard using shift+insert (in terminal)
+  {
+    "key": "shift+insert",
+    "command": "workbench.action.terminal.paste",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  // Navigate through the editor history (useful when diving deep with "Find definition")
+  {
+    "key": "alt+left",
+    "command": "workbench.action.navigateBack",
+    "when": "canNavigateBack"
+  },
+  {
+    "key": "alt+right",
+    "command": "workbench.action.navigateForward",
+    "when": "canNavigateForward"
+  },
+  // Disable MRU tab switching
+  // {
+  //   "key": "ctrl+tab",
+  //   "command": "workbench.action.nextEditor"
+  // },
+  // {
+  //   "key": "ctrl+shift+tab",
+  //   "command": "workbench.action.previousEditor"
+  // },
+  // Get rid of extra/conflicting rust-analyzer keybinds
+  {
+    "key": "ctrl+shift+m",
+    "command": "-rust-analyzer.matchingBrace"
+  },
+  // Show tasks
+  {
+    "key": "ctrl+shift+l",
+    "command": "workbench.action.tasks.runTask"
+  },
+  // Bottom panel keybinds
+  {
+    "key": "ctrl+shift+a ctrl+shift+a",
+    "command": "workbench.action.problems.focus"
+  },
+  {
+    "key": "ctrl+shift+a ctrl+shift+o",
+    "command": "workbench.panel.output.focus"
+  },
+  {
+    "key": "ctrl+shift+a ctrl+shift+d",
+    "command": "workbench.debug.action.focusRepl"
+  },
+  // Block selection
+  {
+    "key": "shift+alt+up",
+    "command": "editor.action.insertCursorAbove",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "shift+alt+down",
+    "command": "editor.action.insertCursorBelow",
+    "when": "editorTextFocus"
+  },
+  // Jump to pair
+  {
+    "key": "ctrl+5",
+    "command": "editor.action.jumpToBracket",
+    "when": "editorTextFocus"
+  },
+  // Expand current view
+  {
+    "key": "ctrl+shift+alt+.",
+    "command": "workbench.action.minimizeOtherEditors"
+  },
+  // Navigate views
+  {
+    "key": "ctrl+shift+alt+up",
+    "command": "workbench.action.focusAboveGroupWithoutWrap"
+  },
+  {
+    "key": "ctrl+shift+alt+left",
+    "command": "workbench.action.focusLeftGroupWithoutWrap"
+  },
+  {
+    "key": "ctrl+shift+alt+right",
+    "command": "workbench.action.focusRightGroupWithoutWrap"
+  },
+  {
+    "key": "ctrl+shift+alt+down",
+    "command": "workbench.action.focusBelowGroupWithoutWrap"
+  },
+  {
+    "key": "ctrl+shift+alt+up",
+    "command": "-editor.action.copyLinesUpAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+shift+alt+down",
+    "command": "-editor.action.copyLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+k up",
+    "command": "-workbench.action.moveActiveEditorGroupUp"
+  },
+  {
+    "key": "ctrl+k down",
+    "command": "-workbench.action.moveActiveEditorGroupDown"
+  },
+  {
+    "key": "ctrl+k left",
+    "command": "-workbench.action.moveActiveEditorGroupLeft"
+  },
+  {
+    "key": "ctrl+k right",
+    "command": "-workbench.action.moveActiveEditorGroupRight"
+  },
+]

@@ -1,0 +1,155 @@
+{
+  "json.schemaDownload.enable": true,
+  // Disable telemetry
+  "telemetry.telemetryLevel": "off",
+  "redhat.telemetry.enabled": false,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorCustomizations": {
+    "editorInlayHint.background": "#242424",
+    "editorInlayHint.foreground": "#9c9c9c"
+  },
+  "workbench.activityBar.location": "bottom",
+  "workbench.navigationControl.enabled": false,
+  "workbench.layoutControl.enabled": false,
+  "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": false,
+  "editor.inlayHints.padding": true,
+  "editor.inlayHints.fontSize": 14,
+  "window.dialogStyle": "custom",
+  "window.titleBarStyle": "custom",
+  "window.experimentalControlOverlay": false,
+  "workbench.editor.empty.hint": "hidden",
+  "window.commandCenter": false,
+  "chat.commandCenter.enabled": false,
+  "editor.renderLineHighlight": "all",
+  // Disable the X11 primary clipboard
+  "editor.selectionClipboard": false,
+  // Editor stuff
+  "editor.minimap.enabled": false,
+  "editor.linkedEditing": true,
+  "editor.renderWhitespace": "trailing",
+  "editor.renderFinalNewline": "dimmed",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.highlightActiveIndentation": true,
+  "editor.inlayHints.enabled": "offUnlessPressed",
+  "editor.mouseWheelZoom": true,
+  "editor.semanticHighlighting.enabled": true,
+  "editor.cursorSurroundingLines": 5,
+  "editor.inlineSuggest.enabled": true,
+  "editor.stickyScroll.enabled": true,
+  "editor.accessibilitySupport": "off",
+  // Editorconfig stuff
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  // Terminal stuff
+  "terminal.integrated.shellIntegration.enabled": false,
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.allowMnemonics": false,
+  "terminal.integrated.allowChords": false,
+  "terminal.integrated.commandsToSkipShell": [
+    "-workbench.action.quickOpen",
+    "-workbench.action.terminal.paste"
+  ],
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell"
+    },
+    "VS Developer PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "& { $originalLocation = Get-Location; $dllPath = \"$env:ProgramFiles\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\Microsoft.VisualStudio.DevShell.dll\"; $vsPath = \"$env:ProgramFiles\\Microsoft Visual Studio\\2022\\Community\\\"; if (Test-Path $dllPath) { Import-Module $dllPath; Enter-VsDevShell -VsInstallPath $vsPath -DevCmdArguments '-no_logo'; Set-Location $originalLocation; Write-Host \"VS Developer PowerShell environment loaded.\" -ForegroundColor Green } else { Write-Host \"Visual Studio DevShell DLL not found at: $dllPath\" -ForegroundColor Yellow } }",
+      ],
+    },
+    "Git Bash": {
+      "path": "C:/Users/peelz/scoop/shims/bash.exe",
+      "icon": "terminal-bash",
+    },
+  },
+  // Terminal causes GPU resets: https://github.com/microsoft/vscode/issues/238088
+  "terminal.integrated.gpuAcceleration": "off",
+  // Don't use VCode's askpass
+  "git.useIntegratedAskPass": false,
+  // Git blame
+  "git.blame.editorDecoration.enabled": false,
+  "git.blame.statusBarItem.enabled": true,
+  // Disable annoying "auto-configure" prompts when opening projects
+  "cmake.configureOnOpen": false,
+  "mesonbuild.configureOnOpen": false,
+  "mesonbuild.languageServer": null,
+  "mesonbuild.downloadLanguageServer": false,
+  // The official C/C++ extension is pretty bad. Use clangd instead.
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.enable": true,
+  // Prevent clangd from creating it's cache folder in the root of the repo
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}/build",
+  ],
+  // Rust stuff
+  "lldb.launch.initCommands": [
+    "settings set target.x86-disassembly-flavor intel",
+  ],
+  "rust-analyzer.inlayHints.lifetimeElisionHints.enable": "skip_trivial",
+  "rust-analyzer.inlayHints.reborrowHints.enable": "never",
+  "rust-analyzer.inlayHints.lifetimeElisionHints.useParameterNames": true,
+  "rust-analyzer.server.extraEnv": {
+    "RUST_BACKTRACE": "full",
+  },
+  "rust-analyzer.debug.engineSettings": {
+    "target.process.thread.step-avoid-libraries": "",
+  },
+  // Tests
+  "testExplorer.useNativeTesting": true,
+  // Prevent settings sync from nuking our settings when moving between OSes
+  // (even though we don't use it)
+  "settingsSync.keybindingsPerPlatform": false,
+  // Disable stupid powershell default code style rules
+  "powershell.codeFormatting.newLineAfterCloseBrace": false,
+  // Format on save
+  "editor.formatOnSave": false,
+  "editor.detectIndentation": false,
+  // Filetype overrides
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+  },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "window.zoomLevel": -1,
+}
