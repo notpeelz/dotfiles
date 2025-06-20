@@ -108,6 +108,8 @@ if (( ${+commands[eza]} )); then
   alias ls="eza --group --git"
 fi
 
+alias sshfs="sshfs -o uid=${UID} -o gid=${GID} -o dmask=$(umask)"
+
 alias gdm="gitdot main"
 alias gda="gitdot arch"
 alias gdp="gitdot pc"
