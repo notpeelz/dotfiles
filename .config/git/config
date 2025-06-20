@@ -18,7 +18,3 @@
 	navigate = true
 [merge]
 	conflictStyle = zdiff3
-[push]
-	recurseSubmodules = on-demand
-[submodule]
-	recurse = true
