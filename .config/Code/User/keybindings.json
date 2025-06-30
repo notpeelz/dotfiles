@@ -47,7 +47,8 @@
   // Build tasks
   {
     "key": "ctrl+b",
-    "command": "workbench.action.tasks.build"
+    "command": "workbench.action.tasks.build",
+    "when": "!terminalFocus"
   },
   // Suggest/hover
   {
