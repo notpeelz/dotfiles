@@ -156,6 +156,8 @@
   },
   "[python]": {
     "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
   },
   "window.zoomLevel": -1,
   "editor.scrollOnMiddleClick": true,
