@@ -154,6 +154,9 @@
   "[rust]": {
     "editor.formatOnSave": true,
   },
+  "[python]": {
+    "editor.formatOnSave": true,
+  },
   "window.zoomLevel": -1,
   "editor.scrollOnMiddleClick": true,
 }
