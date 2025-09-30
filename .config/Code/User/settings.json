@@ -153,6 +153,8 @@
   },
   "[rust]": {
     "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
   },
   "[python]": {
     "editor.formatOnSave": true,
