@@ -165,4 +165,5 @@
   "window.zoomLevel": -1,
   "editor.scrollOnMiddleClick": true,
   "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "extensions.ignoreRecommendations": true
 }
