@@ -249,4 +249,17 @@
     "key": "ctrl+k right",
     "command": "-workbench.action.moveActiveEditorGroupRight"
   },
+  // Unbind copilot sidebar
+  {
+    "key": "ctrl+alt+b",
+    "command": "-workbench.action.toggleAuxiliaryBar"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "-workbench.action.terminal.chat.start"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "-inlineChat.startWithCurrentLine"
+  }
 ]
