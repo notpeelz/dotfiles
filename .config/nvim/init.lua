@@ -167,13 +167,13 @@ do
     }
   else
     vim.g.clipboard = {
-      name = "void",
+      name = "osc52",
       copy = {
-        ["+"] = "true",
+        ["+"] = require("vim.ui.clipboard.osc52").copy('+'),
         ["*"] = "true",
       },
       paste = {
-        ["+"] = "true",
+        ["+"] = require("vim.ui.clipboard.osc52").paste('+'),
         ["*"] = "true",
       }
     }
