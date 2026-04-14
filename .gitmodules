@@ -48,7 +48,7 @@
 [submodule ".local/share/nvim/plugins/nvim-treesitter"]
 	path = .local/share/nvim/plugins/nvim-treesitter
 	url = https://github.com/nvim-treesitter/nvim-treesitter.git
-	branch = master
+	branch = main
 [submodule ".local/share/nvim/plugins/nvim-treesitter-context"]
 	path = .local/share/nvim/plugins/nvim-treesitter-context
 	url = https://github.com/nvim-treesitter/nvim-treesitter-context.git
