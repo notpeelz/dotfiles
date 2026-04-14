@@ -56,7 +56,7 @@
 [submodule ".local/share/nvim/plugins/nvim-treesitter-textobjects"]
 	path = .local/share/nvim/plugins/nvim-treesitter-textobjects
 	url = https://github.com/nvim-treesitter/nvim-treesitter-textobjects.git
-	branch = master
+	branch = main
 [submodule ".local/share/nvim/plugins/nvim-ufo"]
 	path = .local/share/nvim/plugins/nvim-ufo
 	url = https://github.com/kevinhwang91/nvim-ufo.git
