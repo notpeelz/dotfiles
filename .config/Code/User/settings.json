@@ -82,7 +82,9 @@
   "cmake.configureOnOpen": false,
   "mesonbuild.configureOnOpen": false,
   "mesonbuild.languageServer": null,
+  // Dont auto-download language servers
   "mesonbuild.downloadLanguageServer": false,
+  "qt-qml.doNotAskForQmllsDownload": true,
   // The official C/C++ extension is pretty bad. Use clangd instead.
   "C_Cpp.intelliSenseEngine": "disabled",
   "clangd.enable": true,
