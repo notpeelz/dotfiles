@@ -235,6 +235,7 @@ zstyle ":completion:*:*:*:users" ignored-patterns \
   rpc rpcuser rpm rtkit scard shutdown squid sshd statd svn sync tftp \
   usbmux uucp vcsa wwwrun xfs backup gnats irc list proxy sys \
   cups colord geoclue http nm-openvpn qemu tss uuidd libvirt-qemu \
+  pcscd passim fwupd gluster "nixbld*" \
   tor alpm www-data "_*" "systemd-*"
 # ... unless we really want to.
 zstyle "*" single-ignored show
