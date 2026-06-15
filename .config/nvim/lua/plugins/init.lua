@@ -82,21 +82,6 @@ return plugins{
     },
   },
   {
-    "comment.nvim",
-    dependencies = {
-      "nvim-treesitter",
-    },
-    tag = (function()
-      if vim.fn.has("nvim-0.7") == 0 then
-        return "v0.6"
-      end
-    end)(),
-    opts = {
-      basic = true,
-      extended = true,
-    },
-  },
-  {
     "vim-matchup",
     dependencies = {
       "nvim-treesitter",

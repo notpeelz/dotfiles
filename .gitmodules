@@ -22,10 +22,6 @@
 	path = .local/share/nvim/plugins/aerial.nvim
 	url = https://github.com/stevearc/aerial.nvim.git
 	branch = master
-[submodule ".local/share/nvim/plugins/comment.nvim"]
-	path = .local/share/nvim/plugins/comment.nvim
-	url = https://github.com/numToStr/Comment.nvim.git
-	branch = master
 [submodule ".local/share/nvim/plugins/gitsigns.nvim"]
 	path = .local/share/nvim/plugins/gitsigns.nvim
 	url = https://github.com/lewis6991/gitsigns.nvim.git
