@@ -354,10 +354,37 @@ fi
 typeset -g POWERLEVEL9K_LOCK_ICON='∅'
 typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
 
-# configure p10k to use mise instead of asdf
-# https://github.com/romkatv/powerlevel10k/issues/2212#issuecomment-1685084366
 () {
-  function prompt_mise() {
+  _array_insert_after() {
+    local arr_name="$1"
+    local target="$2"
+    shift 2
+    local insert_items=("$@")
+
+    local -a arr out
+    local el inserted=0
+
+    arr=("${(@P)arr_name}")
+
+    for el in "${arr[@]}"; do
+      out+=("${el}")
+
+      if [[ "${el}" == "${target}" ]]; then
+        out+=("${insert_items[@]}")
+        inserted=1
+      fi
+    done
+
+    # fallback if not found
+    if (( ! inserted )); then
+      out+=("${insert_items[@]}")
+    fi
+
+    set -A "${arr_name}" "${out[@]}"
+  }
+
+  # source: https://github.com/romkatv/powerlevel10k/issues/2212#issuecomment-1685084366
+  prompt_mise() {
     while IFS= read -r line; do
       eval "local parts=(${line})"
       local tool_name="${parts[1]}"
@@ -381,6 +408,10 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
     )
   }
 
+  instant_prompt_mise() {
+    prompt_mise
+  }
+
   typeset -g POWERLEVEL9K_MISE_FOREGROUND=6
 
   typeset -g POWERLEVEL9K_MISE_RUBY_FOREGROUND=1
@@ -400,7 +431,34 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
   typeset -g POWERLEVEL9K_MISE_HASKELL_FOREGROUND=3
   typeset -g POWERLEVEL9K_MISE_JULIA_FOREGROUND=2
 
-  # Substitute the default asdf prompt element
-  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/mise}")
+  _array_insert_after POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS asdf mise
+
+  # source: https://github.com/romkatv/powerlevel10k/issues/1808
+  prompt_taloscontext() {
+    if [[ -n "$TALOSCONFIG" ]]; then
+      local self_talosctl_config_info_output && self_talosctl_config_info_output=(${(f)"$(talosctl config info 2>/dev/null)"}) || return
+      local self_talosctl_config_info_query_string='"*"'
+      local self_talosctl_config_info_context_string='([^"'\''|>]*|'$self_talosctl_config_info_query_string')'
+      local self_talosctl_config_info_context_count=(${(@M)self_talosctl_config_info_output:#Current context:$~self_talosctl_config_info_context_string})
+
+      (( $#self_talosctl_config_info_context_count == 1 )) || return
+
+      POWERLEVEL9K_TALOSCONTEXT_SEGMENT="${self_talosctl_config_info_context_count[1]#Current context:}"
+      POWERLEVEL9K_TALOSCONTEXT_SEGMENT="${POWERLEVEL9K_TALOSCONTEXT_SEGMENT##[[:space:]]#}"
+      POWERLEVEL9K_TALOSCONTEXT_SEGMENT="${POWERLEVEL9K_TALOSCONTEXT_SEGMENT%%[[:space:]]#}"
+
+      p10k segment -t "$POWERLEVEL9K_TALOSCONTEXT_SEGMENT"
+    fi
+  }
+
+  instant_prompt_taloscontext() {
+    prompt_taloscontext
+  }
+
+  typeset -g POWERLEVEL9K_TALOSCONTEXT_FOREGROUND=5
+  typeset -g POWERLEVEL9K_TALOSCONTEXT_VISUAL_IDENTIFIER_EXPANSION=""
+  typeset -g POWERLEVEL9K_TALOSCONTEXT_SHOW_ON_COMMAND="talosctl"
+
+  _array_insert_after POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS kubecontext taloscontext
 }
 # }}}
