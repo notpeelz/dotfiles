@@ -188,6 +188,12 @@ done
 # }}}
 
 # Completion {{{
+# Add vendor-completions to fpath (sometimes used by some packages)
+fpath=(
+  "/usr/share/zsh/vendor-completions"
+  "${fpath[@]}"
+)
+
 # Menu selection
 zmodload -i zsh/complist
 zstyle ":completion:*" menu select
