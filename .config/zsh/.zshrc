@@ -28,6 +28,7 @@ bindkey -e
 # GNU colors {{{
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
+alias diff="diff --color=auto"
 
 local _LS_COLORS=(
   # reset to normal
@@ -71,9 +72,6 @@ local _LS_COLORS=(
   "ca=1;38;2;189;147;249"
 )
 export LS_COLORS="${(j.:.)_LS_COLORS}"
-
-alias grep="grep --color=auto"
-alias diff="diff --color=auto"
 
 # XXX: completion breaks if this is set as an alias
 ip() { command ip --color=auto "$@"; }
