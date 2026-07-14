@@ -389,17 +389,23 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
 
   # source: https://github.com/romkatv/powerlevel10k/issues/2212#issuecomment-1685084366
   prompt_mise() {
+    local missing_tool_icon=0
     while IFS= read -r line; do
       eval "local parts=(${line})"
       local tool_name="${parts[1]}"
       local tool_version="${parts[2]}"
       local tool_path="${parts[3]}"
+      local tool_icon="${(U)tool_name}_ICON"
       case "${tool_path}" in
         "${HOME}/.tool-versions") ;&
         "${HOME}/.config/mise/config.toml")
           ;;
         *)
-          p10k segment -r -i "${(U)tool_name}_ICON" -s "${tool_name}" -t "${tool_version}"
+          if [[ -n "${icons[$tool_icon]}" ]]; then
+            p10k segment -r -i "${tool_icon}" -s "${tool_name}" -t "${tool_version}"
+          else
+            missing_tool_icon=1
+          fi
           ;;
       esac
     done < <(
@@ -410,6 +416,10 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
         | @sh
       '
     )
+
+    if (( ${missing_tool_icon} )); then
+      p10k segment +r -i $'\ue20f '
+    fi
   }
 
   instant_prompt_mise() {
