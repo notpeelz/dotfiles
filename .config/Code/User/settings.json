@@ -58,7 +58,6 @@
     "terminal.integrated.allowChords": false,
     "terminal.integrated.commandsToSkipShell": [
         "-workbench.action.quickOpen",
-        "-workbench.action.terminal.paste"
     ],
     "terminal.integrated.profiles.windows": {
         "PowerShell": {
