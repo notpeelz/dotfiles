@@ -26,7 +26,7 @@
     "workbench.editor.useModal": "off",
     "workbench.editor.empty.hint": "hidden",
     "editor.renderLineHighlight": "all",
-    // Disable the X11 primary clipboard
+    // Disable the primary clipboard
     "editor.selectionClipboard": false,
     // Editor stuff
     "editor.scrollOnMiddleClick": true,
@@ -48,9 +48,6 @@
     "editor.insertSpaces": true,
     "files.eol": "\n",
     "files.insertFinalNewline": true,
-    // DELETE ME: SSH stuff for freebsd stuff
-    "remote.SSH.enableRemoteCommand": true,
-    "remote.SSH.useExecServer": false,
     // Terminal stuff
     "terminal.integrated.shellIntegration.enabled": false,
     "terminal.integrated.defaultProfile.windows": "Git Bash",
@@ -120,8 +117,6 @@
     "kotlin.languageServer.path": "/usr/bin/kotlin-language-server",
     // Devcontainers
     "dev.containers.dockerPath": "podman",
-    // Tests
-    "testExplorer.useNativeTesting": true,
     // Prevent settings sync from nuking our settings when moving between OSes
     // (even though we don't use it)
     "settingsSync.keybindingsPerPlatform": false,
