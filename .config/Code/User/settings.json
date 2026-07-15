@@ -58,6 +58,7 @@
     "terminal.integrated.allowChords": false,
     "terminal.integrated.commandsToSkipShell": [
         "-workbench.action.quickOpen",
+        "workbench.action.toggleSidebarVisibility",
     ],
     "terminal.integrated.profiles.windows": {
         "PowerShell": {
