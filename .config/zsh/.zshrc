@@ -108,6 +108,8 @@ fi
 
 alias sshfs="sshfs -o reconnect -o uid=${UID} -o gid=${GID} -o dmask=$(umask) -o fmask=$(umask)"
 
+alias k="kubectl"
+
 alias gdm="gitdot main"
 alias gda="gitdot arch"
 alias gdp="gitdot pc"
