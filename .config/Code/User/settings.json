@@ -28,6 +28,9 @@
     "editor.renderLineHighlight": "all",
     // Disable the primary clipboard
     "editor.selectionClipboard": false,
+    // Disable confirmation dialogs
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
     // Editor stuff
     "editor.scrollOnMiddleClick": true,
     "editor.minimap.enabled": false,
