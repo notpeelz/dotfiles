@@ -6,6 +6,7 @@
     // Disable AI features
     "chat.disableAIFeatures": true,
     // Appearance
+    "workbench.colorTheme": "Dark Modern",
     "workbench.iconTheme": "material-icon-theme",
     "workbench.colorCustomizations": {
         "editorInlayHint.background": "#242424",
