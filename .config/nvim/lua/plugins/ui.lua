@@ -3,19 +3,20 @@ local plugins = require("core.plugins")
 return plugins{
   {
     "onedark.nvim",
-    event = "VimEnter",
-    init = function()
-      require("onedark").load()
-    end,
+    main = "onedark",
     opts = {
       style = "dark",
       highlights = {
         FoldColumn = { bg = "SignColumn" },
       },
     },
+    config = function()
+      require("onedark").load()
+    end,
   },
   {
     "lualine.nvim",
+    main = "lualine",
     dependencies = {
       "onedark.nvim",
     },
@@ -78,6 +79,8 @@ return plugins{
     },
     opts = {
       indent = {
+        char = "│",
+        tab_char = "│",
         priority = 12,
       },
     },

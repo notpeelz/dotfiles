@@ -25,6 +25,7 @@ end
 return plugins{
   {
     "telescope.nvim",
+    main = "telescope",
     dependencies = {
       "plenary.nvim",
     },
@@ -101,6 +102,7 @@ return plugins{
   },
   {
     "aerial.nvim",
+    main = "aerial",
     dependencies = {
       "telescope.nvim",
       "nvim-treesitter",

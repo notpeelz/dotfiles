@@ -30,10 +30,6 @@
 	path = .local/share/nvim/plugins/indent-blankline.nvim
 	url = https://github.com/lukas-reineke/indent-blankline.nvim.git
 	branch = master
-[submodule ".local/share/nvim/plugins/lazy.nvim"]
-	path = .local/share/nvim/plugins/lazy.nvim
-	url = https://github.com/folke/lazy.nvim.git
-	branch = main
 [submodule ".local/share/nvim/plugins/lualine.nvim"]
 	path = .local/share/nvim/plugins/lualine.nvim
 	url = https://github.com/nvim-lualine/lualine.nvim.git

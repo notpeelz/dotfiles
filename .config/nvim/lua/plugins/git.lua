@@ -5,6 +5,7 @@ return plugins{
   "vim-fugitive",
   {
     "gitsigns.nvim",
+    main = "gitsigns",
     opts = {
       on_attach = function(bufnr)
         local gs = require("gitsigns")

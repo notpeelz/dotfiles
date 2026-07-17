@@ -4,7 +4,6 @@ local plugins = require("core.plugins")
 return plugins{
   {
     "nvim-treesitter",
-    build = ":TSUpdate",
     main = "nvim-treesitter.config",
     opts = {
       ensure_installed = {
@@ -95,7 +94,7 @@ return plugins{
   },
   {
     "nvim-treesitter-context",
-    lazy = false,
+    main = "treesitter-context",
     dependencies = {
       "nvim-treesitter",
     },

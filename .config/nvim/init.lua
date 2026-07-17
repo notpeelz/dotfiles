@@ -3,33 +3,12 @@
 local au = require("core.au")
 local keymap = require("core.keymap")
 
-vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/plugins/lazy.nvim")
-require("lazy").setup(
-  {
-    { import = "plugins" },
-  },
-  {
-    ui = {
-      icons = {
-        cmd = "⌘",
-        config = "🛠",
-        event = "📅",
-        ft = "📂",
-        init = "⚙",
-        keys = "🗝",
-        plugin = "🔌",
-        runtime = "💻",
-        source = "📄",
-        start = "🚀",
-        task = "📌",
-        lazy = "💤 ",
-      },
-    },
-    change_detection = {
-      enabled = false,
-    },
-  }
-)
+require("plugins")
+require("plugins.filetypes")
+require("plugins.git")
+require("plugins.telescope")
+require("plugins.treesitter")
+require("plugins.ui")
 
 -- Default indentation
 vim.opt.tabstop = 2

@@ -39,7 +39,6 @@ return plugins{
   },
   {
     "vim-ReplaceWithRegister",
-    lazy = false,
     keys = {
       keymap.mapping{ "n", "r", "<nop>" },
       keymap.mapping{ "x", "r", "<nop>" },
@@ -52,7 +51,7 @@ return plugins{
   },
   {
     "nvim-ufo",
-    lazy = false,
+    main = "ufo",
     dependencies = {
       "nvim-treesitter",
       "promise-async",
