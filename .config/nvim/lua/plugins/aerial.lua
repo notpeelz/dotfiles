@@ -23,47 +23,21 @@ local function make_picker(o)
 end
 
 return plugin{
-  "telescope.nvim",
-  main = "telescope",
+  "aerial.nvim",
+  main = "aerial",
   dependencies = {
-    "plenary.nvim",
-  },
-  extensions = {
-    aerial = {},
-    live_grep_args = {
-      auto_quoting = true,
-    },
+    "telescope.nvim",
+    "nvim-treesitter",
   },
   opts = {},
   keys = {
-    keymap.mapping{
-      "n",
-      "<Space>ff",
+    keymap.mapping{ "n",
+      "<Space>fo",
       make_picker{
         function(...)
-          local builtin = require("telescope.builtin")
-          return builtin.find_files(...)
-        end
-      },
-    },
-    keymap.mapping{
-      "n",
-      "<Space>fb",
-      make_picker{
-        function(...)
-          local builtin = require("telescope.builtin")
-          return builtin.buffers(...)
-        end
-      },
-    },
-    keymap.mapping{
-      "n",
-      "<Space>fh",
-      make_picker{
-        function(...)
-          local builtin = require("telescope.builtin")
-          return builtin.help_tags(...)
-        end
+          local aerial = require("telescope").extensions.aerial
+          aerial.aerial(...)
+        end,
       },
     },
   },

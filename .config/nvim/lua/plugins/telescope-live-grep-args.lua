@@ -23,47 +23,32 @@ local function make_picker(o)
 end
 
 return plugin{
-  "telescope.nvim",
-  main = "telescope",
+  "telescope-live-grep-args.nvim",
   dependencies = {
-    "plenary.nvim",
+    "telescope.nvim",
   },
-  extensions = {
-    aerial = {},
-    live_grep_args = {
-      auto_quoting = true,
-    },
-  },
-  opts = {},
   keys = {
     keymap.mapping{
       "n",
-      "<Space>ff",
+      "<Space>fg",
       make_picker{
         function(...)
-          local builtin = require("telescope.builtin")
-          return builtin.find_files(...)
-        end
-      },
-    },
-    keymap.mapping{
-      "n",
-      "<Space>fb",
-      make_picker{
-        function(...)
-          local builtin = require("telescope.builtin")
-          return builtin.buffers(...)
-        end
-      },
-    },
-    keymap.mapping{
-      "n",
-      "<Space>fh",
-      make_picker{
-        function(...)
-          local builtin = require("telescope.builtin")
-          return builtin.help_tags(...)
-        end
+          local lga = require("telescope").extensions.live_grep_args
+          return lga.live_grep_args(...)
+        end,
+        mappings = function(map)
+          local function quote_prompt(bufnr)
+            local action_state = require("telescope.actions.state")
+            local picker = action_state.get_current_picker(bufnr)
+            local prompt = picker:_get_prompt()
+            prompt = vim.trim(prompt)
+            prompt = "-- \"" .. prompt:gsub("\"", "\\\"") .. "\""
+            picker:set_prompt(prompt)
+            vim.cmd.normal{ "I", bang = true }
+          end
+
+          map("i", "<C-k>", quote_prompt)
+        end,
       },
     },
   },

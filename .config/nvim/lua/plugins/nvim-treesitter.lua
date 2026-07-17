@@ -1,0 +1,86 @@
+local plugin = require("core.plugin")
+
+return plugin{
+  "nvim-treesitter",
+  main = "nvim-treesitter.config",
+  opts = {
+    ensure_installed = {
+      "query",
+      "bash",
+      "c",
+      "cpp",
+      "vala",
+      "rust",
+      "zig",
+      "lua",
+      "python",
+      "vim",
+      "vimdoc",
+      "diff",
+      "javascript",
+      "typescript",
+      "c_sharp",
+      "java",
+      "cmake",
+      "nix",
+      "ruby",
+      "scala",
+      "html",
+      "sql",
+      "json",
+      "jsonc",
+      "json5",
+      "xml",
+      "toml",
+      "yaml",
+      "jq",
+      "glsl",
+      "hlsl",
+      "ini",
+      "latex",
+      "ini",
+      "kdl",
+    },
+    highlight = {
+      enable = true,
+      additional_vim_regex_highlighting = false,
+    },
+    indent = {
+      enable = true,
+    },
+    incremental_selection = {
+      enable = true,
+    },
+    textobjects = {
+      select = {
+        enable = true,
+        lookahead = true,
+        keymaps = {
+          ["af"] = "@function.outer",
+          ["if"] = "@function.inner",
+          ["ac"] = "@class.outer",
+          ["ic"] = "@class.inner",
+          ["as"] = {
+            query = "@scope",
+            query_group = "locals",
+          },
+        },
+        selection_modes = {
+          ["@parameter.outer"] = "v",
+          ["@function.outer"] = "V",
+          ["@class.outer"] = "<C-v>",
+        },
+        include_surrounding_whitespace = true,
+      },
+    },
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = "<CR>",
+        node_incremental = "<CR>",
+        scope_incremental = false,
+        node_decremental = "<BS>",
+      },
+    },
+  },
+}

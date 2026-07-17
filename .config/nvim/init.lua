@@ -4,11 +4,6 @@ local au = require("core.au")
 local keymap = require("core.keymap")
 
 require("plugins")
-require("plugins.filetypes")
-require("plugins.git")
-require("plugins.telescope")
-require("plugins.treesitter")
-require("plugins.ui")
 
 -- Default indentation
 vim.opt.tabstop = 2
