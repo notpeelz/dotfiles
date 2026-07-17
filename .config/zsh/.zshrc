@@ -302,7 +302,8 @@ unsetopt correct_all
 export BLOCK_SIZE="'1"
 
 # Bat theme
-export BAT_THEME="Monokai Extended Bright"
+export BAT_THEME_DARK="Monokai Extended Bright"
+export BAT_THEME_LIGHT="Monokai Extended Light"
 # }}}
 
 _zshrc-set-cursor() {
