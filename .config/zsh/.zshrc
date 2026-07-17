@@ -36,7 +36,7 @@ local _LS_COLORS=(
   # normal text
   "no=0"
   # file
-  "fi=0"
+  "fi=0;37"
   # directory
   "di=0;38;2;97;175;239"
   # executable
