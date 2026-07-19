@@ -12,8 +12,6 @@ return plugin{
     },
   },
   config = function()
-    require("onedark").load()
-
     vim.opt.guicursor = "n-v-c:block-Cursor,i-ci-ve:ver25-Cursor,o:hor50-Cursor"
 
     -- workaround for https://github.com/navarasu/onedark.nvim/issues/260
@@ -40,5 +38,7 @@ return plugin{
         vim.cmd.colorscheme("onedark")
       end,
     })
+
+    require("onedark").load()
   end,
 }
