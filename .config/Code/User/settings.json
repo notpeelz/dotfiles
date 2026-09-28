@@ -191,5 +191,8 @@
     "[java]": {
         "editor.defaultFormatter": "Oracle.oracle-java"
     },
+    "[just]": {
+        "editor.defaultFormatter": "nefrob.vscode-just-syntax"
+    },
     "window.zoomLevel": -1,
 }
