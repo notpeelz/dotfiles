@@ -459,21 +459,36 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_EXPANSION='≡'
   _array_insert_after POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS asdf mise
 
   # source: https://github.com/romkatv/powerlevel10k/issues/1808
+  typeset -g  _p9k_taloscontext_cache=
+  typeset -g  _p9k_taloscontext_cache_mtime=
+
   prompt_taloscontext() {
-    if [[ -n "$TALOSCONFIG" ]]; then
-      local self_talosctl_config_info_output && self_talosctl_config_info_output=(${(f)"$(talosctl config info 2>/dev/null)"}) || return
+    [[ -n $TALOSCONFIG ]] || return
+
+    (( $+builtins[zstat] )) || zmodload -F zsh/stat b:zstat 2>/dev/null
+
+    local -a _p9k_taloscontext_stat
+    zstat -A _p9k_taloscontext_stat +mtime -- "$TALOSCONFIG" 2>/dev/null
+    local mtime=$_p9k_taloscontext_stat[1]
+
+    if [[ -z $_p9k_taloscontext_cache || $mtime != $_p9k_taloscontext_cache_mtime ]]; then
+      local self_talosctl_config_info_output
+      self_talosctl_config_info_output=(${(f)"$(talosctl config info 2>/dev/null)"}) || return
       local self_talosctl_config_info_query_string='"*"'
       local self_talosctl_config_info_context_string='([^"'\''|>]*|'$self_talosctl_config_info_query_string')'
       local self_talosctl_config_info_context_count=(${(@M)self_talosctl_config_info_output:#Current context:$~self_talosctl_config_info_context_string})
 
       (( $#self_talosctl_config_info_context_count == 1 )) || return
 
-      POWERLEVEL9K_TALOSCONTEXT_SEGMENT="${self_talosctl_config_info_context_count[1]#Current context:}"
-      POWERLEVEL9K_TALOSCONTEXT_SEGMENT="${POWERLEVEL9K_TALOSCONTEXT_SEGMENT##[[:space:]]#}"
-      POWERLEVEL9K_TALOSCONTEXT_SEGMENT="${POWERLEVEL9K_TALOSCONTEXT_SEGMENT%%[[:space:]]#}"
-
-      p10k segment -t "$POWERLEVEL9K_TALOSCONTEXT_SEGMENT"
+      _p9k_taloscontext_cache="${self_talosctl_config_info_context_count[1]#Current context:}"
+      _p9k_taloscontext_cache="${_p9k_taloscontext_cache##[[:space:]]#}"
+      _p9k_taloscontext_cache="${_p9k_taloscontext_cache%%[[:space:]]#}"
+      _p9k_taloscontext_cache_mtime=$mtime
     fi
+
+    [[ -n $_p9k_taloscontext_cache ]] || return
+    POWERLEVEL9K_TALOSCONTEXT_SEGMENT=$_p9k_taloscontext_cache
+    p10k segment -t "$POWERLEVEL9K_TALOSCONTEXT_SEGMENT"
   }
 
   instant_prompt_taloscontext() {
