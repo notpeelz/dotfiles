@@ -9,6 +9,12 @@ return plugin{
     highlights = {
       FoldColumn = { bg = "SignColumn" },
       Cursor = { fg = "$bg0", bg = "$fg", fmt = "NONE" },
+      -- gitsigns only defines GitSignsAdd/Change/Delete, so it derives the
+      -- staged variants by mixing the base colour 50% toward the background
+      -- (which looks washed out). Pin them to the real theme colours instead.
+      GitSignsStagedAdd = { fg = "$green" },
+      GitSignsStagedChange = { fg = "$blue" },
+      GitSignsStagedDelete = { fg = "$red" },
     },
   },
   config = function()
