@@ -1,0 +1,47 @@
+{
+  "mcpServers": {
+    "cloudflare": {
+      "url": "https://mcp.cloudflare.com/mcp",
+      "enabled": false
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--no-usage-statistics",
+        "--executablePath",
+        "/usr/bin/chromium"
+      ],
+      "enabled": false
+    },
+    "firefox-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mozilla/firefox-devtools-mcp@latest"
+      ],
+      "enabled": false
+    },
+    "rea": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "rea-agents@6.7.0",
+        "mcp"
+      ],
+      "env": {
+        "GHIDRA_INSTALL_DIR": "/opt/ghidra",
+        "JAVA_HOME": "/usr/lib/jvm/java-27-openjdk"
+      },
+      "enabled": false
+    },
+    "reddit": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "reddit-mcp-server@latest"
+      ]
+    }
+  }
+}
