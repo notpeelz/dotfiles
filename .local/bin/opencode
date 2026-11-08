@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+export OPENCODE_MODELS_URL="https://models.litellm.crank.peelzfreak.com"
+
+exec /usr/bin/opencode "$@"
