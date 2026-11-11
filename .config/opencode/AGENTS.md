@@ -44,6 +44,10 @@ A syntax question gets a syntax answer. Depth is opt-in.
 
 ## Code style
 
+### Git
+
+- When writing commit messages, make sure no line exceeds 72 chars (title or body).
+
 ### Rust
 
 - Avoid `let name: Type = ...` when the type can be inferred. Use
