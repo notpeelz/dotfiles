@@ -88,6 +88,10 @@
     // Git blame
     "git.blame.editorDecoration.enabled": false,
     "git.blame.statusBarItem.enabled": true,
+    // Nix
+    "nix.enableLanguageServer": true,
+    "nix.serverPath": "nixd",
+    "nix.formatterPath": "alejandra",
     // Disable annoying "auto-configure" prompts when opening projects
     "cmake.configureOnOpen": false,
     "mesonbuild.configureOnOpen": false,
