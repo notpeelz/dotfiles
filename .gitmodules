@@ -101,3 +101,6 @@
 	path = .local/share/nvim/plugins/vim-rzip
 	url = https://github.com/lbrayner/vim-rzip.git
 	branch = master
+[submodule ".config/pi/extensions/pi-session-hud"]
+	path = .config/pi/extensions/pi-session-hud
+	url = https://github.com/tmustier/pi-session-hud.git
