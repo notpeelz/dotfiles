@@ -15,14 +15,16 @@
     "npm:@narumitw/pi-worktree",
     "npm:@narumitw/pi-btw",
     "npm:@narumitw/pi-caffeinate",
-    "npm:@tmustier/pi-session-recap"
+    "npm:@tmustier/pi-session-recap",
+    "npm:pi-sticky-message"
   ],
   "extensionChangelogVersions": {
     "{\"source\":\"git:github.com/tmustier/pine-of-glass\",\"scope\":\"user\"}": "0.18.4",
     "{\"source\":\"npm:@narumitw/pi-worktree\",\"scope\":\"user\"}": "0.51.10",
     "{\"source\":\"npm:@narumitw/pi-btw\",\"scope\":\"user\"}": "0.63.8",
     "{\"source\":\"npm:@narumitw/pi-caffeinate\",\"scope\":\"user\"}": "0.49.15",
-    "{\"source\":\"npm:@tmustier/pi-session-recap\",\"scope\":\"user\"}": "0.6.1"
+    "{\"source\":\"npm:@tmustier/pi-session-recap\",\"scope\":\"user\"}": "0.6.1",
+    "{\"source\":\"npm:pi-sticky-message\",\"scope\":\"user\"}": "0.1.3"
   },
   "defaultProvider": "peelzfreak",
   "defaultModel": "deepseek-v4.1-flash"
