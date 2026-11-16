@@ -11,11 +11,10 @@
   "showHardwareCursor": true,
   "packages": [
     "npm:pi-command-palette",
-    "npm:pi-leader-key",
     "git:github.com/tmustier/pine-of-glass"
   ],
   "extensionChangelogVersions": {
-    "{\"source\":\"npm:pi-leader-key\",\"scope\":\"user\"}": "1.4.0"
+    "{\"source\":\"git:github.com/tmustier/pine-of-glass\",\"scope\":\"user\"}": "0.18.4"
   },
   "defaultProvider": "peelzfreak",
   "defaultModel": "deepseek-v4.1-flash"
