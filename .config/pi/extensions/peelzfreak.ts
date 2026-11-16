@@ -473,20 +473,9 @@ export default async function (pi: ExtensionAPI) {
     },
   });
 
-  const startupKey = envApiKey() ?? storedApiKey(id);
-  if (!startupKey) {
-    register([]);
-    return;
-  }
-
-  try {
-    register(
-      asProviderModels(id, baseUrl, await discoverModels(baseUrl, startupKey)),
-    );
-  } catch (error) {
-    console.error(
-      `[peelzfreak] ${error instanceof Error ? error.message : String(error)}`,
-    );
-    register([]);
-  }
+  // Register immediately so Pi can start without waiting on the gateway.
+  // Pi restores the catalog persisted in ModelsStore through refreshModels()
+  // with allowNetwork: false, then refreshes it from the gateway in the
+  // background after the interactive UI is ready.
+  register([]);
 }
