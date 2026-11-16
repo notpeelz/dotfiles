@@ -6,6 +6,7 @@
   "app.thinking.toggle": "ctrl+n",
   "app.session.togglePath": "alt+p",
   "app.models.toggleProvider": "alt+shift+p",
+  "tui.altScreen.previousPrompt": ["ctrl+shift+up", "ctrl+up"],
   "tui.input.newLine": ["shift+enter", "ctrl+j", "ctrl+return", "alt+return"],
   "tui.editor.deleteWordBackward": ["ctrl+w", "alt+backspace", "ctrl+backspace"],
   "tui.editor.deleteWordForward": ["alt+d", "alt+delete", "ctrl+delete"]
