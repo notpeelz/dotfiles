@@ -1,0 +1,22 @@
+{
+  "lastChangelogVersion": "1.5.2",
+  "enabledModels": [
+    "peelzfreak/claude-haiku-5-5",
+    "peelzfreak/qwen3.8-max",
+    "peelzfreak/gpt-6-luna",
+    "peelzfreak/deepseek-v4.1-flash",
+    "peelzfreak/glm-5.3"
+  ],
+  "hideThinkingBlock": false,
+  "showHardwareCursor": true,
+  "packages": [
+    "npm:pi-command-palette",
+    "npm:pi-leader-key",
+    "git:github.com/tmustier/pine-of-glass"
+  ],
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:pi-leader-key\",\"scope\":\"user\"}": "1.4.0"
+  },
+  "defaultProvider": "peelzfreak",
+  "defaultModel": "deepseek-v4.1-flash"
+}
