@@ -11,10 +11,16 @@
   "showHardwareCursor": true,
   "packages": [
     "npm:pi-command-palette",
-    "git:github.com/tmustier/pine-of-glass"
+    "git:github.com/tmustier/pine-of-glass",
+    "npm:@narumitw/pi-worktree",
+    "npm:@narumitw/pi-btw",
+    "npm:@narumitw/pi-caffeinate"
   ],
   "extensionChangelogVersions": {
-    "{\"source\":\"git:github.com/tmustier/pine-of-glass\",\"scope\":\"user\"}": "0.18.4"
+    "{\"source\":\"git:github.com/tmustier/pine-of-glass\",\"scope\":\"user\"}": "0.18.4",
+    "{\"source\":\"npm:@narumitw/pi-worktree\",\"scope\":\"user\"}": "0.51.10",
+    "{\"source\":\"npm:@narumitw/pi-btw\",\"scope\":\"user\"}": "0.63.8",
+    "{\"source\":\"npm:@narumitw/pi-caffeinate\",\"scope\":\"user\"}": "0.49.15"
   },
   "defaultProvider": "peelzfreak",
   "defaultModel": "deepseek-v4.1-flash"
