@@ -14,5 +14,11 @@ fi
 if [[ "$session_name" == "_popup-"* ]]; then
   tmux detach-client
 else
-  tmux display-popup -h 80% -w 80% -E -- "$SCRIPT_DIR/popup-init" "$session_name" "$dir"
+  tmux_version="$(tmux display-message -p '#{version}')"
+  if [[ "$tmux_version" == 3.8* ]]; then
+    tmux display-popup -h 80% -w 80% -E -- "$SCRIPT_DIR/popup-init" "$session_name" "$dir"
+  else
+    tmux new-pane -O -K -x 80% -y 80% -X 10% -Y 10% -c "$dir" -- \
+      env -u TMUX "$SCRIPT_DIR/popup-init" "$session_name" "$dir"
+  fi
 fi
