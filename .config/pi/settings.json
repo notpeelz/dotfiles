@@ -7,7 +7,7 @@
     "peelzfreak/deepseek-v4.1-flash",
     "peelzfreak/glm-5.3"
   ],
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "showHardwareCursor": true,
   "packages": [
     "npm:pi-command-palette",
@@ -26,8 +26,16 @@
     "{\"source\":\"npm:@narumitw/pi-caffeinate\",\"scope\":\"user\"}": "0.49.15",
     "{\"source\":\"npm:@tmustier/pi-session-recap\",\"scope\":\"user\"}": "0.6.1",
     "{\"source\":\"npm:pi-sticky-message\",\"scope\":\"user\"}": "0.1.3",
-    "{\"source\":\"npm:pi-rewind-hook\",\"scope\":\"user\"}": "1.8.8"
+    "{\"source\":\"npm:pi-rewind-hook\",\"scope\":\"user\"}": "1.8.9"
   },
   "defaultProvider": "peelzfreak",
-  "defaultModel": "deepseek-v4.1-flash"
+  "defaultModel": "deepseek-v4.1-flash",
+  "enableInstallTelemetry": false,
+  "terminal": {
+    "showTerminalProgress": false
+  },
+  "markdown": {
+    "mermaid": "streaming"
+  },
+  "quietStartup": true
 }
