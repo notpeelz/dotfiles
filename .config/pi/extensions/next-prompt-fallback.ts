@@ -8,13 +8,16 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 
 const WIDGET_KEY = "next-prompt-fallback";
-const wrapped = new WeakSet<object>();
+// Mark the real renderer, not the stable `this.ui` proxy: pi swaps the proxy's
+// target when the TUI mode changes, and a new AltScreen must be re-patched.
+const PATCHED = "__nextPromptFallbackPatched" as const;
 
 type ScrollViewLike = { scrollTop: number };
 type AltScreenLike = {
   scrollToPrompt?: (direction: number) => void;
   scrollToBottom?: () => void;
   getPrimaryScrollView?: () => ScrollViewLike | undefined;
+  __nextPromptFallbackPatched?: boolean;
 };
 
 export default function (pi: ExtensionAPI) {
@@ -23,8 +26,8 @@ export default function (pi: ExtensionAPI) {
     try {
       ctx.ui.setWidget(WIDGET_KEY, (tui) => {
         const alt = tui as unknown as AltScreenLike;
-        if (typeof alt.scrollToPrompt === "function" && !wrapped.has(alt)) {
-          wrapped.add(alt);
+        if (typeof alt.scrollToPrompt === "function" && !alt[PATCHED]) {
+          alt[PATCHED] = true;
           const original = alt.scrollToPrompt.bind(alt);
           alt.scrollToPrompt = (direction: number) => {
             const before = alt.getPrimaryScrollView?.()?.scrollTop;
