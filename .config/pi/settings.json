@@ -9,7 +9,6 @@
   "hideThinkingBlock": false,
   "showHardwareCursor": true,
   "packages": [
-    "npm:pi-command-palette",
     "git:github.com/tmustier/pine-of-glass",
     "npm:@narumitw/pi-worktree",
     "npm:@narumitw/pi-btw",
