@@ -50,6 +50,13 @@
           "-y",
           "reddit-mcp-server@latest"
         ]
+      },
+      "searxng": {
+        "type": "remote",
+        "url": "https://mcp.search.peelzfreak.com/mcp",
+        "headers": {
+          "Authorization": "Bearer {file:/home/peelz/.config/searxng/mcp-token}"
+        }
       }
     }
   }
