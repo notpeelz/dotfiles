@@ -52,3 +52,16 @@ A syntax question gets a syntax answer. Depth is opt-in.
 
 - Avoid `let name: Type = ...` when the type can be inferred. Use
   turbofish, for example `.collect::<Vec<_>>()`, instead.
+
+## Tool usage
+
+### grep/ripgrep
+
+When using grep or ripgrep (`rg`), make sure to exclude irrelevant folders.
+```
+grep --exclude=node_modules --exclude=.git --exclude=result --exclude=target
+# ripgrep equivalent:
+rg -g '!.git' -g '!result' -g '!target'`.
+```
+
+Prefer using ripgrep if available.
