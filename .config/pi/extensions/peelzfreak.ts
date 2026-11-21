@@ -220,6 +220,14 @@ function toPiModel(row: Json, info: Json | undefined): Json | undefined {
     row.supports_reasoning === true ||
     (levelMap !== undefined &&
       Object.values(levelMap).some((value) => typeof value === "string"));
+  // Anthropic-protocol deployments cache only when the request carries
+  // cache_control breakpoints. Pi emits them for OpenAI-compatible routes only
+  // when the model opts in with compat.cacheControlFormat. Other LiteLLM
+  // upstreams here (openai, gemini) cache without markers or not at all, so
+  // leave them alone.
+  const anthropicPromptCache =
+    modelInfo.litellm_provider === "anthropic" &&
+    modelInfo.supports_prompt_caching === true;
 
   return {
     id,
@@ -235,6 +243,9 @@ function toPiModel(row: Json, info: Json | undefined): Json | undefined {
     },
     contextWindow,
     maxTokens,
+    ...(anthropicPromptCache
+      ? { compat: { cacheControlFormat: "anthropic" } }
+      : {}),
   };
 }
 
