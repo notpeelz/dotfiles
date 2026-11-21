@@ -42,6 +42,14 @@
         "-y",
         "reddit-mcp-server@latest"
       ]
+    },
+    "searxng": {
+      "url": "https://mcp.search.peelzfreak.com/mcp",
+      "headers": {
+        "Authorization": "!echo Bearer $(cat ~/.config/searxng/mcp-token)"
+      },
+      "exposure": "direct",
+      "description": "Web search and URL reading through the peelzfreak SearXNG instance"
     }
   }
 }
