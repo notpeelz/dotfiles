@@ -12,6 +12,7 @@
 - Optimize for accuracy, not approval.
 - If you do not know, say so. Never fabricate.
 - Don't use em dashes, as they're a telltale sign of AI usage.
+- Prefer US English spelling over UK English.
 
 ### Answer scope
 
