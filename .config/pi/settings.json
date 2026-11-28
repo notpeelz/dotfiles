@@ -14,7 +14,8 @@
     "npm:@narumitw/pi-btw",
     "npm:@narumitw/pi-caffeinate",
     "npm:@tmustier/pi-session-recap",
-    "npm:pi-sticky-message"
+    "npm:pi-sticky-message",
+    "npm:pi-ask-user"
   ],
   "defaultProvider": "peelzfreak",
   "defaultModel": "deepseek-v4.1-flash",
