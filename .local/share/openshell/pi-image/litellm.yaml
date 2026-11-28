@@ -1,0 +1,28 @@
+# Provider profile for the self-hosted LiteLLM gateway.
+# Import once:   openshell profile import -f litellm.yaml
+# Create:        LITELLM_API_KEY=... openshell provider create \
+#                  --name litellm --type litellm-peelzfreak --credential LITELLM_API_KEY
+# Attach:        openshell sandbox create ... --provider litellm
+id: litellm-peelzfreak
+display_name: Peelzfreak LiteLLM
+description: Self-hosted LiteLLM OpenAI-compatible gateway
+category: inference
+inference_capable: true
+credentials:
+  - name: api_key
+    description: LiteLLM virtual key
+    env_vars: [LITELLM_API_KEY]
+    required: true
+    auth_style: bearer
+    header_name: authorization
+discovery:
+  credentials: [api_key]
+endpoints:
+  - host: host.openshell.internal
+    port: 8787
+    protocol: rest
+    access: read-write
+    enforcement: enforce
+binaries:
+  - /usr/bin/node
+  - /usr/sbin/node

@@ -1,0 +1,23 @@
+FROM archlinux:latest
+
+RUN pacman -Syu --noconfirm --needed \
+      bash ca-certificates curl fd git less nodejs npm ripgrep \
+  && pacman -Scc --noconfirm
+
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
+# OpenShell runs sandboxes as uid 1000 when the image declares no USER.
+# Arch fd is the real fd binary (no fdfind wrapper) and is picked up from PATH.
+RUN useradd --uid 1000 --create-home --home-dir /home/sandbox \
+      --shell /bin/bash sandbox \
+  && mkdir -p /workspace /home/sandbox/.config/pi \
+  && chown -R 1000:1000 /workspace /home/sandbox
+
+COPY --chown=1000:1000 user-config/ /home/sandbox/.config/pi/
+
+ENV HOME=/home/sandbox \
+    PI_CODING_AGENT_DIR=/home/sandbox/.config/pi \
+    PEELZFREAK_BASE_URL=http://host.openshell.internal:8787/v1
+USER 1000:1000
+WORKDIR /workspace
+ENTRYPOINT ["pi"]

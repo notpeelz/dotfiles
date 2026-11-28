@@ -1,0 +1,56 @@
+ctx := justfile_directory()
+pi_home := env("HOME") / ".config/pi"
+image := "pi"
+sandbox := "pi-sandbox"
+gateway_unit := "openshell-gateway"
+proxy_unit := "pi-litellm-proxy"
+
+# Recipes for the OpenShell sandbox image built from ./Containerfile.
+default:
+    @just --list
+
+# Copy the host pi config into the build context, minus secrets and state.
+# See sync-config.sh for the exclusions and the models-store rewrite.
+sync:
+    ./sync-config.sh
+
+# Rebuild the sandbox image (syncs config first).
+build: sync
+    podman build -t {{image}} .
+
+# Recreate the sandbox from the current image.
+sandbox: build
+    -openshell sandbox delete {{sandbox}}
+    openshell sandbox create --name {{sandbox}} --from localhost/{{image}} \
+      --provider litellm --policy {{ctx}}/policy.yaml \
+      --detach -- sh -c 'sleep infinity'
+
+# Run pi in the sandbox: `just pi -p "explain this repo"`.
+pi *ARGS:
+    openshell sandbox exec --tty --workdir /workspace {{sandbox}} -- pi {{ARGS}}
+
+# Interactive shell in the sandbox.
+shell:
+    openshell sandbox exec --tty {{sandbox}} -- bash
+
+# Upload a path into /workspace (defaults to the current directory).
+upload src="." dest="/workspace/repo":
+    openshell sandbox upload {{sandbox}} {{src}} {{dest}}
+
+# Delete the sandbox.
+rm:
+    openshell sandbox delete {{sandbox}}
+
+# Sandbox and service status.
+status:
+    openshell sandbox list
+    openshell status
+    systemctl --user is-active {{gateway_unit}} {{proxy_unit}} podman.socket
+
+# Proxy used to reach LiteLLM on the LAN; logs.
+proxy-logs:
+    journalctl --user -u {{proxy_unit}} -n 50 --no-pager
+
+# Install and start the user services this setup needs.
+services:
+    systemctl --user enable --now podman.socket {{gateway_unit}} {{proxy_unit}}

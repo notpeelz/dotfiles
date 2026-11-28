@@ -1,0 +1,11 @@
+# OpenShell sandbox policy for the pi image.
+# Endpoint access comes from the attached provider profile (litellm.yaml),
+# which substitutes credentials at the boundary. Keep this file filesystem-only.
+version: 1
+
+filesystem_policy:
+  include_workdir: true
+  read_only: [/bin, /usr, /lib, /lib64, /proc, /dev/urandom, /etc, /var/log]
+  read_write: [/workspace, /home/sandbox, /tmp, /dev/null]
+landlock:
+  compatibility: best_effort
